@@ -1,6 +1,7 @@
 {
-	"useTabs": true,
-	"semi": true,
-	"quoteProps": "consistent",
-	"arrowParens": "avoid"
+    "useTabs": true,
+    "semi": true,
+    "quoteProps": "consistent",
+    "arrowParens": "avoid",
+    "printWidth": 120
 }
