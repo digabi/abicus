@@ -6,7 +6,7 @@ import { match } from "ts-pattern";
  * Shorthand for `new Decimal(n)`.
  * @see The decimal.js docs {@link https://mikemcl.github.io/decimal.js/}
  */
-export function d(n: number | Decimal) {
+export function d(n: Decimal.Value) {
 	return new Decimal(n);
 }
 
