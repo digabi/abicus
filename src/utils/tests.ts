@@ -43,6 +43,7 @@ export const t = {
 	tan: T.fun("tan"),
 	ln: T.fun("ln"),
 	sqrt: T.fun("sqrt"),
+	mem: T.mem("ans"),
 	lhs: T.brak("("),
 	rhs: T.brak(")"),
 };
