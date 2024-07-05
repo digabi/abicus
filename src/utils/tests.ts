@@ -26,6 +26,25 @@ export const T = {
 } satisfies Record<TokenId, (...args: any[]) => Token>;
 
 /**
+ * Utility for creating calculator `Token`s in tests.
+ * @see {@link Token}
+ */
+export const t = {
+	pi: T.const("pi"),
+	e: T.const("e"),
+	plus: T.op("+"),
+	minus: T.op("-"),
+	times: T.op("*"),
+	div: T.op("/"),
+	pow: T.op("^"),
+	sin: T.fun("sin"),
+	cos: T.fun("cos"),
+	tan: T.fun("tan"),
+	ln: T.fun("ln"),
+	sqrt: T.fun("sqrt"),
+};
+
+/**
  * Formats an array of `Token`s into a human-friendly string.
  *
  * @see {@link Token}
