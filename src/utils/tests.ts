@@ -16,7 +16,7 @@ export function d(n: number | Decimal) {
  */
 export const T = {
 	ws: () => ({ type: "ws" }),
-	lit: (x: number) => ({ type: "lit", value: new Decimal(x) }),
+	lit: (x: number | Decimal) => ({ type: "lit", value: d(x) }),
 
 	op: (name: Token<"op">["name"]) => ({ type: "op", name }),
 	mem: (name: Token<"mem">["name"]) => ({ type: "mem", name }),
@@ -30,6 +30,7 @@ export const T = {
  * @see {@link Token}
  */
 export const t = {
+	ws: T.ws(),
 	pi: T.const("pi"),
 	e: T.const("e"),
 	plus: T.op("+"),
