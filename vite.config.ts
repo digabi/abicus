@@ -6,7 +6,18 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-	plugins: [tsconfigPaths(), react()],
+	plugins: [
+		tsconfigPaths(),
+		react({
+			babel: {
+				plugins: [
+					/** See `./src/_clsx-jsx.d.ts` for more details on these two plugins */
+					["transform-jsx-classnames", { attributes: ["x"] }],
+					["babel-plugin-rename-jsx-attribute", { attributes: { x: "className" } }],
+				],
+			},
+		}),
+	],
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//
