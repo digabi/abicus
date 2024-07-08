@@ -21,7 +21,7 @@ const E = Decimal.exp(1);
  * @todo Returns `undefined` when evaluating function without an argument
  * @todo Returns `undefined` when input doesn't collapse into a single number
  */
-export default function evaluate(parsedArray: Token[]) {
+export default function evaluate(parsedArray: Token[], ans: Decimal) {
 	const calcStack: Decimal[] = [];
 
 	for (const token of parsedArray) {
@@ -30,7 +30,7 @@ export default function evaluate(parsedArray: Token[]) {
 			.with({ type: "brak" }, () => null)
 
 			.with({ type: "lit" }, token => calcStack.push(token.value))
-			.with({ type: "mem", name: "ans" }, () => calcStack.push())
+			.with({ type: "mem", name: "ans" }, () => calcStack.push(ans))
 			.with({ type: "const", name: "pi" }, () => calcStack.push(PI))
 			.with({ type: "const", name: "e" }, () => calcStack.push(E))
 
@@ -69,7 +69,6 @@ export default function evaluate(parsedArray: Token[]) {
 
 				calcStack.push(result);
 			})
-			.with({ type: "mem", name: "ans" }, () => null)
 			.run();
 	}
 

@@ -44,7 +44,7 @@ describe("Known cases", () => {
 	for (const [input, expected] of cases) {
 		const title = `${debugDisplayExpression(input)} = ${d(expected).toDecimalPlaces(10)}`;
 
-		const result = evaluate(input)?.toDecimalPlaces(10);
+		const result = evaluate(input, d(0))?.toDecimalPlaces(10);
 		const wanted = d(expected).toDecimalPlaces(10);
 
 		test(title, () => expect(result).toEqual(wanted));
