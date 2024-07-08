@@ -8,6 +8,16 @@ const E = Decimal.exp(1);
 /**
  * Evaluates an array of `Token`s in Reverse Polish Notation into a result.
  *
+ * @example
+ * ```typescript
+ * const result: Decimal = evaluate([
+ * 	{ type: "lit", value: new Decimal(1) },
+ * 	{ type: "lit", value: new Decimal(1) },
+ * 	{ type: "op", name: "+" },
+ * ]);
+ * debugDisplayExpression(result) // => "[ 2 ]"
+ * ```
+ *
  * @todo Returns `undefined` when evaluating function without an argument
  * @todo Returns `undefined` when input doesn't collapse into a single number
  */

@@ -22,6 +22,12 @@ export const tokenMatchers = [
 /**
  * Reads an input expression and returns a `Generator` of `Token`s.
  *
+ * @example
+ * ```typescript
+ * const result = tokenise("1+1");
+ * debugDisplayExpression([...result]) // => "[ 1 + 1 ]"
+ * ```
+ *
  * @todo Returns early if given unrecognised tokens input
  */
 export default function* tokenise(expression: string) {

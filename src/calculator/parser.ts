@@ -26,6 +26,16 @@ function associativity(token: Token<"op">): "lhs" | "rhs" {
 /**
  * Parses a iterable of `Token`s into Reverse Polish Notation using the Shunting Yard Algorithm.
  *
+ * @example
+ * ```typescript
+ * const result: Token[] = parse([
+ * 	{ type: "lit", value: new Decimal(1) },
+ * 	{ type: "op", name: "+" },
+ * 	{ type: "lit", value: new Decimal(1) },
+ * ]);
+ * debugDisplayExpression(result) // => "[ 1 1 + ]"
+ * ```
+ *
  * @todo Undefined behaviour when given unbalanced round brackets
  *
  * @see Shunting Yard Algorithm: {@link https://en.wikipedia.org/wiki/Shunting_yard_algorithm}
