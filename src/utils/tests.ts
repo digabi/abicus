@@ -69,7 +69,7 @@ export const debugDisplayExpression = (expr: Token[]) => {
 				.with({ type: "ws" }, () => "_")
 				.with({ type: "lit" }, t => t.value.toString())
 				.with({ type: "brak" }, t => t.side)
-				.otherwise(t => t.name)
+				.otherwise(t => t.name),
 		)
 		.join(" ");
 
