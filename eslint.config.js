@@ -15,6 +15,17 @@ export default [
 		rules: {
 			"react/react-in-jsx-scope": "off",
 			"@typescript-eslint/no-explicit-any": "off",
+
+			"no-unused-vars": "off",
+			"@typescript-eslint/no-unused-vars": [
+				"warn",
+				{
+					varsIgnorePattern: "^_",
+					argsIgnorePattern: "^_",
+					caughtErrorsIgnorePattern: "^_",
+					destructuredArrayIgnorePattern: "^_",
+				},
+			],
 		},
 	},
 ];
