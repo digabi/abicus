@@ -21,39 +21,43 @@ const E = Decimal.exp(1);
  * @todo Returns `undefined` when evaluating function without an argument
  * @todo Returns `undefined` when input doesn't collapse into a single number
  */
-export default function evaluate(parsedArray: Token[], ans: Decimal) {
+export default function evaluate(parsedArray: Token[], ans: Decimal, mem: Decimal) {
 	const calcStack: Decimal[] = [];
 
 	for (const token of parsedArray) {
 		match(token)
-			.with({ type: "ws" }, () => null)
-			.with({ type: "brak" }, () => null)
+			.with({ type: "lbrk" }, () => null)
+			.with({ type: "rbrk" }, () => null)
 
-			.with({ type: "lit" }, token => calcStack.push(token.value))
-			.with({ type: "mem", name: "ans" }, () => calcStack.push(ans))
-			.with({ type: "const", name: "pi" }, () => calcStack.push(PI))
-			.with({ type: "const", name: "e" }, () => calcStack.push(E))
+			.with({ type: "litr" }, token => calcStack.push(token.value))
+			.with({ type: "memo", name: "ans" }, () => calcStack.push(ans))
+			.with({ type: "memo", name: "mem" }, () => calcStack.push(mem))
 
-			.with({ type: "fun" }, token => {
+			.with({ type: "cons", name: "pi" }, () => calcStack.push(PI))
+			.with({ type: "cons", name: "e" }, () => calcStack.push(E))
+
+			.with({ type: "func" }, token => {
 				const x = calcStack.pop();
 				const f = match(token.name)
 					.with("ln", () => Decimal.ln)
 					.with("log", () => Decimal.log10)
+					.with("sqrt", () => Decimal.sqrt)
 					.with("sin", () => Decimal.sin)
 					.with("cos", () => Decimal.cos)
 					.with("tan", () => Decimal.tan)
-					.with("sqrt", () => Decimal.sqrt)
-					.run();
+					.with("asin", () => Decimal.asin)
+					.with("acos", () => Decimal.acos)
+					.with("atan", () => Decimal.atan)
+					.exhaustive();
 
 				if (x === undefined) return;
-				if (f === undefined) return;
 
 				const result = f.call(Decimal, x);
 
 				calcStack.push(result);
 			})
 
-			.with({ type: "op" }, token => {
+			.with({ type: "oper" }, token => {
 				const a = calcStack.pop();
 				const b = calcStack.pop() ?? new Decimal(0);
 
@@ -69,7 +73,7 @@ export default function evaluate(parsedArray: Token[], ans: Decimal) {
 
 				calcStack.push(result);
 			})
-			.run();
+			.exhaustive();
 	}
 
 	if (calcStack.length !== 1) return;

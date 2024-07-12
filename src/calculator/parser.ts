@@ -1,7 +1,7 @@
 import { isMatching, match } from "ts-pattern";
-import { Token } from "./tokeniser";
+import { Token, TokenId } from "./tokeniser";
 
-function precedence(token: Token<"op">): number {
+function precedence(token: Token<"oper">): number {
 	return match(token.name)
 		.with("^", () => 2)
 		.with("/", "*", () => 1)
@@ -9,7 +9,7 @@ function precedence(token: Token<"op">): number {
 		.exhaustive();
 }
 
-function associativity(token: Token<"op">): "lhs" | "rhs" {
+function associativity(token: Token<"oper">): "lhs" | "rhs" {
 	return (
 		match(token.name)
 			.returnType<"lhs" | "rhs">()
@@ -46,17 +46,16 @@ export default function parse(tokens: Iterable<Token>) {
 
 	for (const token of tokens) {
 		match(token)
-			.with({ type: "ws" }, () => null)
-			.with({ type: "lit" }, token => outputStack.push(token))
-			.with({ type: "mem" }, token => outputStack.push(token))
-			.with({ type: "const" }, token => outputStack.push(token))
-			.with({ type: "fun" }, token => sidingStack.push(token))
+			.with({ type: "litr" }, token => outputStack.push(token))
+			.with({ type: "memo" }, token => outputStack.push(token))
+			.with({ type: "cons" }, token => outputStack.push(token))
+			.with({ type: "func" }, token => sidingStack.push(token))
+			.with({ type: "lbrk" }, token => sidingStack.push(token))
 
-			.with({ type: "brak", side: "(" }, token => sidingStack.push(token))
-			.with({ type: "brak", side: ")" }, () => {
+			.with({ type: "rbrk" }, () => {
 				let topmost = sidingStack.at(-1);
 
-				while (!isMatching({ type: "brak", side: "(" }, topmost)) {
+				while (!isMatching({ type: "lbrk" satisfies TokenId }, topmost)) {
 					if (!topmost) return; // TODO: Unbalanced parens
 					outputStack.push(topmost);
 					sidingStack.pop();
@@ -66,18 +65,18 @@ export default function parse(tokens: Iterable<Token>) {
 				sidingStack.pop();
 				topmost = sidingStack.at(-1);
 
-				if (isMatching({ type: "fun" }, topmost)) {
+				if (isMatching({ type: "func" satisfies TokenId }, topmost)) {
 					outputStack.push(topmost);
 					sidingStack.pop();
 				}
 			})
 
-			.with({ type: "op" }, token => {
+			.with({ type: "oper" }, token => {
 				let topmost = sidingStack.at(-1);
 
 				while (
 					topmost &&
-					topmost.type === "op" &&
+					topmost.type === "oper" &&
 					(precedence(topmost) > precedence(token) ||
 						(precedence(topmost) === precedence(token) && associativity(token) === "lhs"))
 				) {
