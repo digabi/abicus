@@ -77,7 +77,7 @@ const tokenMatchers = [
 	],
 	[
 		// Constants: "pi", "e", and unicode variations
-		/^pi|π|e|ℇ|𝑒|ℯ/i,
+		/^(pi|π|e|ℇ|𝑒|ℯ)/i,
 		str => ({
 			type: "cons" as const,
 			name: match(str.toLowerCase())
@@ -91,7 +91,7 @@ const tokenMatchers = [
 	],
 	[
 		// Memory register: "ans", "mem"
-		/^ans|mem/i,
+		/^(ans|mem)/i,
 		str => ({
 			type: "memo" as const,
 			name: match(str.toLowerCase())
@@ -107,9 +107,9 @@ const tokenMatchers = [
 			[
 				// TODO: Should we also support the "sin^(-1)" notation for arcus functions?
 				// TODO: Should we also support the "sin^(2)(x) == sin(x^2)" notation?
-				/(a(rc)?)?(sin|cos|tan)/,
-				/log|lg|ln/,
-				/sqrt|√/,
+				/^((a(rc)?)?(sin|cos|tan))/,
+				/^(log|lg|ln)/,
+				/^(sqrt|√)/,
 			]
 				.map(subRegex => subRegex.source)
 				.join("|"),
