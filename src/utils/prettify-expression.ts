@@ -7,12 +7,17 @@ import tokenise, { Token } from "#/calculator/tokeniser";
  *
  * Returns `undefined` if the input expression cannot be tokenised.
  */
-export default function prettify(expression: string) {
-	const result = tokenise(expression);
+export default function prettify(expression: string | Token[]) {
+	let tokens: Token[];
+	if (typeof expression === "string") {
+		const result = tokenise(expression);
+		if (!result.ok) return;
 
-	if (!result.ok) return;
+		tokens = result.value;
+	} else {
+		tokens = expression;
+	}
 
-	const tokens = result.value;
 	const pretty = Array.from(prettiedCharacters(tokens));
 
 	return pretty.join("");
