@@ -59,7 +59,7 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "lbrk" }, () => "(")
 			.with({ type: "rbrk" }, () => ")")
 			.with({ type: "memo", name: "ans" }, () => "ANS")
-			.with({ type: "memo", name: "mem" }, () => "MEM")
+			.with({ type: "memo", name: "ind" }, () => "M")
 			.with({ type: "cons", name: "pi" }, () => "π")
 			.with({ type: "cons", name: "e" }, () => "e")
 			.with({ type: "func", name: "sqrt" }, () => "√")

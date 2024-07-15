@@ -34,7 +34,7 @@ export const t = {
 	ln: T.func("ln"),
 	sqrt: T.func("sqrt"),
 	ans: T.memo("ans"),
-	mem: T.memo("mem"),
+	ind: T.memo("ind"),
 	lbrk: T.lbrk(),
 	rbrk: T.rbrk(),
 };
