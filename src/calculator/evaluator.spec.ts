@@ -1,11 +1,15 @@
 import Decimal from "decimal.js";
-import { d, debugDisplayExpression } from "#/utils/tests";
+import prettify from "#/utils/prettify-expression";
 import { t, T } from "#/utils/tokens";
 
 import { Token } from "./tokeniser";
 import evaluate from "./evaluator";
 
 const { litr } = T;
+
+function d(n: Decimal.Value) {
+	return new Decimal(n);
+}
 
 run("Sanity tests", [
 	[[litr(1), litr(1), t.plus], 2],
@@ -49,7 +53,7 @@ run("Random-ish cases", [
 function run(title: string, cases: [Token[], number | Decimal][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
-			const title = `${debugDisplayExpression(input)} = ${d(expected).toDecimalPlaces(10)}`;
+			const title = `${prettify(input)} = ${d(expected).toDecimalPlaces(10)}`;
 
 			const result = evaluate(input, d(0), d(0))?.toDecimalPlaces(10);
 			const wanted = d(expected).toDecimalPlaces(10);

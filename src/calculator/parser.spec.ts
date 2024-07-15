@@ -1,4 +1,4 @@
-import { debugDisplayExpression } from "#/utils/tests";
+import prettify from "#/utils/prettify-expression";
 import { T, t } from "#/utils/tokens";
 
 import { Token } from "./tokeniser";
@@ -74,10 +74,10 @@ run("Functions", [
 function run(title: string, cases: [Token[], Token[]][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
-			const title = `${debugDisplayExpression(input)} => ${debugDisplayExpression(expected)}`;
+			const title = `${prettify(input)} => ${prettify(expected)}`;
 
-			const result = debugDisplayExpression(parse(input));
-			const wanted = debugDisplayExpression(expected);
+			const result = prettify(parse(input));
+			const wanted = prettify(expected);
 
 			test(title, () => expect(result).toEqual(wanted));
 		}

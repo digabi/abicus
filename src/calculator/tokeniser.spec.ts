@@ -1,8 +1,14 @@
-import { debugDisplayExpression, d } from "#/utils/tests";
+import Decimal from "decimal.js";
+import prettify from "#/utils/prettify-expression";
 import { T, t } from "#/utils/tokens";
+
 import tokenise, { Token } from "./tokeniser";
 
 const { litr } = T;
+
+function d(n: Decimal.Value) {
+	return new Decimal(n);
+}
 
 run("Whitespace", [
 	["2 + 3", [litr(2), t.plus, litr(3)]],
@@ -43,15 +49,15 @@ run("Memory", [["ans sin", [t.ans, t.sin]]]);
 function run(title: string, cases: [string, Token[]][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
-			const title = `"${input}" => ${debugDisplayExpression(expected)}`;
+			const title = `"${input}" => ${prettify(expected)}`;
 
 			const tokens = tokenise(input);
 
 			expect(tokens.ok).toBe(true);
 			if (!tokens.value) expect.unreachable("Tokenisation result marked as OK but no token array given from tokeniser");
 
-			const result = debugDisplayExpression(tokens.value);
-			const wanted = debugDisplayExpression(expected);
+			const result = prettify(tokens.value);
+			const wanted = prettify(expected);
 
 			test(title, () => expect(result).toEqual(wanted));
 		}
