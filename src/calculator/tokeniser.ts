@@ -1,11 +1,10 @@
 import Decimal from "decimal.js";
 import { match } from "ts-pattern";
-import { IterableElement } from "type-fest";
 
 /** A tuple of Regex and a token builder function. See {@link tokenMathcers} for details. */
 type TokenMatcher = (typeof tokenMatchers)[number];
 /** Any of the tokens created by the token builder function in {@link tokenMatchers}. */
-type TokenAny = NonNullable<IterableElement<ReturnType<typeof tokens>>["value"]>;
+type TokenAny = ReturnType<TokenMatcher[1]>;
 
 /**
  * A union of all the possible `Token` `type` values.
@@ -147,8 +146,9 @@ const tokenMatchers = [
 export default function tokenise(expression: string) {
 	const output = [...tokens(expression)];
 	const errIdx = output.find(result => !result.ok)?.error;
+	const hasErr = typeof errIdx !== "undefined";
 
-	return typeof errIdx === "number"
+	return hasErr
 		? ({ ok: false, error: errIdx } as const)
 		: ({ ok: true, value: output.map(result => result.value as Token) } as const);
 }
