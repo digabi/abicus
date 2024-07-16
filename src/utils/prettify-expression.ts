@@ -33,8 +33,8 @@ export default function prettify(expression: string | Token[]) {
  */
 function* prettiedCharacters(tokens: Token[]) {
 	for (let i = 0; i < tokens.length; i++) {
-		const lhs = i !== 0 && tokens[i - 1];
-		const cur = tokens[i];
+		const lhs = tokens[i - 1];
+		const cur = tokens[i]!;
 
 		const shouldHaveSpace =
 			lhs &&
