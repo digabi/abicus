@@ -6,7 +6,7 @@
 		"distDir": "../dist"
 	},
 	"package": {
-		"productName": "abicus",
+		"productName": "Abicus",
 		"version": "0.0.0"
 	},
 	"tauri": {
@@ -32,7 +32,7 @@
 		"bundle": {
 			"active": true,
 			"targets": "all",
-			"identifier": "com.tauri.dev",
+			"identifier": "fi.ylioppilastutkinto.abicus",
 			"icon": [
 				"icons/32x32.png",
 				"icons/128x128.png",
