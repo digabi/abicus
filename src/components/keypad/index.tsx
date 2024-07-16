@@ -10,7 +10,7 @@ export default function Keypad() {
 	return (
 		<>
 			<div>
-				<div x={["inline-grid grid-cols-5 gap-2", "w-96", "font-[Jost]"]}>
+				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
 					{/* Row #1 */}
 					<Key tint="blue" input="" label={keyLabel.memIn} />
 					<Key tint="blue" input="" label={keyLabel.memOut} />
