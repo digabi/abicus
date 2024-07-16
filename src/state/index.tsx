@@ -23,6 +23,18 @@ type CalculatorContext = {
 	crunch(): void;
 };
 
+const CalculatorContextObject = createContext<CalculatorContext | null>(null);
+
+/**
+ * Returns a handle to the app-global memory registers and user input buffer
+ * as well as methods to clear the state and to actually perform the user-given calculation.
+ */
+export function useCalculator() {
+	const handle = useContext(CalculatorContextObject);
+	if (!handle) throw Error("Programmer Error: Calculator Context was used outside its Provider");
+	return handle;
+}
+
 export default function CalculatorProvider({ children }: PropsWithChildren) {
 	const buffer = useBuffer();
 	const memory = useMemory();
@@ -52,12 +64,4 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 			{children}
 		</CalculatorContextObject.Provider>
 	);
-}
-
-const CalculatorContextObject = createContext<CalculatorContext | null>(null);
-
-export function useCalculator() {
-	const handle = useContext(CalculatorContextObject);
-	if (!handle) throw Error("Programmer Error: Calculator Context was used outside its Provider");
-	return handle;
 }
