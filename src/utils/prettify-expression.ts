@@ -1,5 +1,5 @@
 import { match, P } from "ts-pattern";
-import tokenise, { Token } from "#/calculator/tokeniser";
+import { tokenise, Token } from "#/calculator";
 
 /**
  * Takes in an unformatted expression (e.g. `1+2*(cos(2)/sqrt(pi))`) and gives out a "prettified"

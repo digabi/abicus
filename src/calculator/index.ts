@@ -1,8 +1,11 @@
 import Decimal from "decimal.js";
 
-import evaluate from "./evaluator";
-import parse from "./parser";
-import tokenise from "./tokeniser";
+import evaluate from "./internal/evaluator";
+import parse from "./internal/parser";
+import tokenise from "./internal/tokeniser";
+
+export type { Token, TokenId } from "./internal/tokeniser";
+export { tokenise, parse, evaluate };
 
 export function calculate(expression: string, ans: Decimal, ind: Decimal) {
 	const tokens = tokenise(expression);

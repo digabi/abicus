@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import { Token, TokenId } from "#/calculator/tokeniser";
+import { Token, TokenId } from "#/calculator";
 
 /**
  * Utility for creating calculator `Token`s in tests.
