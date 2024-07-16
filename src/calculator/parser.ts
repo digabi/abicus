@@ -18,7 +18,7 @@ import { Token, TokenId } from "./tokeniser";
  *
  * @see Shunting Yard Algorithm: {@link https://en.wikipedia.org/wiki/Shunting_yard_algorithm}
  */
-export default function parse(tokens: Iterable<Token>) {
+export default function parse(tokens: Token[]) {
 	const outputStack: Token[] = []; // Final RPN stack
 	const sidingStack: Token[] = []; // AKA the operator stack
 
