@@ -1,28 +1,6 @@
 import { isMatching, match } from "ts-pattern";
 import { Token, TokenId } from "./tokeniser";
 
-function precedence(token: Token<"oper">): number {
-	return match(token.name)
-		.with("^", () => 2)
-		.with("/", "*", () => 1)
-		.with("-", "+", () => 0)
-		.exhaustive();
-}
-
-function associativity(token: Token<"oper">): "lhs" | "rhs" {
-	return (
-		match(token.name)
-			.returnType<"lhs" | "rhs">()
-			// Strictly defined:
-			.with("^", () => "rhs")
-			.with("/", () => "lhs")
-			.with("-", () => "lhs")
-			// Technically either one:
-			.with("+", "*", () => "lhs")
-			.exhaustive()
-	);
-}
-
 /**
  * Parses a iterable of `Token`s into Reverse Polish Notation using the Shunting Yard Algorithm.
  *
@@ -95,4 +73,26 @@ export default function parse(tokens: Iterable<Token>) {
 	}
 
 	return outputStack;
+}
+
+function precedence(token: Token<"oper">): number {
+	return match(token.name)
+		.with("^", () => 2)
+		.with("/", "*", () => 1)
+		.with("-", "+", () => 0)
+		.exhaustive();
+}
+
+function associativity(token: Token<"oper">): "lhs" | "rhs" {
+	return (
+		match(token.name)
+			.returnType<"lhs" | "rhs">()
+			// Strictly defined:
+			.with("^", () => "rhs")
+			.with("/", () => "lhs")
+			.with("-", () => "lhs")
+			// Technically either one:
+			.with("+", "*", () => "lhs")
+			.exhaustive()
+	);
 }
