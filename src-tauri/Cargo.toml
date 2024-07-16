@@ -1,11 +1,9 @@
 [package]
 name = "abicus"
 version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "A Simple Scientific Calculator"
+authors = ["Matriculation Examination Board, Finland"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
 tauri-build = { version = "1.5.3", features = [] }
