@@ -4,45 +4,59 @@ import { Component, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren;
 
-export default class ErrorBoundary extends Component<Props, { error: unknown; info?: unknown }> {
+export default class ErrorBoundary extends Component<Props, { error: any; stack: any }> {
 	constructor(props: Props) {
 		super(props);
-		this.state = { error: null };
+		this.state = { error: null, stack: null };
 	}
 
-	static getDerivedStateFromError(error: unknown) {
+	static getDerivedStateFromError(error: any) {
 		return { error };
 	}
 
-	componentDidCatch(_: unknown, info: unknown) {
-		this.setState(s => ({ ...s, info }));
+	componentDidCatch(_: unknown, info: any) {
+		this.setState(s => ({ ...s, stack: info.componentStack }));
 	}
 
 	render() {
 		if (this.state.error === null) return this.props.children;
 
 		const error = this.state.error;
-		const info = this.state.error;
+		const stack = this.state.stack;
 
-		const message = (error as any)?.message;
-		const stack = (info as any)?.componentStack;
+		const message = error.message;
 
 		return (
-			<main x={["w-max-sm", "flex flex-col items-center gap-4"]}>
-				{/* Placeholder icon */}
-				<span role="img" x="text-9xl">
-					💔
-				</span>
+			<main x={["max-w-sm h-screen py-4", "flex flex-col justify-between gap-4"]}>
+				<div x={["grow", "flex flex-col items-center justify-center"]}>
+					{/* Placeholder icon */}
+					<span role="img" x="text-9xl">
+						💔
+					</span>
 
-				<div x="text-3xl">The calculator has crashed</div>
-
-				<div x="w-full flex flex-col">
-					<div x="flex justify-between">
-						<div x="text-sm">Diagnostic information:</div>
-					</div>
-					<textarea disabled x="resize-none text-xs font-mono" value={message} />
-					<textarea disabled x="resize-none text-xs font-mono" value={stack} />
+					<h1 x="text-3xl text-center">
+						<div>Ohjelma kaatui</div>
+						<div>Programmet har kraschat</div>
+					</h1>
 				</div>
+
+				<output
+					x={[
+						"w-[24rem] max-h-52",
+						"overflow-scroll",
+						"px-3 py-2",
+						"rounded-md",
+						"flex flex-col",
+						"text-xs font-mono",
+						"bg-abi-lblue border border-blue-300",
+					]}
+				>
+					<span>--- Message ---</span>
+					<span>{message}</span>
+					<span>--- Component Stack ---</span>
+					<span>{stack}</span>
+					<span>--- End ---</span>
+				</output>
 			</main>
 		);
 	}
