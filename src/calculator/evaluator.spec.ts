@@ -50,7 +50,7 @@ run("Random-ish cases", [
 	[[t.pi, litr(4), t.div, t.sin, t.pi, litr(4), t.div, t.cos, t.plus, t.sqrt], 1.189207115],
 ]);
 
-function run(title: string, cases: [Token[], number | Decimal][]) {
+function run(title: string, cases: [input: Token[], expected: number | Decimal][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
 			const title = `${prettify(input)} = ${d(expected).toDecimalPlaces(10)}`;

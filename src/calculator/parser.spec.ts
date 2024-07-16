@@ -71,7 +71,7 @@ run("Functions", [
 	],
 ]);
 
-function run(title: string, cases: [Token[], Token[]][]) {
+function run(title: string, cases: [input: Token[], expected: Token[]][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
 			const title = `${prettify(input)} => ${prettify(expected)}`;

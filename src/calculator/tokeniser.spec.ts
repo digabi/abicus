@@ -46,7 +46,7 @@ run("Brackets", [["2+(3+4)", [litr(2), t.plus, t.lbrk, litr(3), t.plus, litr(4),
 run("Functions", [["sin cos tan", [t.sin, t.cos, t.tan]]]);
 run("Memory", [["ans sin", [t.ans, t.sin]]]);
 
-function run(title: string, cases: [string, Token[]][]) {
+function run(title: string, cases: [input: string, expected: Token[]][]) {
 	describe(title, () => {
 		for (const [input, expected] of cases) {
 			const title = `"${input}" => ${prettify(expected)}`;
