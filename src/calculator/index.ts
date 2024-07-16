@@ -10,6 +10,8 @@ export function calculate(expression: string, ans: Decimal, ind: Decimal) {
 	if (!tokens.ok) return new Decimal(0);
 
 	const parsed = parse(tokens.value);
+	if (!parsed) return new Decimal(0);
+
 	const result = evaluate(parsed, ans, ind);
 
 	return result;

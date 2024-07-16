@@ -76,10 +76,13 @@ function run(title: string, cases: [input: Token[], expected: Token[]][]) {
 		for (const [input, expected] of cases) {
 			const title = `${prettify(input)} => ${prettify(expected)}`;
 
-			const result = prettify(parse(input));
+			const result = parse(input);
+			if (!result) expect.unreachable("Unparseable test case");
+
+			const pretty = prettify(result);
 			const wanted = prettify(expected);
 
-			test(title, () => expect(result).toEqual(wanted));
+			test(title, () => expect(pretty).toEqual(wanted));
 		}
 	});
 }
