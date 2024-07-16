@@ -89,12 +89,13 @@ const tokenMatchers = [
 		}),
 	],
 	[
-		// Memory register: "ans" (answer), "ind" (independent)
-		/^(ans|ind)/i,
+		// Memory register: "ans" (answer register), "mem" (independent memory register)
+		/^(ans|mem|m|ind)/i,
 		str => ({
 			type: "memo" as const,
 			name: match(str.toLowerCase())
-				.with("ans", "ind", name => name)
+				.with("ans", () => "ans" as const)
+				.with("m", "ind", "mem", () => "ind" as const)
 				.otherwise(name => {
 					throw Error(`Programmer error: neglected memory register "${name}"`);
 				}),

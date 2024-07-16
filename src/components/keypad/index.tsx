@@ -7,13 +7,25 @@ import { match } from "ts-pattern";
 export default function Keypad() {
 	const calculator = useCalculator();
 
+	function onClickMemIn() {
+		calculator.crunch(true);
+	}
+
+	// Show "clear buffer" (C) button when buffer has content and "clear all" (AC) when buffer is empty
+	const clearButton =
+		calculator.buffer.value === "" ? (
+			<FunctionKey tint="blue" label="AC" onClick={calculator.clearAll} />
+		) : (
+			<FunctionKey tint="blue" label="C" onClick={calculator.buffer.empty} />
+		);
+
 	return (
 		<>
 			<div>
 				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
 					{/* Row #1 */}
-					<Key tint="blue" input="" label={keyLabel.memIn} />
-					<Key tint="blue" input="" label={keyLabel.memOut} />
+					<FunctionKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
+					<Key tint="blue" input="MEM" label={keyLabel.memOut} />
 					<Key tint="blue" input="ANS" />
 					<Key input="log" />
 					<Key input="ln" />
@@ -61,7 +73,7 @@ export default function Keypad() {
 
 					{/* Row #8 */}
 					<FunctionKey tint="blue" label="⌫" onClick={calculator.buffer.del} />
-					<FunctionKey tint="blue" label="AC" onClick={calculator.clearAll} />
+					{clearButton}
 					<div x="col-span-2" />
 					<FunctionKey tint="blue" label="=" onClick={calculator.crunch} />
 				</div>

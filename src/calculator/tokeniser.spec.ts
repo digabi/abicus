@@ -44,7 +44,7 @@ run("Disregard trailing zeros", [
 run("Operators", [["2+3", [litr(2), t.plus, litr(3)]]]);
 run("Brackets", [["2+(3+4)", [litr(2), t.plus, t.lbrk, litr(3), t.plus, litr(4), t.rbrk]]]);
 run("Functions", [["sin cos tan", [t.sin, t.cos, t.tan]]]);
-run("Memory", [["ans sin", [t.ans, t.sin]]]);
+run("Memory", [["ans mem", [t.ans, t.ind]]]);
 
 function run(title: string, cases: [input: string, expected: Token[]][]) {
 	describe(title, () => {

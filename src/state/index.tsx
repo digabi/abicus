@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { createContext, PropsWithChildren, useContext } from "react";
 import { calculate } from "#/calculator";
 
@@ -19,8 +20,11 @@ type CalculatorContext = {
 	 * - Evaluates the expression in the input buffer.
 	 * - Stores the result in the answer memory register.
 	 * - Marks the input buffer as "clean" to signal that *the current answer matches the value of the input buffer*.
+	 *
+	 * @param `saveToInd` Whether the result should be saved **also** to the independent memory register. Default `false`.
+	 * @returns The result of the expression in the input buffer or `undefined` if the input could not be evaluated.
 	 */
-	crunch(): void;
+	crunch(saveToInd?: boolean): Decimal | undefined;
 };
 
 const CalculatorContextObject = createContext<CalculatorContext | null>(null);
@@ -44,12 +48,15 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 		memory.empty();
 	}
 
-	function crunch() {
+	function crunch(saveToInd = false) {
 		const result = calculate(buffer.value, memory.ans, memory.ind);
 		if (typeof result === "undefined") return;
 
 		buffer.clean();
 		memory.setAns(result);
+		if (saveToInd) memory.setInd(result);
+
+		return result;
 	}
 
 	return (
