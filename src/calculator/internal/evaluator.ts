@@ -28,9 +28,6 @@ const E = Decimal.exp(1);
  * 	{ type: "oper", name: "+" },
  * ]); // => Decimal(2)
  * ```
- *
- * @todo Returns `undefined` when evaluating function without an argument
- * @todo Returns `undefined` when input doesn't collapse into a single number
  */
 export default function evaluate(parsedArray: Token[], ans: Decimal, ind: Decimal): Result<Decimal, EvalError> {
 	const calcStack: Decimal[] = [];

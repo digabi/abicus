@@ -23,7 +23,7 @@ export type TokenId = ReturnType<TokenMatcher[1]>["type"];
 
 /**
  * A utility type to get the type of a `Token` by type id.
- * @see {@link TokenId}
+ * @see {@link TokenId} for a comprehensive list of the different token types.
  * @example
  * ```typescript
  * type ConstantToken = Token<"cons">

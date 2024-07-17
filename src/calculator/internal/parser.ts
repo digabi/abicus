@@ -17,14 +17,12 @@ export type SyntaxError = Extract<ReturnType<typeof syntaxCheck>, Err<never, any
  *
  * @example
  * ```typescript
- * const result: Token[] = parse([
+ * parse([
  * 	{ type: "litr", value: new Decimal(1) },
  * 	{ type: "oper", name: "+" },
  * 	{ type: "litr", value: new Decimal(1) },
- * ]); // "1 + 1" => "1 1 +"
+ * ]) // "1 + 1" => "1 1 +"
  * ```
- *
- * @todo Undefined behaviour when given unbalanced round brackets
  *
  * @see Shunting Yard Algorithm: {@link https://en.wikipedia.org/wiki/Shunting_yard_algorithm}
  */
@@ -93,7 +91,6 @@ export default function parse(tokens: Token[]): Result<Token[], SyntaxError> {
  *
  * Iterates over the tokens in the expression and checks rules like "are the brackets balanced"
  * and that all operators have operands.
- *
  */
 function syntaxCheck(tokens: Token[]) {
 	// --- Bracket balance ---
