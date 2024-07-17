@@ -110,23 +110,29 @@ function syntaxCheck(tokens: Token[]) {
 	const cons = { type: "cons" satisfies TokenId } as const;
 	const memo = { type: "memo" satisfies TokenId } as const;
 
+	const numLike = union(litr, cons, memo);
+
 	// Basic syntax rules:
 	for (let i = 0; i < tokens.length; i++) {
 		const lhs = tokens[i - 1] ?? null;
 		const cur = tokens[i]!;
 		const rhs = tokens[i + 1] ?? null;
 
-		const hasSyntaxError = match([lhs, cur, rhs])
-			// Operators must have operand on their left side:
-			.with([null, oper, any], () => true)
-			// Operators must have operand on their right side:
-			.with([any, oper, null], () => true)
+		const window = [lhs, cur, rhs];
+
+		const hasSyntaxError = match(window)
 			// Function name must have left bracket on its right side:
 			.with([any, func, not(lbrk)], () => true)
-			// Number literal, constant, or memory reference can only have operator or left bracket on its left side:
-			.with([not(union(null, oper, lbrk)), union(litr, cons, memo), P.any], () => true)
-			// Number literal, constant, or memory reference can only have operator or right bracket on its right side:
-			.with([any, union(litr, cons, memo), not(union(oper, rbrk, null))], () => true)
+			// Operators must have operands on both sides:
+			// - The left-hand-side of the operator allows for anything number-like or a right-bracket
+			// - The right-hand-side allows for both of the above and a function call
+			.with([union(null, not(union(numLike, rbrk))), oper, any], () => true)
+			.with([any, oper, union(null, not(union(numLike, func, rbrk)))], () => true)
+			// Number can only have operator or a bracket on its side:
+			// - On the left side, there can be a left-bracket
+			// - Conversely on the right side it must be a right-bracket
+			.with([not(union(null, oper, lbrk)), numLike, P.any], () => true)
+			.with([any, numLike, not(union(oper, rbrk, null))], () => true)
 			.otherwise(() => false);
 
 		if (hasSyntaxError) return false;
