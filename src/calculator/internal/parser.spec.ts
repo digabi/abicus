@@ -56,6 +56,17 @@ run("Associativity", [
 	],
 ]);
 
+run("Unary minus", [
+	[
+		[t.minus, litr(3), t.times, litr(3)],
+		[litr(3), litr(3), t.times, t.minus],
+	],
+	[
+		[litr(3), t.times, t.lbrk, t.minus, litr(3), t.rbrk],
+		[litr(3), t.minus, litr(3), t.times],
+	],
+]);
+
 run("Functions", [
 	[
 		[t.sin, t.lbrk, litr(2), t.plus, litr(3), t.rbrk, t.pow, litr(4)],
@@ -77,7 +88,7 @@ function run(title: string, cases: [input: Token[], expected: Token[]][]) {
 			const title = `${prettify(input)} => ${prettify(expected)}`;
 
 			const result = parse(input);
-			if (!result) expect.unreachable("Unparseable test case");
+			if (!result) expect.unreachable(`Unparseable test case: ${title}`);
 
 			const pretty = prettify(result);
 			const wanted = prettify(expected);
