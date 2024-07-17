@@ -1,4 +1,4 @@
-import { useRef, KeyboardEvent } from "react";
+import { useRef, KeyboardEvent, FocusEvent, useEffect } from "react";
 import { flushSync } from "react-dom";
 
 import { useCalculator } from "#/state";
@@ -71,6 +71,25 @@ export default function CalculatorInput() {
 		}
 	}
 
+	function onBlur(e: FocusEvent<HTMLInputElement>) {
+		// Timeout needed because of Safari (of course)
+		setTimeout(() => {
+			e.target.scrollLeft = e.target.scrollWidth;
+		}, 0);
+	}
+
+	useEffect(
+		function BufferInputKeypadInputListener() {
+			const element = elementRef.current;
+			if (!element) return;
+
+			if (document.activeElement !== element) {
+				element.scrollLeft = element.scrollWidth;
+			}
+		},
+		[buffer.value]
+	);
+
 	return (
 		<input
 			type="text"
@@ -78,6 +97,7 @@ export default function CalculatorInput() {
 			value={buffer.value}
 			onChange={onChange}
 			onKeyDown={onKeyDown}
+			onBlur={onBlur}
 			x={[
 				"absolute bottom-0",
 				"w-full h-full",
