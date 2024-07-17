@@ -19,10 +19,6 @@ export default function useBuffer() {
 		setRawBuffer("");
 	}
 
-	function set(text: string) {
-		setRawBuffer(text);
-	}
-
 	function add(text: string) {
 		setRawBuffer(v => v + text);
 	}
@@ -34,13 +30,13 @@ export default function useBuffer() {
 	return {
 		/** The text in the input buffer */
 		value: valueToUse,
+		/** *Overwrite* the input buffer */
+		set: setRawBuffer,
 		/** Empty the input buffer while also setting the status to "clean" */
 		empty,
 		/** *Append* text to the input buffer */
 		add,
-		/** *Overwrite* the input buffer */
-		set,
-		/** *Delete* the last charact */
+		/** *Delete* the last character or a full token if applicable */
 		del,
 
 		/** Has the buffer been changed since the last `empty` or `clean` call? An empty buffer is inherently dirty. */
