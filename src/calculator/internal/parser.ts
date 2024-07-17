@@ -126,6 +126,8 @@ function syntaxCheck(tokens: Token[]) {
 			// Operators must have operands on both sides:
 			// - The left-hand-side of the operator allows for anything number-like or a right-bracket
 			// - The right-hand-side allows for both of the above and a function call
+			// - *But* the above doesn't apply with unary minus: there e.g. "3 + (-3)" is allowed
+			.with([union(null, lbrk), { type: "oper", name: "-" }, union(numLike, func)], () => false)
 			.with([union(null, not(union(numLike, rbrk))), oper, any], () => true)
 			.with([any, oper, union(null, not(union(numLike, func, rbrk)))], () => true)
 			// Number can only have operator or a bracket on its side:
