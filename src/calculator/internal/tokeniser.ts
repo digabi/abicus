@@ -196,7 +196,7 @@ function* tokens(expression: string): Generator<Result<Token, LexicalError>, voi
 			continue eating;
 		}
 
-		yield err({ type: "LEXICAL_ERROR", idx });
+		yield err({ type: "UNKNOWN_TOKEN", idx });
 		return;
 	}
 }
