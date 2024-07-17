@@ -40,7 +40,9 @@ export default function Screen() {
 					]}
 				>
 					<span x="pointer-events-none text-slate-500">{"="}</span>
-					{!buffer.isDirty && <output>{memory.ans.toDecimalPlaces(8).toString().replace(".", ",")}</output>}
+					{!buffer.isDirty && (
+						<output>{memory.ans.toDecimalPlaces(8).toString().replace(".", ",").replace("-", "−")}</output>
+					)}
 				</div>
 
 				{/* Input buffer */}
