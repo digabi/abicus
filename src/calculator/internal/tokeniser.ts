@@ -175,7 +175,7 @@ export function* tokens(expression: string) {
 			continue eating;
 		}
 
-		if (__DEV__ && slice.startsWith("improbatur")) {
+		if (import.meta.env.DEV && slice.startsWith("improbatur")) {
 			throw Error("Simulated error: This is a simulated error for testing purposes");
 		}
 
