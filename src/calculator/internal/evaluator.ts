@@ -1,27 +1,38 @@
-import { match } from "ts-pattern";
-import { Token } from "./tokeniser";
 import Decimal from "decimal.js";
+import { err, ok, Result } from "neverthrow";
+import { match } from "ts-pattern";
+
+import { Token } from "./tokeniser";
+
+/**
+ * Represents an error where the input expression couldn't be evaluated fully.
+ * This means that the parser's syntax check isn't comprehensive enough, since
+ * a properly formed expression should always collapse.
+ */
+export type EvalError = { type: "UNCOLLAPSIBLE_EXPR" };
 
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
 
 /**
- * Evaluates an array of `Token`s in Reverse Polish Notation into a result.
+ * Evaluates an array of `Token`s in Reverse Polish Notation into a `Result<Decimal, number> where
+ * - `Decimal` is the decimal.js object that was calculated, or
+ * - `number` is the last size of the internal calculation stack if the input did not collapse
+ *   (i.e. the input couldn't be calculated because it had an error)
  *
  * @example
  * ```typescript
  * const result: Decimal = evaluate([
- * 	{ type: "lit", value: new Decimal(1) },
- * 	{ type: "lit", value: new Decimal(1) },
- * 	{ type: "op", name: "+" },
- * ]);
- * debugDisplayExpression(result) // => "[ 2 ]"
+ * 	{ type: "litr", value: new Decimal(1) },
+ * 	{ type: "litr", value: new Decimal(1) },
+ * 	{ type: "oper", name: "+" },
+ * ]); // => Decimal(2)
  * ```
  *
  * @todo Returns `undefined` when evaluating function without an argument
  * @todo Returns `undefined` when input doesn't collapse into a single number
  */
-export default function evaluate(parsedArray: Token[], ans: Decimal, ind: Decimal) {
+export default function evaluate(parsedArray: Token[], ans: Decimal, ind: Decimal): Result<Decimal, EvalError> {
 	const calcStack: Decimal[] = [];
 
 	for (const token of parsedArray) {
@@ -76,7 +87,7 @@ export default function evaluate(parsedArray: Token[], ans: Decimal, ind: Decima
 			.exhaustive();
 	}
 
-	if (calcStack.length !== 1) return;
+	if (calcStack.length !== 1) return err({ type: "UNCOLLAPSIBLE_EXPR" });
 
-	return calcStack[0];
+	return ok(calcStack[0]!);
 }
