@@ -175,6 +175,10 @@ export function* tokens(expression: string) {
 			continue eating;
 		}
 
+		if (__DEV__ && slice.startsWith("improbatur")) {
+			throw Error("Simulated error: This is a simulated error for testing purposes");
+		}
+
 		matching: for (const [regex, build] of tokenMatchers) {
 			const str = regex.exec(slice)?.[0];
 

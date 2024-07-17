@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 /// <reference types="vitest" />
 
 import { defineConfig } from "vite";
@@ -18,6 +19,10 @@ export default defineConfig(async () => ({
 			},
 		}),
 	],
+
+	define: {
+		__DEV__: "import.meta.env.DEV",
+	},
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//
