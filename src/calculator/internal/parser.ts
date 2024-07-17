@@ -133,7 +133,7 @@ function syntaxCheck(tokens: Token[]) {
 			// Number can only have operator or a bracket on its side:
 			// - On the left side, there can be a left-bracket
 			// - Conversely on the right side it must be a right-bracket
-			.with([not(union(null, oper, lbrk)), numLike, P.any], () => true)
+			.with([not(union(null, oper, lbrk)), numLike, any], () => true)
 			.with([any, numLike, not(union(oper, rbrk, null))], () => true)
 			.otherwise(() => false);
 
