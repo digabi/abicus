@@ -58,7 +58,7 @@ function run(title: string, cases: [input: Token[], expected: number | Decimal][
 			const result = evaluate(input, d(0), d(0));
 			const wanted = d(expected).toDecimalPlaces(10);
 
-			if (result.isErr()) expect.unreachable("Test case could not be evaluated");
+			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title}`);
 
 			test(title, () => expect(result.value).toEqual(wanted));
 		}

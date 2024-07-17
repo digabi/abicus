@@ -52,7 +52,7 @@ function run(title: string, cases: [input: string, expected: Token[]][]) {
 			const title = `"${input}" => ${prettify(expected)}`;
 
 			const tokens = tokenise(input);
-			if (tokens.isErr()) expect.unreachable("Test case could not be tokenised");
+			if (tokens.isErr()) expect.unreachable(`Test case could not be tokenised: ${title}`);
 
 			const result = prettify(tokens.value);
 			const wanted = prettify(expected);

@@ -88,7 +88,7 @@ function run(title: string, cases: [input: Token[], expected: Token[]][]) {
 			const title = `${prettify(input)} => ${prettify(expected)}`;
 
 			const result = parse(input);
-			if (result.isErr()) expect.unreachable(`Unparseable test case: ${title}`);
+			if (result.isErr()) expect.unreachable(`Test case could not be parsed: ${title}`);
 
 			const pretty = prettify(result.value);
 			const wanted = prettify(expected);
