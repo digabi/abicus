@@ -50,13 +50,15 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 
 	function crunch(saveToInd = false) {
 		const result = calculate(buffer.value, memory.ans, memory.ind);
-		if (typeof result === "undefined") return;
+		if (result.isErr()) return;
+
+		const { value } = result;
 
 		buffer.clean();
-		memory.setAns(result);
-		if (saveToInd) memory.setInd(result);
+		memory.setAns(value);
+		if (saveToInd) memory.setInd(value);
 
-		return result;
+		return value;
 	}
 
 	return (
