@@ -1,90 +1,141 @@
 import Decimal from "decimal.js";
-import { err, ok, Result } from "neverthrow";
-import { match } from "ts-pattern";
+import { isMatching, match, P, Pattern } from "ts-pattern";
+import { ok, err, Ok, Result } from "neverthrow";
 
 import { Token } from "./tokeniser";
-
-/**
- * Represents an error where the input expression couldn't be evaluated fully.
- * This means that the parser's syntax check isn't comprehensive enough, since
- * a properly formed expression should always collapse.
- */
-export type EvalError = { type: "UNCOLLAPSIBLE_EXPR" };
 
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
 
+export type SyntaxErrorId = "UNEXPECTED_EOF" | "UNEXPECTED_TOKEN" | "NO_LHS_BRACKET" | "NO_RHS_BRACKET";
+export type EvalResult = Result<Decimal, SyntaxErrorId>;
+
 /**
- * Evaluates an array of `Token`s in Reverse Polish Notation into a `Result<Decimal, number> where
- * - `Decimal` is the decimal.js object that was calculated, or
- * - `number` is the last size of the internal calculation stack if the input did not collapse
- *   (i.e. the input couldn't be calculated because it had an error)
+ * Parses an evaluates a mathematical expression as a list of `Token`s into a `Decimal` value.
  *
- * @example
- * ```typescript
- * const result: Decimal = evaluate([
- * 	{ type: "litr", value: new Decimal(1) },
- * 	{ type: "litr", value: new Decimal(1) },
- * 	{ type: "oper", name: "+" },
- * ]); // => Decimal(2)
- * ```
+ * The returned `Result` is either
+ * - The value of the given expression as a `Decimal` object, or
+ * - A string representing a syntax error in the input
+ *
  */
-export default function evaluate(parsedArray: Token[], ans: Decimal, ind: Decimal): Result<Decimal, EvalError> {
-	const calcStack: Decimal[] = [];
+export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): EvalResult {
+	// This function is an otherwise stock-standard Pratt parser but instead
+	// of building a full AST as the `left` value, we instead eagerly evaluate
+	// the sub-expressions in the `led` parselets.
+	//
+	// If the above is gibberish to you, it's recommended to read up on Pratt parsing before
+	// attempting to change this algorithm. Good explainers are e.g. (WayBackMachine archived):
+	// - https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/ (https://u.ri.fi/1n)
+	// - https://martin.janiczek.cz/2023/07/03/demystifying-pratt-parsers.html (https://u.ri.fi/1o)
+	// - https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html (https://u.ri.fi/1p)
+	// - https://abarker.github.io/typped/pratt_parsing_intro.html (https://u.ri.fi/1q)
 
-	for (const token of parsedArray) {
-		match(token)
-			.with({ type: "lbrk" }, () => null)
-			.with({ type: "rbrk" }, () => null)
+	let idx = -1; // Incremented by the first `next()` call into the valid index zero
 
-			.with({ type: "litr" }, token => calcStack.push(token.value))
-			.with({ type: "memo", name: "ans" }, () => calcStack.push(ans))
-			.with({ type: "memo", name: "ind" }, () => calcStack.push(ind))
-
-			.with({ type: "cons", name: "pi" }, () => calcStack.push(PI))
-			.with({ type: "cons", name: "e" }, () => calcStack.push(E))
-
-			.with({ type: "func" }, token => {
-				const x = calcStack.pop();
-				const f = match(token.name)
-					.with("ln", () => Decimal.ln)
-					.with("log", () => Decimal.log10)
-					.with("sqrt", () => Decimal.sqrt)
-					.with("sin", () => Decimal.sin)
-					.with("cos", () => Decimal.cos)
-					.with("tan", () => Decimal.tan)
-					.with("asin", () => Decimal.asin)
-					.with("acos", () => Decimal.acos)
-					.with("atan", () => Decimal.atan)
-					.exhaustive();
-
-				if (x === undefined) return;
-
-				const result = f.call(Decimal, x);
-
-				calcStack.push(result);
-			})
-
-			.with({ type: "oper" }, token => {
-				const a = calcStack.pop();
-				const b = calcStack.pop() ?? new Decimal(0);
-
-				if (a === undefined) return;
-
-				const result = match(token.name)
-					.with("+", () => b.plus(a))
-					.with("-", () => b.minus(a))
-					.with("*", () => b.times(a))
-					.with("/", () => b.div(a))
-					.with("^", () => b.pow(a))
-					.exhaustive();
-
-				calcStack.push(result);
-			})
-			.exhaustive();
+	/** Consumes the next token from the input and returns it */
+	function next() {
+		return tokens[++idx];
 	}
 
-	if (calcStack.length !== 1) return err({ type: "UNCOLLAPSIBLE_EXPR" });
+	/** Peeks at the next unconsumed token in the input */
+	function peek() {
+		return tokens[idx + 1];
+	}
 
-	return ok(calcStack[0]!);
+	/**
+	 * Accepts a `Pattern` for a token and returns it as a `Result`.
+	 * - The result is `Ok` with the next token wrapped if the next token matches the pattern.
+	 * - The result is `Err` if the next token does not match the pattern.
+	 *
+	 * Can either just peek at the next token or consume it, based on the value of the second argument.
+	 */
+	function expect(pattern: Pattern.Pattern<Token>, consumeNext: boolean): Result<Token, SyntaxErrorId> {
+		const token = consumeNext ? next() : peek();
+
+		if (!token) return err("UNEXPECTED_EOF");
+		if (!isMatching(pattern, token)) return err("UNEXPECTED_TOKEN");
+
+		return ok(token);
+	}
+
+	/**
+	 * The null denotation of a token.
+	 * Also known as the "prefix" or "head" handler.
+	 *
+	 * Returns the value of a sub-expression without a preceeding (i.e. left) expression (i.e. value).
+	 */
+	function nud(token: Token | undefined): EvalResult {
+		return match(token)
+			.with(undefined, () => err("UNEXPECTED_EOF" as const))
+			.with({ type: "litr" }, token => ok(token.value))
+			.with({ type: "cons", name: "pi" }, () => ok(PI))
+			.with({ type: "cons", name: "e" }, () => ok(E))
+			.with({ type: "memo", name: "ans" }, () => ok(ans))
+			.with({ type: "memo", name: "ind" }, () => ok(ind))
+			.with({ type: "oper", name: "-" }, () => evalExpr(0).map(right => right.neg()))
+			.with({ type: "lbrk" }, () =>
+				evalExpr(0).andThen(value =>
+					expect({ type: "rbrk" }, true)
+						.map(() => value)
+						.mapErr(() => "NO_RHS_BRACKET" as const)
+				)
+			)
+			.with({ type: "func" }, token => {
+				return expect({ type: "lbrk" }, false).andThen(() =>
+					evalExpr(0) // The RBP here shouldn't matter so we default to zero
+						.map(value => Decimal[token.name](value))
+				);
+			})
+			.otherwise(() => err("UNEXPECTED_TOKEN"));
+	}
+
+	/**
+	 * The left denotation of a token.
+	 * Also known as the "infix" or "tail" handler.
+	 *
+	 * Returns the value of a sub-expression with a preceeding (i.e. left) expression (i.e. value).
+	 */
+	function led(token: Token | undefined, left: Ok<Decimal, SyntaxErrorId>): EvalResult {
+		return (
+			match(token)
+				.with(undefined, () => err("UNEXPECTED_EOF" as const))
+				.with({ type: "litr" }, () => err("UNEXPECTED_TOKEN" as const))
+				.with({ type: "cons", name: "pi" }, () => ok(PI))
+				.with({ type: "cons", name: "e" }, () => ok(E))
+				.with({ type: "memo", name: "ans" }, () => ok(ans))
+				.with({ type: "memo", name: "ind" }, () => ok(ind))
+				.with({ type: "oper", name: "+" }, () => evalExpr(2).map(right => left.value.add(right)))
+				.with({ type: "oper", name: "-" }, () => evalExpr(2).map(right => left.value.sub(right)))
+				.with({ type: "oper", name: "*" }, () => evalExpr(3).map(right => left.value.mul(right)))
+				.with({ type: "oper", name: "/" }, () => evalExpr(3).map(right => left.value.div(right)))
+				.with({ type: "oper", name: "^" }, () => evalExpr(3).map(right => left.value.pow(right)))
+				// Right bracket should never get parsed by anything else than the left bracket parselet
+				.with({ type: "rbrk" }, () => err("NO_LHS_BRACKET" as const))
+				.otherwise(() => err("UNEXPECTED_TOKEN"))
+		);
+	}
+
+	function evalExpr(rbp: number): EvalResult {
+		let left = nud(next());
+
+		while (left.isOk() && peek() && lbp(peek()!) > rbp) {
+			left = led(next(), left);
+		}
+
+		return left;
+	}
+
+	return evalExpr(0);
+}
+
+/** Returns the Left Binding Power of the given token */
+function lbp(token: Token) {
+	return match(token)
+		.with({ type: P.union("lbrk", "rbrk") }, () => 0)
+		.with({ type: P.union("litr", "memo", "cons") }, () => 1)
+		.with({ type: "oper", name: P.union("+", "-") }, () => 2)
+		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
+		.with({ type: "oper", name: "^" }, () => 4)
+		.with({ type: "func" }, () => 5)
+		.exhaustive();
 }
