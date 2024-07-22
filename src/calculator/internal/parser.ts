@@ -1,25 +1,34 @@
+import { Err, err, ok, Result } from "neverthrow";
 import { isMatching, match, P } from "ts-pattern";
+
 import { Token, TokenId } from "./tokeniser";
+
+/**
+ * Represents an error where the parser's syntax check found illegal input.
+ * The `idx` field points to the offending token in the input.
+ */
+// The neverthrow package doesn't export a `ExtractErr` utility yet
+export type SyntaxError = Extract<ReturnType<typeof syntaxCheck>, Err<never, any>> extends Err<any, infer T>
+	? T
+	: never;
 
 /**
  * Parses a iterable of `Token`s into Reverse Polish Notation using the Shunting Yard Algorithm.
  *
  * @example
  * ```typescript
- * const result: Token[] = parse([
- * 	{ type: "lit", value: new Decimal(1) },
- * 	{ type: "op", name: "+" },
- * 	{ type: "lit", value: new Decimal(1) },
- * ]);
- * debugDisplayExpression(result) // => "[ 1 1 + ]"
+ * parse([
+ * 	{ type: "litr", value: new Decimal(1) },
+ * 	{ type: "oper", name: "+" },
+ * 	{ type: "litr", value: new Decimal(1) },
+ * ]) // "1 + 1" => "1 1 +"
  * ```
- *
- * @todo Undefined behaviour when given unbalanced round brackets
  *
  * @see Shunting Yard Algorithm: {@link https://en.wikipedia.org/wiki/Shunting_yard_algorithm}
  */
-export default function parse(tokens: Token[]) {
-	if (!syntaxCheck(tokens)) return;
+export default function parse(tokens: Token[]): Result<Token[], SyntaxError> {
+	const syntaxResult = syntaxCheck(tokens);
+	if (syntaxResult.isErr()) return syntaxResult;
 
 	const outputStack: Token[] = []; // Final RPN stack
 	const sidingStack: Token[] = []; // AKA the operator stack
@@ -36,7 +45,7 @@ export default function parse(tokens: Token[]) {
 				let topmost = sidingStack.at(-1);
 
 				while (!isMatching({ type: "lbrk" satisfies TokenId }, topmost)) {
-					if (!topmost) return; // TODO: Unbalanced parens
+					if (!topmost) return;
 					outputStack.push(topmost);
 					sidingStack.pop();
 					topmost = sidingStack.at(-1);
@@ -74,7 +83,7 @@ export default function parse(tokens: Token[]) {
 		outputStack.push(sidingStack.pop()!);
 	}
 
-	return outputStack;
+	return ok(outputStack);
 }
 
 /**
@@ -82,23 +91,35 @@ export default function parse(tokens: Token[]) {
  *
  * Iterates over the tokens in the expression and checks rules like "are the brackets balanced"
  * and that all operators have operands.
- *
- * Returns `true` if the input passes and `false` if there is a syntax error somewhere in the input.
  */
 function syntaxCheck(tokens: Token[]) {
-	// Bracket balance:
+	// --- Bracket balance ---
+
 	let bracketStackSize = 0;
-	for (const token of tokens) {
-		bracketStackSize += match(token.type)
+	let startOfUnbalance = 0;
+	for (let i = 0; i < tokens.length; i++) {
+		bracketStackSize += match(tokens[i]!.type)
 			.with("lbrk", () => 1)
 			.with("rbrk", () => -1)
 			.otherwise(() => 0);
 
+		if (bracketStackSize === 0) startOfUnbalance = i;
+
 		// All right brackets must have a left bracket somewhere:
-		if (bracketStackSize < 0) return false;
+		if (bracketStackSize < 0)
+			return err({
+				type: "UNBALANCED_BRAKS" as const,
+				idx: startOfUnbalance,
+			});
 	}
 
-	if (bracketStackSize !== 0) return false;
+	if (bracketStackSize !== 0)
+		return err({
+			type: "UNBALANCED_BRAKS" as const,
+			idx: startOfUnbalance,
+		});
+
+	// --- Basic syntax rules ---
 
 	// Shorthands to avoid writing these over and over:
 	const { any, union, not } = P;
@@ -120,27 +141,27 @@ function syntaxCheck(tokens: Token[]) {
 
 		const window = [lhs, cur, rhs];
 
-		const hasSyntaxError = match(window)
+		const errorType = match(window)
 			// Function name must have left bracket on its right side:
-			.with([any, func, not(lbrk)], () => true)
+			.with([any, func, not(lbrk)], () => "NO_FUNC_BRAK" as const)
 			// Operators must have operands on both sides:
 			// - The left-hand-side of the operator allows for anything number-like or a right-bracket
 			// - The right-hand-side allows for both of the above and a function call
 			// - *But* the above doesn't apply with unary minus: there e.g. "3 + (-3)" is allowed
-			.with([union(null, lbrk), { type: "oper", name: "-" }, union(numLike, func)], () => false)
-			.with([union(null, not(union(numLike, rbrk))), oper, any], () => true)
-			.with([any, oper, union(null, not(union(numLike, func, lbrk)))], () => true)
+			.with([union(null, lbrk), { type: "oper", name: "-" }, union(numLike, func)], () => null)
+			.with([union(null, not(union(numLike, rbrk))), oper, any], () => "NO_LHS_OPERAND" as const)
+			.with([any, oper, union(null, not(union(numLike, func, lbrk)))], () => "NO_RHS_OPERAND" as const)
 			// Number can only have operator or a bracket on its side:
 			// - On the left side, there can be a left-bracket
 			// - Conversely on the right side it must be a right-bracket
-			.with([not(union(null, oper, lbrk)), numLike, any], () => true)
-			.with([any, numLike, not(union(oper, rbrk, null))], () => true)
-			.otherwise(() => false);
+			.with([not(union(null, oper, lbrk)), numLike, any], () => "NUM_INVALID_LHS" as const)
+			.with([any, numLike, not(union(oper, rbrk, null))], () => "NUM_INVALID_RHS" as const)
+			.otherwise(() => null);
 
-		if (hasSyntaxError) return false;
+		if (errorType) return err({ type: errorType, idx: i });
 	}
 
-	return true;
+	return ok(null);
 }
 
 function precedence(token: Token<"oper">): number {

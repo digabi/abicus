@@ -55,10 +55,12 @@ function run(title: string, cases: [input: Token[], expected: number | Decimal][
 		for (const [input, expected] of cases) {
 			const title = `${prettify(input)} = ${d(expected).toDecimalPlaces(10)}`;
 
-			const result = evaluate(input, d(0), d(0))?.toDecimalPlaces(10);
+			const result = evaluate(input, d(0), d(0));
 			const wanted = d(expected).toDecimalPlaces(10);
 
-			test(title, () => expect(result).toEqual(wanted));
+			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title}`);
+
+			test(title, () => expect(result.value).toEqual(wanted));
 		}
 	});
 }

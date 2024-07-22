@@ -1,5 +1,12 @@
 import Decimal from "decimal.js";
+import { err, ok, Result } from "neverthrow";
 import { match } from "ts-pattern";
+
+/**
+ * Represents an error where the tokeniser couldn't match the input to any token.
+ * The `idx` field points to the start of the unknown part in the input.
+ */
+export type LexicalError = { type: "UNKNOWN_TOKEN"; idx: number };
 
 /** A tuple of Regex and a token builder function. See {@link tokenMathcers} for details. */
 type TokenMatcher = (typeof tokenMatchers)[number];
@@ -16,7 +23,7 @@ export type TokenId = ReturnType<TokenMatcher[1]>["type"];
 
 /**
  * A utility type to get the type of a `Token` by type id.
- * @see {@link TokenId}
+ * @see {@link TokenId} for a comprehensive list of the different token types.
  * @example
  * ```typescript
  * type ConstantToken = Token<"cons">
@@ -132,37 +139,34 @@ const tokenMatchers = [
 ] satisfies [RegExp, (str: string) => { type: string }][];
 
 /**
- * Reads an input expression and returns an array of `Token`s as a tagged result.
- *
- * If there's lexical errors in the input, the value of the `error` prop will be the position
- * of the *first* error as an index of the input string.
+ * Reads an input expression and returns a `Result<Token[], number>` where
+ * - `Token[]` is the tokenised expression, or
+ * - `number` is the starting index of the *first lexical error* (i.e. unrecognised word) in the input expression.
  *
  * @see {@link Token}
  * @example
  * ```typescript
- * tokenise("1 + 2") // => { ok: true, value: [{ type: "lit", value: Decimal(1) },...] }
- * tokenise("1 ö 2") // => { ok: false, error: 2 } // 2 === "1 ö 2".indexOf("ö")
+ * tokenise("1 + 2") // => Ok([{ type: "litr", value: Decimal(1) }, { type: "oper", name: "+" }, ...])
+ * tokenise("1 ö 2") // => Err(2) // 2 === "1 ö 2".indexOf("ö")
  * ```
  */
-export default function tokenise(expression: string) {
-	const output = [...tokens(expression)];
-	const errIdx = output.find(result => !result.ok)?.error;
-	const hasErr = typeof errIdx !== "undefined";
-
-	return hasErr
-		? ({ ok: false, error: errIdx } as const)
-		: ({ ok: true, value: output.map(result => result.value as Token) } as const);
+export default function tokenise(expression: string): Result<Token[], LexicalError> {
+	return Result.combine([...tokens(expression)]);
 }
 
 /**
- * Reads an input expression and returns a `Generator` of `Token`s as tagged results.
+ * Reads an input expression and returns a `Generator` of `Result<Token, number>` where
+ * - `Token` is a token object as built by one of the matchers in {@link tokenMatchers}, or
+ * - `number` is the index (of the passed in string) where none of the matchers could be applied,
+ *   meaning that there is a lexical error at that point in the input.
  *
- * You probably want to use `tokenise` to get an array of `Token`s instead.
+ * The generator stops on the first lexical error.
+ * I.e. if an error is encountered, it will be the last value output by the generator.
  *
  * @see {@link tokenise}
  * @see {@link Token}
  */
-export function* tokens(expression: string) {
+function* tokens(expression: string): Generator<Result<Token, LexicalError>, void, void> {
 	const end = expression.length;
 	let idx = 0;
 
@@ -188,11 +192,11 @@ export function* tokens(expression: string) {
 
 			idx += str.length;
 
-			yield { ok: true, value: token } as const;
+			yield ok(token);
 			continue eating;
 		}
 
-		yield { ok: false, error: idx } as const;
+		yield err({ type: "UNKNOWN_TOKEN", idx });
 		return;
 	}
 }
