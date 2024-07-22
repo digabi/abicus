@@ -23,9 +23,9 @@ export const T = {
 export const t = {
 	pi: T.cons("pi"),
 	e: T.cons("e"),
-	plus: T.oper("+"),
-	minus: T.oper("-"),
-	times: T.oper("*"),
+	add: T.oper("+"),
+	sub: T.oper("-"),
+	mul: T.oper("*"),
 	div: T.oper("/"),
 	pow: T.oper("^"),
 	sin: T.func("sin"),
