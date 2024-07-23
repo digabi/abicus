@@ -1,11 +1,10 @@
 import Decimal from "decimal.js";
+import { err, ok } from "neverthrow";
 
 import evaluate from "./internal/evaluator";
 import tokenise from "./internal/tokeniser";
-import { err, ok } from "neverthrow";
 
 export type { Token, TokenId } from "./internal/tokeniser";
-
 export { tokenise, evaluate };
 
 export function calculate(expression: string, ans: Decimal, ind: Decimal) {
