@@ -32,27 +32,12 @@ export default function prettify(expression: string | Token[]) {
  * to the input token array.
  */
 function* prettiedCharacters(tokens: Token[]) {
+	const { any, not, union } = P;
+
 	for (let i = 0; i < tokens.length; i++) {
-		const lhs = tokens[i - 1];
+		const lhs = tokens[i - 1] ?? null;
 		const cur = tokens[i]!;
-
-		const shouldHaveSpace =
-			lhs &&
-			match([lhs, cur])
-				.with(
-					// No spaces at bracket inside boundaries: "(1 + 1)"
-					[P._, { type: "rbrk" }],
-					[{ type: "lbrk" }, P._],
-					// No space between function name and opening brakcet: "sin(…"
-					[{ type: "func" }, { type: "lbrk" }],
-					// Disabled: No space on either side of the power operator: "2^5"
-					// [P._, { type: "oper", name: "^" }],
-					// [{ type: "oper", name: "^" }, P._],
-					() => false
-				)
-				.otherwise(() => true);
-
-		if (shouldHaveSpace) yield " ";
+		const rhs = tokens[i + 1] ?? null;
 
 		const formattedToken = match(cur)
 			.with({ type: "litr" }, token => token.value.toString().replace(".", ","))
@@ -63,12 +48,32 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "cons", name: "pi" }, () => "π")
 			.with({ type: "cons", name: "e" }, () => "e")
 			.with({ type: "func", name: "sqrt" }, () => "√")
-			.with({ type: "func", name: P.any }, token => token.name)
+			.with({ type: "func", name: any }, token => token.name)
 			.with({ type: "oper", name: "*" }, () => "×")
 			.with({ type: "oper", name: "-" }, () => "−")
-			.with({ type: "oper", name: P.any }, token => token.name)
+			.with({ type: "oper", name: any }, token => token.name)
 			.exhaustive();
 
 		yield formattedToken;
+
+		// Decide whether we want a space between the *current* and *left-hand-side* tokens:
+		const shouldHaveSpace =
+			(lhs || rhs) &&
+			match([lhs, cur, rhs])
+				.with(
+					// No spaces at bracket inside boundaries: "(1 + 1)"
+					[any, { type: "lbrk" }, not(null)],
+					[any, any, { type: "rbrk" }],
+					// No space between function name and opening brakcet: "sin(…"
+					[any, { type: "func" }, { type: "lbrk" }],
+					// Negative numbers: e.g. "-5" and "-5 + 5" instead of "- 5" and "- 5 + 5"
+					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
+					// No space at the end
+					[any, any, null],
+					() => false
+				)
+				.otherwise(() => true);
+
+		if (shouldHaveSpace) yield " ";
 	}
 }
