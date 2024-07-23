@@ -99,10 +99,6 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): E
 		return (
 			match(token)
 				.with(undefined, () => err("UNEXPECTED_EOF" as const))
-				.with({ type: "cons", name: "pi" }, () => ok(PI))
-				.with({ type: "cons", name: "e" }, () => ok(E))
-				.with({ type: "memo", name: "ans" }, () => ok(ans))
-				.with({ type: "memo", name: "ind" }, () => ok(ind))
 				.with({ type: "oper", name: "+" }, () => evalExpr(2).map(right => left.value.add(right)))
 				.with({ type: "oper", name: "-" }, () => evalExpr(2).map(right => left.value.sub(right)))
 				.with({ type: "oper", name: "*" }, () => evalExpr(3).map(right => left.value.mul(right)))
