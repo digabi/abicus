@@ -99,7 +99,6 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): E
 		return (
 			match(token)
 				.with(undefined, () => err("UNEXPECTED_EOF" as const))
-				.with({ type: "litr" }, () => err("UNEXPECTED_TOKEN" as const))
 				.with({ type: "cons", name: "pi" }, () => ok(PI))
 				.with({ type: "cons", name: "e" }, () => ok(E))
 				.with({ type: "memo", name: "ans" }, () => ok(ans))
@@ -125,7 +124,14 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): E
 		return left;
 	}
 
-	return evalExpr(0);
+	const result = evalExpr(0);
+
+	// After the root eval call there shouldn't be anything to peek at
+	if (peek()) {
+		return err("UNEXPECTED_TOKEN");
+	} else {
+		return result;
+	}
 }
 
 /** Returns the Left Binding Power of the given token */
