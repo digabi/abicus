@@ -10,9 +10,11 @@ Abicus is a simple **scientific calculator** built on web technologies.
 Abicus does not include any symbolic computation capabilities.<br />
 It is built for use in the Finnish digital matriculation examinations.
 
+<!--
 [Installation]() ⋅
 [User Guide]() ⋅
 [Development Guide]()
+-->
 
 </div>
 
@@ -20,13 +22,37 @@ It is built for use in the Finnish digital matriculation examinations.
 <img alt="screenshot" width="375" src="./app-screenshot.png" />
 </div>
 
-## Lorem Ipsum
+## Installation
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus lacus, dignissim id aliquet eu, iaculis eget erat. Etiam quis pretium nisl. Aliquam accumsan nisl at sapien facilisis facilisis. Vestibulum cursus ex ac varius condimentum. Ut euismod erat nulla, ac aliquam augue bibendum ullamcorper. In sagittis vulputate bibendum. Praesent ac lacinia erat. Integer malesuada metus non varius pharetra. Phasellus suscipit quam justo, quis placerat urna laoreet vel. Proin porttitor malesuada tincidunt. Morbi a velit magna.
+Clone this repository and make sure you have [Node.js](https://nodejs.org/) `^20.15.0` installed on your system. If you want to develop the desktop application, you will additionally need [Rust](https://www.rust-lang.org/) `^1.79.0`.
 
-Proin imperdiet maximus quam, nec tincidunt justo consectetur ac. Mauris sollicitudin, lectus a pretium dapibus, lorem arcu sagittis justo, in posuere turpis metus eu lorem. Quisque aliquet eros non turpis elementum, sit amet efficitur nunc aliquam. Vestibulum sit amet tortor magna. Vestibulum nisl felis, consequat vel consequat et, rutrum a nisi. Maecenas ac ex lobortis, rutrum turpis ut, lacinia diam. Cras eget aliquam ante. Quisque dolor augue, rutrum vitae dui at, faucibus maximus quam. Aliquam mollis purus et nisi scelerisque, ut venenatis augue egestas. Donec bibendum felis quam, quis mollis leo finibus sit amet. Integer at arcu erat. Duis sit amet faucibus est, sed vulputate lectus.
+When Node.js is ready and this repository has been cloned, install the packages by running the following in the cloned directory:
 
-Etiam egestas lectus vitae egestas tempor. Etiam laoreet a erat eget fringilla. Aenean eleifend orci condimentum ex varius, ac feugiat nibh rhoncus. Vestibulum viverra blandit lectus ut congue. Duis accumsan porta magna id eleifend. Donec vitae velit ornare, interdum risus et, molestie felis. Aenean dui est, congue quis ex eget, pretium ultricies eros. Donec sit amet lobortis nisi. Duis non enim a metus accumsan convallis. In imperdiet nibh massa, sit amet congue ante varius bibendum. Vivamus id tincidunt erat. In finibus luctus lorem, sit amet commodo lacus viverra pharetra. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc ullamcorper elit in finibus pellentesque. Donec maximus ante dolor, at facilisis eros feugiat vitae. Aenean sollicitudin id arcu id blandit.
+```bash
+npm install
+```
+
+After all the required packages have been installed, run one of the following commands to start the development server with or without the desktop component:
+
+For the web-application only:
+
+```bash
+npm run dev
+```
+
+For the web-application and the desktop application:
+
+```bash
+npm run tauri dev
+```
+
+## Tests
+
+After the project has been [set up](#installation), simply run:
+
+```bash
+npm run test
+```
 
 ---
 
