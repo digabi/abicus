@@ -24,7 +24,9 @@ It is built for use in the Finnish digital matriculation examinations.
 
 ## Installation
 
-Clone this repository and make sure you have [Node.js](https://nodejs.org/) `^20.15.0` installed on your system. If you want to develop the desktop application, you will additionally need [Rust](https://www.rust-lang.org/) `^1.79.0`.
+Clone this repository and make sure you have [Node.js](https://nodejs.org/) `^20.15.0` installed on your system.
+
+If you want to develop the desktop application, you will additionally need [Rust](https://www.rust-lang.org/) `^1.79.0`. Please then also follow the [Tauri set-up instructions for your system](https://tauri.app/v1/guides/getting-started/prerequisites/).
 
 When Node.js is ready and this repository has been cloned, install the packages by running the following in the cloned directory:
 
@@ -32,27 +34,28 @@ When Node.js is ready and this repository has been cloned, install the packages 
 npm install
 ```
 
-After all the required packages have been installed, run one of the following commands to start the development server with or without the desktop component:
+After all the required packages have been installed, run one of the following commands to start the development server:
 
-For the web-application only:
+- For the web-application only:
 
-```bash
-npm run dev
-```
+  ```bash
+  npm run dev
+  ```
 
-For the web-application and the desktop application:
-
-```bash
-npm run tauri dev
-```
+- For the web-application and the desktop application:
+  ```bash
+  npm run tauri dev
+  ```
 
 ## Tests
 
-After the project has been [set up](#installation), simply run:
+This project uses the [Vitest testing framework](https://vitest.dev). After the project has been [set up](#installation), to run all the unit tests for the project you can simply run:
 
 ```bash
 npm run test
 ```
+
+Please see the [Vitest CLI documentation](https://vitest.dev/guide/cli.html) for details on e.g. how to filter which tests to run etc.
 
 ---
 
