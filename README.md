@@ -24,9 +24,9 @@ It is built for use in the Finnish digital matriculation examinations.
 
 ## Installation
 
-Clone this repository and make sure you have [Node.js](https://nodejs.org/) `^20.15.0` installed on your system.
+Clone this repository and make sure you have [Node.js](https://nodejs.org/) installed on your system. The exact version used in development can be found in the [`.nvmrc` file](./.nvmrc).
 
-If you want to develop the desktop application, you will additionally need [Rust](https://www.rust-lang.org/) `^1.79.0`. Please then also follow the [Tauri set-up instructions for your system](https://tauri.app/v1/guides/getting-started/prerequisites/).
+If you want to develop the desktop application, you will additionally need to have a [Rust](https://www.rust-lang.org/) toolchain installed on your system. Please then also follow the [Tauri set-up instructions for your system](https://tauri.app/v1/guides/getting-started/prerequisites/).
 
 When Node.js is ready and this repository has been cloned, install the packages by running the following in the cloned directory:
 
