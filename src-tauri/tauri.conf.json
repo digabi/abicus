@@ -7,7 +7,7 @@
 	},
 	"package": {
 		"productName": "Abicus",
-		"version": "0.0.0"
+		"version": "../package.json"
 	},
 	"tauri": {
 		"allowlist": {
