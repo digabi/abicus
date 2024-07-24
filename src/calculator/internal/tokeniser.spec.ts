@@ -11,8 +11,8 @@ function d(n: Decimal.Value) {
 }
 
 run("Whitespace", [
-	["2 + 3", [litr(2), t.plus, litr(3)]],
-	[" 2 + 3 ", [litr(2), t.plus, litr(3)]],
+	["2 + 3", [litr(2), t.add, litr(3)]],
+	[" 2 + 3 ", [litr(2), t.add, litr(3)]],
 ]);
 
 run("Literals", [
@@ -41,8 +41,8 @@ run("Disregard trailing zeros", [
 	],
 ]);
 
-run("Operators", [["2+3", [litr(2), t.plus, litr(3)]]]);
-run("Brackets", [["2+(3+4)", [litr(2), t.plus, t.lbrk, litr(3), t.plus, litr(4), t.rbrk]]]);
+run("Operators", [["2+3", [litr(2), t.add, litr(3)]]]);
+run("Brackets", [["2+(3+4)", [litr(2), t.add, t.lbrk, litr(3), t.add, litr(4), t.rbrk]]]);
 run("Functions", [["sin cos tan", [t.sin, t.cos, t.tan]]]);
 run("Memory", [["ans mem", [t.ans, t.ind]]]);
 

@@ -125,15 +125,15 @@ const tokenMatchers = [
 		str => ({
 			type: "func" as const,
 			name: match(str.toLowerCase())
-				.with("sqrt", "log", "ln", "sin", "cos", "tan", "asin", "acos", "atan", name => name)
+				.with("sqrt", "ln", "sin", "cos", "tan", "asin", "acos", "atan", name => name)
+				.with("log", "lg", () => "log10" as const)
 				.with("√", () => "sqrt" as const)
-				.with("lg", () => "log" as const)
 				.with("arcsin", () => "asin" as const)
 				.with("arccos", () => "acos" as const)
 				.with("arctan", () => "atan" as const)
 				.otherwise(name => {
 					throw Error(`Programmer error: neglected function "${name}"`);
-				}),
+				}) satisfies keyof typeof Decimal,
 		}),
 	],
 ] satisfies [RegExp, (str: string) => { type: string }][];
