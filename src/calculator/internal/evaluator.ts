@@ -11,7 +11,7 @@ export type SyntaxErrorId = "UNEXPECTED_EOF" | "UNEXPECTED_TOKEN" | "NO_LHS_BRAC
 export type EvalResult = Result<Decimal, SyntaxErrorId>;
 
 /**
- * Parses an evaluates a mathematical expression as a list of `Token`s into a `Decimal` value.
+ * Parses and evaluates a mathematical expression as a list of `Token`s into a `Decimal` value.
  *
  * The returned `Result` is either
  * - The value of the given expression as a `Decimal` object, or

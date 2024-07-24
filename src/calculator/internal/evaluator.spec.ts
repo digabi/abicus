@@ -139,7 +139,7 @@ describe("Memory registers", () => {
 	});
 });
 
-describe("Syntax Erros", () => {
+describe("Syntax Errors", () => {
 	fail("Arithmetic", [
 		[litr(10), t.add, t.add, litr(10)],
 		[litr(10), t.mul, t.mul, litr(10)],
