@@ -35,5 +35,6 @@ export default defineConfig(async () => ({
 	},
 	test: {
 		globals: true,
+		exclude: ["**/playwright/**", "**/node_modules/**"],
 	},
 }));
