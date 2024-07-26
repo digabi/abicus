@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
+    "test": "concurrently -n ui,unit npm:test:ui npm:test:unit",
+    "test:ui": "playwright test",
+    "test:unit": "vitest",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri"
