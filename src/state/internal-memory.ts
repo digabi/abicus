@@ -13,7 +13,7 @@ export default function useMemory() {
 
 	function empty() {
 		setInd(zero());
-		setInd(zero());
+		setAns(zero());
 	}
 
 	return {
