@@ -47,11 +47,18 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "memo", name: "ind" }, () => "M")
 			.with({ type: "cons", name: "pi" }, () => "π")
 			.with({ type: "cons", name: "e" }, () => "e")
-			.with({ type: "func", name: "sqrt" }, () => "√")
-			.with({ type: "func", name: any }, token => token.name)
 			.with({ type: "oper", name: "*" }, () => "×")
 			.with({ type: "oper", name: "-" }, () => "−")
 			.with({ type: "oper", name: any }, token => token.name)
+			.with({ type: "func", name: any }, token =>
+				match(token.name)
+					.with("sqrt", () => "√")
+					.with("asin", () => "arcsin")
+					.with("acos", () => "arccos")
+					.with("atan", () => "arctan")
+					.with("log10", () => "log")
+					.otherwise(() => token.name)
+			)
 			.exhaustive();
 
 		yield formattedToken;
