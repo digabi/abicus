@@ -1,86 +1,32 @@
-import { useRef, KeyboardEvent, FocusEvent, useEffect } from "react";
-import { flushSync } from "react-dom";
+import { KeyboardEvent, FocusEvent, useEffect, ChangeEvent } from "react";
 
 import { useCalculator } from "#/state";
 
 export default function CalculatorInput() {
 	const { buffer, crunch } = useCalculator();
-	const elementRef = useRef<HTMLInputElement>(null);
 
-	function onChange() {
-		const element = elementRef.current;
-		if (!element) return;
-
-		// Guaranteed to be non-null as per
-		// https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/selectionStart
-		const rhs = element.selectionEnd!;
-
-		// How far the cursor is from the right edge of the box before insert
-		const rhsOffset = element.value.length - rhs;
-
-		// Must flush current render now to make sure the selection setting below happens at the correct state
-		flushSync(() => buffer.set(element.value));
-
-		// New value might be shorter or longer than what we physically typed, so we set cursor to the last offset
-		// position *from the right* to make it look like the key press actually inserted what appeared on the screen
-		const bufLen = element.value.length;
-		const curPos = bufLen - rhsOffset;
-
-		element.setSelectionRange(curPos, curPos);
+	function onChange(e: ChangeEvent<HTMLInputElement>) {
+		buffer.set(e.target.value);
 	}
 
 	function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-		const element = elementRef.current;
-		if (!element) return;
-
-		switch (e.key) {
-			case "Enter":
-				crunch();
-				break;
-
-			case "Backspace":
-			case "Delete":
-				{
-					const lhs = element.selectionStart!;
-					const rhs = element.selectionEnd!;
-
-					// Selections don't need custom deletion logic
-					const isSelection = lhs !== rhs;
-					if (isSelection) return;
-
-					e.preventDefault();
-
-					const lSlice = element.value.slice(0, lhs);
-					const rSlice = element.value.slice(rhs);
-
-					if (e.key === "Delete") {
-						flushSync(() => buffer.set(() => lSlice + rSlice.replace(/^\s*([a-z]+|.)/, "")));
-						element.setSelectionRange(lhs, lhs);
-					} else {
-						const rhsOffset = element.value.length - rhs;
-
-						flushSync(() => buffer.set(() => lSlice.replace(/([a-z]+|.)\s*$/, "") + rSlice));
-
-						const bufLen = element.value.length;
-						const curPos = bufLen - rhsOffset;
-
-						element.setSelectionRange(curPos, curPos);
-					}
-				}
-				break;
+		if (e.key === "Enter") {
+			e.preventDefault();
+			crunch();
 		}
 	}
 
 	function onBlur(e: FocusEvent<HTMLInputElement>) {
 		// Timeout needed because of Safari (of course)
 		setTimeout(() => {
+			e.target.focus();
 			e.target.scrollLeft = e.target.scrollWidth;
 		}, 0);
 	}
 
 	useEffect(
 		function BufferInputKeypadInputListener() {
-			const element = elementRef.current;
+			const element = buffer.ref.current;
 			if (!element) return;
 
 			if (document.activeElement !== element) {
@@ -93,7 +39,8 @@ export default function CalculatorInput() {
 	return (
 		<input
 			type="text"
-			ref={elementRef}
+			autoFocus
+			ref={buffer.ref}
 			value={buffer.value}
 			onChange={onChange}
 			onKeyDown={onKeyDown}
@@ -107,7 +54,7 @@ export default function CalculatorInput() {
 				"transition-transform",
 				// Focus is shown by the parent so it's safe to disable here
 				"focus:outline-none",
-				buffer.isDirty ? "text-black" : "text-slate-500",
+				buffer.isDirty ? "text-black" : "text-slate-500 text-sm",
 			]}
 			// Safari bug workaround:
 			// As of writing this, translating an input in safari without using `translate3d`

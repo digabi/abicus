@@ -11,7 +11,7 @@ export default function prettify(expression: string | Token[]) {
 	let tokens: Token[];
 	if (typeof expression === "string") {
 		const result = tokenise(expression);
-		if (result.isErr()) return;
+		if (result.isErr()) return expression;
 
 		tokens = result.value;
 	} else {

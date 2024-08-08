@@ -1,8 +1,7 @@
 import { useCalculator } from "#/state";
-import { ReactNode } from "react";
 
+import { RawKey, BasicKey, FunctionKey } from "./key";
 import * as keyLabel from "./special-key-labels";
-import { match } from "ts-pattern";
 
 export default function Keypad() {
 	const calculator = useCalculator();
@@ -11,12 +10,24 @@ export default function Keypad() {
 		calculator.crunch(true);
 	}
 
+	function onClickSquare() {
+		calculator.buffer.input.raw("(", ")^2", "wrap", 0);
+	}
+
+	function onClickPower() {
+		calculator.buffer.input.raw("(", ")^()", "wrap", -1);
+	}
+
+	function onClickMagnitude() {
+		calculator.buffer.input.raw("(", ")×10^()", "wrap", -1);
+	}
+
 	// Show "clear buffer" (C) button when buffer has content and "clear all" (AC) when buffer is empty
 	const clearButton =
 		calculator.buffer.value === "" ? (
-			<FunctionKey tint="blue" label="AC" onClick={calculator.clearAll} />
+			<RawKey tint="blue" label="AC" onClick={calculator.clearAll} />
 		) : (
-			<FunctionKey tint="blue" label="C" onClick={calculator.buffer.empty} />
+			<RawKey tint="blue" label="C" onClick={calculator.buffer.empty} />
 		);
 
 	return (
@@ -24,105 +35,60 @@ export default function Keypad() {
 			<div>
 				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
 					{/* Row #1 */}
-					<FunctionKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
-					<Key tint="blue" input="MEM" label={keyLabel.memOut} />
-					<Key tint="blue" input="ANS" />
-					<Key input="log" />
-					<Key input="ln" />
+					<RawKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
+					<BasicKey tint="blue" input="MEM" label={keyLabel.memOut} />
+					<BasicKey tint="blue" input="ANS" />
+					<BasicKey input="log" />
+					<BasicKey input="ln" />
 
 					{/* Row #2 */}
-					<Key input="sin" />
-					<Key input="cos" />
-					<Key input="tan" />
-					<Key input="^(2)" label={keyLabel.squared} />
-					<Key input="sqrt" label="√" />
+					<FunctionKey name="sin" />
+					<FunctionKey name="cos" />
+					<FunctionKey name="tan" />
+					<RawKey label={keyLabel.squared} onClick={onClickSquare} />
+					<FunctionKey name="√" />
 
 					{/* Row #3 */}
-					<Key input="asin" label="arcsin" />
-					<Key input="acos" label="arccos" />
-					<Key input="atan" label="arctan" />
-					<Key input="*10^()" label={keyLabel.magnitude} />
-					<Key input="^()" label={keyLabel.power} />
+					<FunctionKey name="arcsin" />
+					<FunctionKey name="arccos" />
+					<FunctionKey name="arctan" />
+					<RawKey label={keyLabel.magnitude} onClick={onClickMagnitude} />
+					<RawKey label={keyLabel.power} onClick={onClickPower} />
 
 					{/* Row #4 */}
-					<Key input="1" />
-					<Key input="2" />
-					<Key input="3" />
-					<Key tint="grey" input="(" />
-					<Key tint="grey" input=")" />
+					<BasicKey input="1" />
+					<BasicKey input="2" />
+					<BasicKey input="3" />
+					<RawKey tint="grey" label="(" onClick={calculator.buffer.input.openBrackets} />
+					<RawKey tint="grey" label=")" onClick={calculator.buffer.input.closeBrackets} />
 
 					{/* Row #5 */}
-					<Key input="4" />
-					<Key input="5" />
-					<Key input="6" />
-					<Key tint="grey" input="+" />
-					<Key tint="grey" input="-" label="−" /* sic: They are different characters */ />
+					<BasicKey input="4" />
+					<BasicKey input="5" />
+					<BasicKey input="6" />
+					<BasicKey tint="grey" input="+" />
+					<BasicKey tint="grey" input="−" />
 
 					{/* Row #6 */}
-					<Key input="7" />
-					<Key input="8" />
-					<Key input="9" />
-					<Key tint="grey" input="*" label="×" />
-					<Key tint="grey" input="/" />
+					<BasicKey input="7" />
+					<BasicKey input="8" />
+					<BasicKey input="9" />
+					<BasicKey tint="grey" input="×" />
+					<BasicKey tint="grey" input="/" />
 
 					{/* Row #7 */}
-					<Key input="0" ax="col-span-2" />
-					<Key input="," />
-					<Key input="pi" label="π" />
-					<Key input="e" label="e" />
+					<BasicKey input="0" className="col-span-2" />
+					<BasicKey input="," />
+					<BasicKey input="π" />
+					<BasicKey input="e" />
 
 					{/* Row #8 */}
-					<FunctionKey tint="blue" label="⌫" onClick={calculator.buffer.del} />
+					<RawKey tint="blue" label="⌫" onClick={calculator.buffer.del} />
 					{clearButton}
 					<div x="col-span-2" />
-					<FunctionKey tint="blue" label="=" onClick={calculator.crunch} />
+					<RawKey tint="blue" label="=" onClick={calculator.crunch} />
 				</div>
 			</div>
 		</>
-	);
-}
-
-type FunctionKeyProps = Required<Pick<KeyProps, "onClick" | "label">> & Pick<KeyProps, "ax" | "tint">;
-function FunctionKey(props: FunctionKeyProps) {
-	return <Key input="" {...props} />;
-}
-
-type KeyProps = {
-	input: string;
-	tint?: "none" | "blue" | "grey";
-	label?: ReactNode;
-	ax?: any;
-	onClick?: () => void;
-};
-
-function Key({ input, onClick, tint = "none", label = input, ax }: KeyProps) {
-	const { buffer } = useCalculator();
-
-	function doInput() {
-		onClick?.();
-		buffer.add(input);
-	}
-
-	return (
-		<button
-			x={[
-				"h-9",
-				"rounded-sm border border-abi-dgrey",
-				[
-					"transition-all duration-75",
-					"shadow scale-100",
-					"active:shadow-none active:scale-95",
-					match(tint)
-						.with("none", () => "bg-white active:bg-slate-100")
-						.with("blue", () => "bg-abi-lblue active:bg-blue-300")
-						.with("grey", () => "bg-abi-lgrey active:bg-slate-300")
-						.exhaustive(),
-				],
-				ax,
-			]}
-			onClick={doInput}
-		>
-			{label}
-		</button>
 	);
 }
