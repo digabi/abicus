@@ -1,6 +1,6 @@
 import { useCalculator } from "#/state";
 
-import { RawKey, BasicKey, FunctionKey } from "./key";
+import { RawKey, BasicKey, FunctionKey, OperatorKey } from "./key";
 import * as keyLabel from "./special-key-labels";
 
 export default function Keypad() {
@@ -8,18 +8,6 @@ export default function Keypad() {
 
 	function onClickMemIn() {
 		calculator.crunch(true);
-	}
-
-	function onClickSquare() {
-		calculator.buffer.input.raw("(", ")^2", "wrap", 0);
-	}
-
-	function onClickPower() {
-		calculator.buffer.input.raw("(", ")^()", "wrap", -1);
-	}
-
-	function onClickMagnitude() {
-		calculator.buffer.input.raw("(", ")×10^()", "wrap", -1);
 	}
 
 	// Show "clear buffer" (C) button when buffer has content and "clear all" (AC) when buffer is empty
@@ -45,15 +33,15 @@ export default function Keypad() {
 					<FunctionKey name="sin" />
 					<FunctionKey name="cos" />
 					<FunctionKey name="tan" />
-					<RawKey label={keyLabel.squared} onClick={onClickSquare} />
+					<RawKey label={keyLabel.squared} onClick={calculator.buffer.input.square} />
 					<FunctionKey name="√" />
 
 					{/* Row #3 */}
 					<FunctionKey name="arcsin" />
 					<FunctionKey name="arccos" />
 					<FunctionKey name="arctan" />
-					<RawKey label={keyLabel.magnitude} onClick={onClickMagnitude} />
-					<RawKey label={keyLabel.power} onClick={onClickPower} />
+					<RawKey label={keyLabel.magnitude} onClick={calculator.buffer.input.magnitude} />
+					<RawKey label={keyLabel.power} onClick={calculator.buffer.input.power} />
 
 					{/* Row #4 */}
 					<BasicKey input="1" />
@@ -66,15 +54,15 @@ export default function Keypad() {
 					<BasicKey input="4" />
 					<BasicKey input="5" />
 					<BasicKey input="6" />
-					<BasicKey tint="grey" input="+" />
-					<BasicKey tint="grey" input="−" />
+					<OperatorKey tint="grey" symbol="+" />
+					<OperatorKey tint="grey" symbol="−" />
 
 					{/* Row #6 */}
 					<BasicKey input="7" />
 					<BasicKey input="8" />
 					<BasicKey input="9" />
-					<BasicKey tint="grey" input="×" />
-					<BasicKey tint="grey" input="/" />
+					<OperatorKey tint="grey" symbol="×" />
+					<OperatorKey tint="grey" symbol="/" />
 
 					{/* Row #7 */}
 					<BasicKey input="0" className="col-span-2" />

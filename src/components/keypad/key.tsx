@@ -52,6 +52,7 @@ export function BasicKey({ input, label = input, ...props }: BasicKeyProps) {
 
 	return <RawKey label={label} onClick={onClick} {...props} />;
 }
+
 /*****************************************************************************/
 
 type FunctionKeyProps = RawKeyProps<"onClick" | "label"> & { name: string };
@@ -64,4 +65,18 @@ export function FunctionKey({ name, ...props }: FunctionKeyProps) {
 	}
 
 	return <RawKey label={name} onClick={onClick} {...props} />;
+}
+
+/*****************************************************************************/
+
+type OperatorKeyProps = RawKeyProps<"onClick" | "label"> & { symbol: string };
+
+export function OperatorKey({ symbol, ...props }: OperatorKeyProps) {
+	const { buffer } = useCalculator();
+
+	function onClick() {
+		buffer.input.oper(symbol);
+	}
+
+	return <RawKey label={symbol} onClick={onClick} {...props} />;
 }

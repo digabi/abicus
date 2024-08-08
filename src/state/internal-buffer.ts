@@ -31,6 +31,11 @@ export default function useBuffer() {
 		return [e.selectionStart!, e.selectionEnd!];
 	}
 
+	function isSelection() {
+		const [l, r] = getSelection();
+		return l !== r;
+	}
+
 	/**
 	 * Inputs the given text to the buffer and sets the cursor position.
 	 *
@@ -40,6 +45,8 @@ export default function useBuffer() {
 	 * from the new input. I.e. if the offset is `0` the cursor will be placed after the input text.
 	 */
 	function rawInput(inpLhs: string, inpRhs: string, action: "replace" | "wrap", cursorOffset: number) {
+		// This was exactly as "fun" to figure out how to write as it is to read through
+
 		const [curLhs, curRhs] = getSelection();
 
 		flushSync(() => {
@@ -53,8 +60,7 @@ export default function useBuffer() {
 				setTimeout(() => {
 					if (!ref.current) return;
 
-					ref.current.selectionStart = ref.current.selectionEnd =
-						bufLhs.length + inpLhs.length + (action === "wrap" ? bufSel.length : 0) + inpRhs.length + cursorOffset;
+					ref.current.selectionStart = ref.current.selectionEnd = bufLhs.length + newTxt.length + cursorOffset;
 				});
 
 				return `${bufLhs}${newTxt}${bufRhs}`;
@@ -86,14 +92,17 @@ export default function useBuffer() {
 			key(text: string) {
 				rawInput(text, "", "replace", 0);
 			},
+
 			/** Insert a function (e.g. `sin()`) into the buffer, wrapping selected text */
 			func(name: string) {
 				rawInput(`${name}(`, ")", "wrap", -1);
 			},
+
 			/** Insert a pair of brackets into the buffer, wrapping selected text */
 			openBrackets() {
 				rawInput("(", ")", "wrap", -1);
 			},
+
 			/** Either insert a right-bracket or skip over one, depending if one already exists in the input */
 			closeBrackets() {
 				const [l, r] = getSelection();
@@ -101,6 +110,39 @@ export default function useBuffer() {
 					ref.current.selectionEnd = ref.current.selectionStart = ref.current.selectionEnd! + 1;
 				} else {
 					rawInput(")", "", "replace", 0);
+				}
+			},
+
+			/** Either inserts an operator or wraps the selected text in brackets and adds an operator (and brackets as the other operand) */
+			oper(symbol: string) {
+				if (isSelection()) {
+					rawInput("(", `)${symbol}()`, "wrap", -1);
+				} else {
+					rawInput(symbol, "", "replace", 0);
+				}
+			},
+
+			power() {
+				if (isSelection()) {
+					rawInput("(", `)^()`, "wrap", -1);
+				} else {
+					rawInput("^(", ")", "replace", -1);
+				}
+			},
+
+			magnitude() {
+				if (isSelection()) {
+					rawInput("(", `)×10^()`, "wrap", -1);
+				} else {
+					rawInput("×10^(", ")", "replace", -1);
+				}
+			},
+
+			square() {
+				if (isSelection()) {
+					rawInput("(", `)^2`, "wrap", 0);
+				} else {
+					rawInput("^2", "", "replace", 0);
 				}
 			},
 		},
