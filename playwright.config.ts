@@ -12,6 +12,7 @@ export default defineConfig({
 	use: {
 		baseURL: "http://localhost:1420",
 		trace: "retain-on-failure",
+		screenshot: "only-on-failure",
 	},
 
 	webServer: {
