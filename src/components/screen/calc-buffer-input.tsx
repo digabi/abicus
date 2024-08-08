@@ -1,6 +1,7 @@
 import { KeyboardEvent, FocusEvent, useEffect, ChangeEvent } from "react";
 
 import { useCalculator } from "#/state";
+import { match } from "ts-pattern";
 
 export default function CalculatorInput() {
 	const { buffer, crunch } = useCalculator();
@@ -10,10 +11,17 @@ export default function CalculatorInput() {
 	}
 
 	function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-		if (e.key === "Enter") {
-			e.preventDefault();
-			crunch();
-		}
+		match(e.key)
+			.with("Enter", () => {
+				crunch();
+			})
+			.with("(", () => {
+				buffer.input.openBrackets();
+			})
+			.with("^", "/", "+", "*", oper => {
+				buffer.input.raw("(", `)${oper}()`, "wrap", -1);
+			})
+			.otherwise(() => true) || e.preventDefault();
 	}
 
 	function onBlur(e: FocusEvent<HTMLInputElement>) {
