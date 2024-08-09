@@ -57,12 +57,16 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 	}
 
 	function crunch(saveToInd = false) {
+		buffer.clean();
+
 		const result = calculate(buffer.value, memory.ans, memory.ind, angleUnit);
-		if (result.isErr()) return;
+		if (result.isErr()) {
+			buffer.setErr(true);
+			return;
+		}
 
 		const { value } = result;
 
-		buffer.clean();
 		memory.setAns(value);
 		if (saveToInd) memory.setInd(value);
 
