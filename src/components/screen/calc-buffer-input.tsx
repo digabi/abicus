@@ -33,7 +33,6 @@ export default function CalculatorInput() {
 	function onBlur(e: FocusEvent<HTMLInputElement>) {
 		// Timeout needed because of Safari (of course)
 		setTimeout(() => {
-			e.target.focus();
 			e.target.scrollLeft = e.target.scrollWidth;
 		}, 0);
 	}
