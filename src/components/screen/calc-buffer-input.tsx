@@ -12,7 +12,7 @@ export default function CalculatorInput() {
 
 	function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
 		match(e.key)
-			.with("Enter", () => {
+			.with("Enter", "=", () => {
 				crunch();
 			})
 			.with("(", () => {
