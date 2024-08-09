@@ -82,8 +82,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): E
 			)
 			.with({ type: "func" }, token => {
 				return expect({ type: "lbrk" }, false).andThen(() =>
-					evalExpr(0) // The RBP here shouldn't matter so we default to zero
-						.map(value => Decimal[token.name](value))
+					evalExpr(Infinity).map(value => Decimal[token.name](value))
 				);
 			})
 			.otherwise(() => err("UNEXPECTED_TOKEN"));

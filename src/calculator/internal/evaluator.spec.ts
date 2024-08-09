@@ -101,6 +101,15 @@ run("Functions", [
 	[[t.ln,    t.lbrk, litr(10),  t.add, litr(10),  t.rbrk], d(2 * 10).ln()],
 	[[t.log10, t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.log10(2 * 13)],
 	[[t.sqrt,  t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.sqrt(2 * 13)],
+
+	[
+		[ // sin((2 / 3) * pi) ^ sqrt(1.08 + 7.12)
+			t.sin, t.lbrk, t.lbrk, litr(2), t.div, litr(3), t.rbrk, t.mul, t.pi, t.rbrk,
+			t.pow,
+			t.sqrt, t.lbrk, litr(1.08), t.add, litr(7.12), t.rbrk
+		],
+		new Decimal("0.66239180766192125587")
+	]
 ]);
 
 describe("Constants", () => {
