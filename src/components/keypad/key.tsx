@@ -14,7 +14,14 @@ export type RawKeyProps<O extends string = never> = Omit<
 	O
 >;
 
-export function RawKey({ onClick, tint = "none", label, className }: RawKeyProps) {
+export function RawKey({ onClick: propsOnClick, tint = "none", label, className }: RawKeyProps) {
+	const { buffer } = useCalculator();
+
+	function onClick() {
+		buffer.ref.current?.focus();
+		propsOnClick();
+	}
+
 	return (
 		<button
 			x={[
