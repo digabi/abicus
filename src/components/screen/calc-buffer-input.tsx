@@ -18,8 +18,11 @@ export default function CalculatorInput() {
 			.with("(", () => {
 				buffer.input.openBrackets();
 			})
-			.with("^", "/", "+", "*", symbol => {
+			.with("^", "/", "+", symbol => {
 				buffer.input.oper(symbol);
+			})
+			.with("*", () => {
+				buffer.input.oper("×");
 			})
 			.otherwise(() => true) || e.preventDefault();
 	}
