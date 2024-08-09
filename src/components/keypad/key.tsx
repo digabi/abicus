@@ -1,6 +1,7 @@
-import { useCalculator } from "#/state";
-import { ReactNode } from "react";
+import { ReactNode, MouseEvent } from "react";
 import { match } from "ts-pattern";
+
+import { useCalculator } from "#/state";
 
 /*****************************************************************************/
 
@@ -17,8 +18,12 @@ export type RawKeyProps<O extends string = never> = Omit<
 export function RawKey({ onClick: propsOnClick, tint = "none", label, className }: RawKeyProps) {
 	const { buffer } = useCalculator();
 
-	function onClick() {
+	function onMouseDown(e: MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
 		buffer.ref.current?.focus();
+	}
+
+	function onClick() {
 		propsOnClick();
 	}
 
@@ -40,6 +45,7 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 				className,
 			]}
 			onClick={onClick}
+			onMouseDown={onMouseDown}
 		>
 			{label}
 		</button>
