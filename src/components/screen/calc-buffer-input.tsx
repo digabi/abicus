@@ -18,6 +18,9 @@ export default function CalculatorInput() {
 			.with("(", () => {
 				buffer.input.openBrackets();
 			})
+			.with(")", () => {
+				buffer.input.closeBrackets();
+			})
 			.with("^", "/", "+", symbol => {
 				buffer.input.oper(symbol);
 			})
