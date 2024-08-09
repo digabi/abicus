@@ -1,5 +1,8 @@
 import { Component, PropsWithChildren } from "react";
 
+import errorImgSrc from "./error-img.svg";
+import { BUFFER_DEBUG, EXPR_DEBUG, INPUT_DEBUG } from "./constants";
+
 // Currently no way to write Error Boundaries as function components :(
 
 type Props = PropsWithChildren;
@@ -27,22 +30,21 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 		const message = error.message;
 
 		return (
-			<main x={["max-w-sm h-screen py-4", "flex flex-col justify-between gap-4"]}>
-				<div x={["grow", "flex flex-col items-center justify-center"]}>
-					{/* Placeholder icon */}
-					<span role="img" x="text-9xl">
-						💔
-					</span>
+			<main x={["max-w-sm h-screen py-4", "flex flex-col justify-center items-center"]}>
+				{/* Placeholder icon */}
+				<div x="grid grid-cols-[5rem_1fr] mt-8">
+					<img src={errorImgSrc} x="row-span-2 h-16" />
 
-					<h1 x="text-3xl text-center">
-						<div>Ohjelma kaatui</div>
-						<div>Programmet har kraschat</div>
-					</h1>
+					<h1 x="text-xl self-center">Jotain meni pieleen!</h1>
+					<h1 x="text-xl self-center">Något gick fel!</h1>
 				</div>
+
+				<p x="mt-8">Välitäthän alla olevan virheviestin Abitti-tukeen.</p>
+				<p x="mb-8">Vänligen lämna feluppgifterna nedan till Abitti-support.</p>
 
 				<output
 					x={[
-						"w-[24rem] max-h-52",
+						"w-[24rem] grow",
 						"overflow-scroll",
 						"px-3 py-2",
 						"rounded-md",
@@ -51,8 +53,13 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 						"bg-abi-blue-2 border border-blue-300",
 					]}
 				>
+					<span>Abicus@{__GIT_HASH___}</span>
 					<span>--- Message ---</span>
 					<span>{message}</span>
+					<span>--- Last Values ---</span>
+					<span>Expr: {(window as any)[EXPR_DEBUG]}</span>
+					<span>Input: {(window as any)[INPUT_DEBUG]}</span>
+					<span>Buffer: {(window as any)[BUFFER_DEBUG]}</span>
 					<span>--- Component Stack ---</span>
 					<span>{stack}</span>
 					<span>--- End ---</span>

@@ -1,6 +1,7 @@
 import { SetStateAction, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
+import { BUFFER_DEBUG, INPUT_DEBUG } from "#/error-boundary/constants";
 import prettify from "#/utils/prettify-expression";
 
 export type BufferHandle = ReturnType<typeof useBuffer>;
@@ -10,6 +11,8 @@ export default function useBuffer() {
 	const [isErr, setErr] = useState(false);
 
 	const ref = useRef<HTMLInputElement>(null);
+
+	(window as any)[BUFFER_DEBUG] = buffer;
 
 	function getSelection(): [lhs: number, rhs: number] {
 		if (!ref.current) return [0, 0];
@@ -64,6 +67,8 @@ export default function useBuffer() {
 	 */
 	function rawInput(inpLhs: string, inpRhs: string, action: "replace" | "wrap", cursorOffset: number) {
 		// This was exactly as "fun" to figure out how to write as it is to read through
+
+		(window as any)[INPUT_DEBUG] = JSON.stringify({ inpLhs, inpRhs, action, cursorOffset });
 
 		const [curLhs, curRhs] = getSelection();
 

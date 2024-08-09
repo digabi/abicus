@@ -2,6 +2,7 @@ import { KeyboardEvent, FocusEvent, useEffect, ChangeEvent } from "react";
 
 import { useCalculator } from "#/state";
 import { match } from "ts-pattern";
+import { EXPR_DEBUG } from "#/error-boundary/constants";
 
 export default function Input() {
 	const { buffer, crunch } = useCalculator();
@@ -9,6 +10,7 @@ export default function Input() {
 	const shouldShowOutput = !buffer.isDirty && !buffer.isErr;
 
 	function onChange(e: ChangeEvent<HTMLInputElement>) {
+		(window as any)[EXPR_DEBUG] = e.target.value;
 		buffer.set(e.target.value);
 	}
 

@@ -2,6 +2,8 @@ import Decimal from "decimal.js";
 import { err, ok, Result } from "neverthrow";
 import { match } from "ts-pattern";
 
+import { INPUT_DEBUG } from "#/error-boundary/constants";
+
 /**
  * Represents an error where the tokeniser couldn't match the input to any token.
  * The `idx` field points to the start of the unknown part in the input.
@@ -180,7 +182,8 @@ function* tokens(expression: string): Generator<Result<Token, LexicalError>, voi
 		}
 
 		if (import.meta.env.DEV && slice.startsWith("improbatur")) {
-			throw Error("Simulated error: This is a simulated error for testing purposes");
+			(window as any)[INPUT_DEBUG] = "tan5sin/ANSsin/tan5sin+(🕺🏼🕺🏼)";
+			throw Error("Simulated Error: This is a simulated error for testing purposes.");
 		}
 
 		matching: for (const [regex, build] of tokenMatchers) {
