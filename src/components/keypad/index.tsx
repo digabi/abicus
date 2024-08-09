@@ -24,7 +24,7 @@ export default function Keypad() {
 				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
 					{/* Row #1 */}
 					<RawKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
-					<BasicKey tint="blue" input="MEM" label={keyLabel.memOut} />
+					<BasicKey tint="blue" input="M" label={keyLabel.memOut} />
 					<BasicKey tint="blue" input="ANS" />
 					<BasicKey input="log" />
 					<BasicKey input="ln" />
