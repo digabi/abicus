@@ -21,6 +21,9 @@ export default function CalculatorInput() {
 			.with("^", "/", "+", symbol => {
 				buffer.input.oper(symbol);
 			})
+			.with("-", () => {
+				buffer.input.oper("−");
+			})
 			.with("*", () => {
 				buffer.input.oper("×");
 			})
