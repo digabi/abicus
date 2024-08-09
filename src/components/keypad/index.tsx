@@ -26,8 +26,8 @@ export default function Keypad() {
 					<RawKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
 					<BasicKey tint="blue" input="M" label={keyLabel.memOut} />
 					<BasicKey tint="blue" input="ANS" />
-					<BasicKey input="log" />
-					<BasicKey input="ln" />
+					<FunctionKey name="log" />
+					<FunctionKey name="ln" />
 
 					{/* Row #2 */}
 					<FunctionKey name="sin" />
