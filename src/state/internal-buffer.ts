@@ -9,20 +9,6 @@ export default function useBuffer() {
 	const [buffer, setBuffer] = useState("");
 	const ref = useRef<HTMLInputElement>(null);
 
-	function clean() {
-		setBuffer(prettify);
-		setDirty(false);
-	}
-
-	function set(value: SetStateAction<string>) {
-		setBuffer(value);
-		setDirty(true);
-	}
-
-	function del() {
-		set(v => v.replace(/\s*([a-z]+|.)$/i, ""));
-	}
-
 	function getSelection(): [lhs: number, rhs: number] {
 		if (!ref.current) return [0, 0];
 		const e = ref.current;
@@ -34,6 +20,34 @@ export default function useBuffer() {
 	function isSelection() {
 		const [l, r] = getSelection();
 		return l !== r;
+	}
+
+	function clean() {
+		setBuffer(prettify);
+		setDirty(false);
+	}
+
+	function set(value: SetStateAction<string>) {
+		setBuffer(value);
+		setDirty(true);
+	}
+
+	function del() {
+		flushSync(() => {
+			set(v => {
+				const [l, r] = getSelection();
+
+				const lhs = l !== r ? v.slice(0, l) : v.slice(0, l).replace(/\s*([a-z]+|.)$/i, "");
+				const rhs = v.slice(r);
+
+				setTimeout(() => {
+					if (!ref.current) return;
+					ref.current.selectionStart = ref.current.selectionEnd = lhs.length;
+				});
+
+				return `${lhs}${rhs}`;
+			});
+		});
 	}
 
 	/**
