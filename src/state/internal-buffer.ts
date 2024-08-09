@@ -116,7 +116,7 @@ export default function useBuffer() {
 			/** Either inserts an operator or wraps the selected text in brackets and adds an operator (and brackets as the other operand) */
 			oper(symbol: string) {
 				if (isSelection()) {
-					rawInput("(", `)${symbol}()`, "wrap", -1);
+					rawInput("(", `) ${symbol} ()`, "wrap", -1);
 				} else {
 					rawInput(symbol, "", "replace", 0);
 				}
