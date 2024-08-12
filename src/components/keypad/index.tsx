@@ -13,9 +13,9 @@ export default function Keypad() {
 	// Show "clear buffer" (C) button when buffer has content and "clear all" (AC) when buffer is empty
 	const clearButton =
 		calculator.buffer.value === "" ? (
-			<RawKey tint="blue" label="AC" onClick={calculator.clearAll} />
+			<RawKey tint="d-blue" label="AC" onClick={calculator.clearAll} />
 		) : (
-			<RawKey tint="blue" label="C" onClick={calculator.buffer.empty} />
+			<RawKey tint="d-blue" label="C" onClick={calculator.buffer.empty} />
 		);
 
 	return (
@@ -23,25 +23,25 @@ export default function Keypad() {
 			<div>
 				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
 					{/* Row #1 */}
-					<RawKey tint="blue" onClick={onClickMemIn} label={keyLabel.memIn} />
-					<BasicKey tint="blue" input="M" label={keyLabel.memOut} />
-					<BasicKey tint="blue" input="ANS" />
-					<FunctionKey name="log" />
-					<FunctionKey name="ln" />
+					<RawKey tint="d-blue" onClick={onClickMemIn} label={keyLabel.memIn} />
+					<BasicKey tint="d-blue" input="M" label={keyLabel.memOut} />
+					<BasicKey tint="d-blue" input="ANS" />
+					<FunctionKey name="log" tint="l-blue" />
+					<FunctionKey name="ln" tint="l-blue" />
 
 					{/* Row #2 */}
-					<FunctionKey name="sin" />
-					<FunctionKey name="cos" />
-					<FunctionKey name="tan" />
-					<RawKey label={keyLabel.squared} onClick={calculator.buffer.input.square} />
-					<FunctionKey name="√" />
+					<FunctionKey name="sin" tint="l-blue" />
+					<FunctionKey name="cos" tint="l-blue" />
+					<FunctionKey name="tan" tint="l-blue" />
+					<RawKey label={keyLabel.squared} onClick={calculator.buffer.input.square} tint="l-blue" />
+					<FunctionKey name="√" tint="l-blue" />
 
 					{/* Row #3 */}
-					<FunctionKey name="arcsin" />
-					<FunctionKey name="arccos" />
-					<FunctionKey name="arctan" />
-					<RawKey label={keyLabel.magnitude} onClick={calculator.buffer.input.magnitude} />
-					<RawKey label={keyLabel.power} onClick={calculator.buffer.input.power} />
+					<FunctionKey name="arcsin" tint="l-blue" />
+					<FunctionKey name="arccos" tint="l-blue" />
+					<FunctionKey name="arctan" tint="l-blue" />
+					<RawKey label={keyLabel.magnitude} onClick={calculator.buffer.input.magnitude} tint="l-blue" />
+					<RawKey label={keyLabel.power} onClick={calculator.buffer.input.power} tint="l-blue" />
 
 					{/* Row #4 */}
 					<BasicKey input="1" />
@@ -71,10 +71,10 @@ export default function Keypad() {
 					<BasicKey input="e" />
 
 					{/* Row #8 */}
-					<RawKey tint="blue" label="⌫" onClick={calculator.buffer.del} />
+					<RawKey tint="d-blue" label="⌫" onClick={calculator.buffer.del} />
 					{clearButton}
 					<div x="col-span-2" />
-					<RawKey tint="blue" label="=" onClick={calculator.crunch} />
+					<RawKey tint="d-blue" label="=" onClick={calculator.crunch} />
 				</div>
 			</div>
 		</>

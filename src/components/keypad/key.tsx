@@ -9,7 +9,7 @@ export type RawKeyProps<O extends string = never> = Omit<
 	{
 		label: ReactNode;
 		onClick: () => void;
-		tint?: "none" | "blue" | "grey";
+		tint?: "none" | "d-blue" | "l-blue" | "grey";
 		className?: any;
 	},
 	O
@@ -38,7 +38,8 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 					"active:shadow-none active:scale-95",
 					match(tint)
 						.with("none", () => "bg-white active:bg-slate-100")
-						.with("blue", () => "bg-abi-lblue active:bg-blue-300")
+						.with("d-blue", () => "bg-abi-blue-2 active:bg-blue-300")
+						.with("l-blue", () => "bg-abi-blue-3 active:bg-blue-100")
 						.with("grey", () => "bg-abi-lgrey active:bg-slate-300")
 						.exhaustive(),
 				],

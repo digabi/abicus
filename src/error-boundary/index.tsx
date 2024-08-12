@@ -48,7 +48,7 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 						"rounded-md",
 						"flex flex-col",
 						"text-xs font-mono",
-						"bg-abi-lblue border border-blue-300",
+						"bg-abi-blue-2 border border-blue-300",
 					]}
 				>
 					<span>--- Message ---</span>
