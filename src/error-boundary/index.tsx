@@ -57,7 +57,7 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 						"bg-abi-blue-2 border border-blue-300",
 					]}
 				>
-					<span>Abicus@{__GIT_HASH___}</span>
+					<span>Abicus@{__GIT_HASH__}</span>
 					<span>--- Message ---</span>
 					<span>{message}</span>
 					<span>--- Last Values ---</span>

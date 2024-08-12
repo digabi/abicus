@@ -24,7 +24,7 @@ export default defineConfig(async () => ({
 	],
 
 	define: {
-		__GIT_HASH___: JSON.stringify(commitHash),
+		__GIT_HASH__: JSON.stringify(commitHash),
 	},
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
