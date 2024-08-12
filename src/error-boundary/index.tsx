@@ -29,10 +29,14 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 
 		const message = error.message;
 
+		function onClickReload() {
+			location.reload();
+		}
+
 		return (
-			<main x={["max-w-sm h-screen py-4", "flex flex-col justify-center items-center"]}>
+			<main x={["max-w-sm h-screen", "flex flex-col justify-center items-center"]}>
 				{/* Placeholder icon */}
-				<div x="grid grid-cols-[5rem_1fr] mt-8">
+				<div x="grid grid-cols-[5rem_1fr] mt-10">
 					<img src={errorImgSrc} x="row-span-2 h-16" />
 
 					<h1 x="text-xl self-center">Jotain meni pieleen!</h1>
@@ -64,6 +68,23 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 					<span>{stack}</span>
 					<span>--- End ---</span>
 				</output>
+
+				<div x="my-8">
+					<button
+						onClick={onClickReload}
+						x={[
+							"h-9 px-4",
+							"rounded-sm border border-abi-dgrey",
+
+							"shadow scale-100",
+							"bg-white active:bg-slate-100",
+							"transition-all duration-75",
+							"active:shadow-none active:scale-95",
+						]}
+					>
+						Uudelleenkäynnistä / Omstarta
+					</button>
+				</div>
 			</main>
 		);
 	}
