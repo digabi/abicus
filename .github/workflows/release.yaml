@@ -60,4 +60,7 @@ jobs:
           tagName: v__VERSION__
           releaseDraft: true
           releaseName: Abicus v__VERSION__
-          releaseBody: ""
+          releaseBody: |
+            Abicus precompiled binaries:
+            - [Apple Silicon `.dmg`](https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___aarch64.dmg)
+            - [Apple Intel `.dmg`](https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64.dmg)
