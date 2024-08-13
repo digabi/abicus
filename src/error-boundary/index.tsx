@@ -35,7 +35,6 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 
 		return (
 			<main x={["max-w-sm h-screen", "flex flex-col justify-center items-center"]}>
-				{/* Placeholder icon */}
 				<div x="grid grid-cols-[5rem_1fr] mt-10">
 					<img src={errorImgSrc} x="row-span-2 h-16" />
 
