@@ -1,9 +1,9 @@
-import Decimal from "decimal.js";
 import prettify from "#/utils/prettify-expression";
 import { T, t } from "#/utils/tokens";
+import Decimal from "decimal.js";
 
-import { Token } from "./tokeniser";
 import evaluate from "./evaluator";
+import { Token } from "./tokeniser";
 
 const d = (x: number) => new Decimal(x);
 const { litr } = T;
@@ -13,7 +13,7 @@ function run(title: string, cases: [input: Token[], expected: Decimal][]) {
 		for (const [input, expected] of cases) {
 			const title = `"${prettify(input)}" => ${expected.toString()}`;
 
-			const result = evaluate(input, new Decimal(0), new Decimal(0));
+			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
 			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title} (${result.error})`);
 
 			test(title, () => expect(result.value.toFraction()).toEqual(expected.toFraction()));
@@ -26,7 +26,7 @@ function fail(title: string, cases: Token[][]) {
 		for (const input of cases) {
 			const title = `"${prettify(input)}"`;
 
-			const result = evaluate(input, new Decimal(0), new Decimal(0));
+			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
 			test(title, () => expect(result.isErr()).toBe(true));
 		}
 	});
@@ -114,17 +114,17 @@ run("Functions", [
 
 describe("Constants", () => {
 	test("π is defined", () => {
-		const result = evaluate([T.cons("pi")], d(0), d(0));
+		const result = evaluate([T.cons("pi")], d(0), d(0), "rad");
 		if (result.isErr()) expect.unreachable(`Could not evaluate value of pi: (${result.error})`);
 		expect(result.value.toNumber()).toBeCloseTo(103993 / 33102, 8);
 	});
 	test("e is defined", () => {
-		const result = evaluate([T.cons("e")], d(0), d(0));
+		const result = evaluate([T.cons("e")], d(0), d(0), "rad");
 		if (result.isErr()) expect.unreachable(`Could not evaluate value of Napier's constant: (${result.error})`);
 		expect(result.value.toNumber()).toBeCloseTo(49171 / 18089, 8);
 	});
 	test("Can be used in expressions", () => {
-		const result = evaluate([T.cons("e"), t.div, T.cons("pi")], d(0), d(0));
+		const result = evaluate([T.cons("e"), t.div, T.cons("pi")], d(0), d(0), "rad");
 		if (result.isErr()) expect.unreachable(`Could not use constants in expression: (${result.error})`);
 		expect(result.value.toNumber()).toBeCloseTo(53035 / 61294, 8);
 	});
@@ -132,19 +132,144 @@ describe("Constants", () => {
 
 describe("Memory registers", () => {
 	test("Answer register is used", () => {
-		const result = evaluate([t.ans], d(100), d(0));
+		const result = evaluate([t.ans], d(100), d(0), "rad");
 		if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
 		expect(result.value.toNumber()).toEqual(100);
 	});
 	test("Independent register is used", () => {
-		const result = evaluate([t.ind], d(0), d(100));
+		const result = evaluate([t.ind], d(0), d(100), "rad");
 		if (result.isErr()) expect.unreachable(`Could not use the independent register: (${result.error})`);
 		expect(result.value.toNumber()).toEqual(100);
 	});
 	test("Can be used in expressions", () => {
-		const result = evaluate([t.ind, t.div, t.ans], d(712), d(108));
+		const result = evaluate([t.ind, t.div, t.ans], d(712), d(108), "rad");
 		if (result.isErr()) expect.unreachable(`Could not use the memory registers in expression: (${result.error})`);
 		expect(result.value.toNumber()).toEqual(108 / 712);
+	});
+});
+
+describe("Using degrees", () => {
+	test("0°", () => {
+		{
+			const result = evaluate([t.sin, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(0);
+		}
+		{
+			const result = evaluate([t.cos, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(1);
+		}
+		{
+			const result = evaluate([t.tan, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(0);
+		}
+	});
+	test("90°", () => {
+		{
+			const result = evaluate([t.sin, t.lbrk, litr(90), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(1);
+		}
+		{
+			const result = evaluate([t.cos, t.lbrk, litr(90), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(0);
+		}
+		{
+			const result = evaluate([t.tan, t.lbrk, litr(90), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBe(-707106781186547.5);
+		}
+	});
+	test("45°", () => {
+		{
+			const result = evaluate([t.sin, t.lbrk, litr(45), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(0.7071);
+		}
+		{
+			const result = evaluate([t.cos, t.lbrk, litr(45), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(0.7071);
+		}
+		{
+			const result = evaluate([t.tan, t.lbrk, litr(45), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBe(1);
+		}
+	});
+	test("200°", () => {
+		{
+			const result = evaluate([t.sin, t.lbrk, litr(200), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(-0.342);
+		}
+		{
+			const result = evaluate([t.cos, t.lbrk, litr(200), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(-0.9397);
+		}
+		{
+			const result = evaluate([t.tan, t.lbrk, litr(200), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(0.364);
+		}
+	});
+});
+
+describe("Using degrees in arcus functions", () => {
+	test("0", () => {
+		{
+			const result = evaluate([t.asin, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(0);
+		}
+		{
+			const result = evaluate([t.acos, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(90);
+		}
+		{
+			const result = evaluate([t.atan, t.lbrk, litr(0), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(0);
+		}
+	});
+	test("1", () => {
+		{
+			const result = evaluate([t.asin, t.lbrk, litr(1), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(90);
+		}
+		{
+			const result = evaluate([t.acos, t.lbrk, litr(1), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(0);
+		}
+		{
+			const result = evaluate([t.atan, t.lbrk, litr(1), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(45);
+		}
+	});
+	test("1/2", () => {
+		{
+			const result = evaluate([t.asin, t.lbrk, litr(0.5), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(30);
+		}
+		{
+			const result = evaluate([t.acos, t.lbrk, litr(0.5), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toEqual(60);
+		}
+		{
+			const result = evaluate([t.atan, t.lbrk, litr(0.5), t.rbrk], d(0), d(0), "deg");
+			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
+			expect(result.value.toNumber()).toBeCloseTo(26.5651);
+		}
 	});
 });
 

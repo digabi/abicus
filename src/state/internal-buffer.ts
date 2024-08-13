@@ -95,6 +95,8 @@ export default function useBuffer() {
 		empty: () => set(""),
 		/** Has the buffer been changed since the last `clean` call? An empty buffer is inherently dirty. */
 		isDirty: isDirty || buffer === "",
+		/** Manually marks the buffer as dirty */
+		makeDirty: () => setDirty(true),
 
 		/** Ref object to attach to the `input` element tied to this buffer */
 		ref,

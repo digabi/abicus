@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
-import { createContext, PropsWithChildren, useContext } from "react";
-import { calculate } from "#/calculator";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { AngleUnit, calculate } from "#/calculator";
 
 import useBuffer, { BufferHandle } from "./internal-buffer";
 import useMemory, { MemoryHandle } from "./internal-memory";
@@ -13,6 +13,13 @@ type CalculatorContext = {
 
 	/** Clear the input buffer and all memory registers */
 	clearAll(): void;
+
+	/** Unit to use in trigonometric functions */
+	angleUnit: AngleUnit;
+	/** Switch to using radians */
+	radsOn(): void;
+	/** Switch to using degrees */
+	degsOn(): void;
 
 	/**
 	 * Crunch the numbers!
@@ -40,6 +47,7 @@ export function useCalculator() {
 }
 
 export default function CalculatorProvider({ children }: PropsWithChildren) {
+	const [angleUnit, setAngleUnit] = useState<AngleUnit>("deg");
 	const buffer = useBuffer();
 	const memory = useMemory();
 
@@ -49,7 +57,7 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 	}
 
 	function crunch(saveToInd = false) {
-		const result = calculate(buffer.value, memory.ans, memory.ind);
+		const result = calculate(buffer.value, memory.ans, memory.ind, angleUnit);
 		if (result.isErr()) return;
 
 		const { value } = result;
@@ -68,6 +76,16 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 				memory,
 				clearAll,
 				crunch,
+
+				angleUnit,
+				radsOn() {
+					buffer.makeDirty();
+					setAngleUnit("rad");
+				},
+				degsOn() {
+					buffer.makeDirty();
+					setAngleUnit("deg");
+				},
 			}}
 		>
 			{children}

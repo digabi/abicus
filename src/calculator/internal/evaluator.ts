@@ -2,10 +2,12 @@ import Decimal from "decimal.js";
 import { isMatching, match, P, Pattern } from "ts-pattern";
 import { ok, err, Ok, Result } from "neverthrow";
 
+import { AngleUnit } from "..";
 import { Token } from "./tokeniser";
 
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
+const RAD_DEG_RATIO = new Decimal(180).div(PI);
 
 export type SyntaxErrorId = "UNEXPECTED_EOF" | "UNEXPECTED_TOKEN" | "NO_LHS_BRACKET" | "NO_RHS_BRACKET";
 export type EvalResult = Result<Decimal, SyntaxErrorId>;
@@ -18,7 +20,7 @@ export type EvalResult = Result<Decimal, SyntaxErrorId>;
  * - A string representing a syntax error in the input
  *
  */
-export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): EvalResult {
+export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, angleUnit: AngleUnit): EvalResult {
 	// This function is an otherwise stock-standard Pratt parser but instead
 	// of building a full AST as the `left` value, we instead eagerly evaluate
 	// the sub-expressions in the `led` parselets.
@@ -81,9 +83,24 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal): E
 				)
 			)
 			.with({ type: "func" }, token => {
-				return expect({ type: "lbrk" }, false).andThen(() =>
-					evalExpr(Infinity).map(value => Decimal[token.name](value))
-				);
+				const funcName = token.name;
+				const func = Decimal[funcName].bind(Decimal);
+
+				return expect({ type: "lbrk" }, false).andThen(() => {
+					const result = evalExpr(Infinity);
+					if (result.isErr()) return result;
+
+					const argument = result.value;
+
+					if (angleUnit === "rad") return ok(func(argument));
+
+					return ok(
+						match(funcName)
+							.with("sin", "cos", "tan", () => func(degToRad(argument)))
+							.with("asin", "acos", "atan", () => radToDeg(func(argument)))
+							.otherwise(() => func(argument))
+					);
+				});
 			})
 			.otherwise(() => err("UNEXPECTED_TOKEN"));
 	}
@@ -139,4 +156,14 @@ function lbp(token: Token) {
 		.with({ type: "oper", name: "^" }, () => 4)
 		.with({ type: "func" }, () => 5)
 		.exhaustive();
+}
+
+/** Converts the argument from degrees to radians */
+function degToRad(deg: Decimal) {
+	return deg.div(RAD_DEG_RATIO);
+}
+
+/** Converts the argument from radians to degrees */
+function radToDeg(rad: Decimal) {
+	return rad.mul(RAD_DEG_RATIO);
 }

@@ -1,6 +1,7 @@
 import { useCalculator } from "#/state";
 
 import CalculatorInput from "./calc-buffer-input";
+import RadDegToggle from "./rad-deg-toggle";
 
 export default function Screen() {
 	const { buffer, memory } = useCalculator();
@@ -8,7 +9,14 @@ export default function Screen() {
 	return (
 		<>
 			<div
-				x={["relative", "h-24", "text-xl", "border rounded-md overflow-hidden", "has-[:focus]:ring-2 ring-blue-400"]}
+				x={[
+					"relative",
+					"h-24",
+					"text-xl",
+					"rounded-md overflow-hidden",
+					"border border-abi-dgrey has-[:focus]:border-transparent",
+					"has-[:focus]:ring-2 ring-blue-400",
+				]}
 			>
 				{/* Sliding background */}
 				<div
@@ -38,6 +46,7 @@ export default function Screen() {
 				</div>
 
 				<CalculatorInput />
+				<RadDegToggle />
 			</div>
 		</>
 	);
