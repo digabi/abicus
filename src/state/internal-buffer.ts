@@ -1,13 +1,18 @@
 import { SetStateAction, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
+import { BUFFER_DEBUG, INPUT_DEBUG } from "#/error-boundary/constants";
 import prettify from "#/utils/prettify-expression";
 
 export type BufferHandle = ReturnType<typeof useBuffer>;
 export default function useBuffer() {
-	const [isDirty, setDirty] = useState(true);
 	const [buffer, setBuffer] = useState("");
+	const [isDirty, setDirty] = useState(true);
+	const [isErr, setErr] = useState(false);
+
 	const ref = useRef<HTMLInputElement>(null);
+
+	(window as any)[BUFFER_DEBUG] = buffer;
 
 	function getSelection(): [lhs: number, rhs: number] {
 		if (!ref.current) return [0, 0];
@@ -25,11 +30,13 @@ export default function useBuffer() {
 	function clean() {
 		setBuffer(prettify);
 		setDirty(false);
+		setErr(false);
 	}
 
 	function set(value: SetStateAction<string>) {
 		setBuffer(value);
 		setDirty(true);
+		setErr(false);
 	}
 
 	function del() {
@@ -61,6 +68,8 @@ export default function useBuffer() {
 	function rawInput(inpLhs: string, inpRhs: string, action: "replace" | "wrap", cursorOffset: number) {
 		// This was exactly as "fun" to figure out how to write as it is to read through
 
+		(window as any)[INPUT_DEBUG] = JSON.stringify({ inpLhs, inpRhs, action, cursorOffset });
+
 		const [curLhs, curRhs] = getSelection();
 
 		flushSync(() => {
@@ -89,14 +98,21 @@ export default function useBuffer() {
 		set,
 		/** *Delete* the last character or a full token if applicable */
 		del,
+
 		/** Manually sets the status to "not dirty" (namely used when the buffer is evaluated) */
 		clean,
 		/** Empty the input buffer */
 		empty: () => set(""),
+
 		/** Has the buffer been changed since the last `clean` call? An empty buffer is inherently dirty. */
 		isDirty: isDirty || buffer === "",
 		/** Manually marks the buffer as dirty */
 		makeDirty: () => setDirty(true),
+
+		/** Has the buffer been marked as having a syntax error */
+		isErr,
+		/** Mark the buffer as having a syntax error */
+		setErr,
 
 		/** Ref object to attach to the `input` element tied to this buffer */
 		ref,

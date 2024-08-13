@@ -4,6 +4,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
+import * as child from "child_process";
+
+const commitHash = child.execSync("git rev-parse HEAD").toString();
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
@@ -19,6 +22,10 @@ export default defineConfig(async () => ({
 			},
 		}),
 	],
+
+	define: {
+		__GIT_HASH__: JSON.stringify(commitHash),
+	},
 
 	// Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
 	//
