@@ -39,7 +39,24 @@
 				"icons/128x128@2x.png",
 				"icons/icon.icns",
 				"icons/icon.ico"
-			]
+			],
+			"windows": {
+				"nsis": {
+					"displayLanguageSelector": true,
+					"languages": [
+						"fi-FI",
+						"sv-SE",
+						"en-GB"
+					]
+				},
+				"wix": {
+					"language": [
+						"fi-FI",
+						"sv-SE",
+						"en-GB"
+					]
+				}
+			}
 		}
 	}
 }
