@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
-import { calculate } from "#/calculator";
+import { AngleUnit, calculate } from "#/calculator";
 
 import useBuffer, { BufferHandle } from "./internal-buffer";
 import useMemory, { MemoryHandle } from "./internal-memory";
@@ -15,7 +15,7 @@ type CalculatorContext = {
 	clearAll(): void;
 
 	/** Unit to use in trigonometric functions */
-	angleUnit: "deg" | "rad";
+	angleUnit: AngleUnit;
 	/** Switch to using radians */
 	radsOn(): void;
 	/** Switch to using degrees */
@@ -47,7 +47,7 @@ export function useCalculator() {
 }
 
 export default function CalculatorProvider({ children }: PropsWithChildren) {
-	const [angleUnit, setAngleUnit] = useState<"deg" | "rad">("deg");
+	const [angleUnit, setAngleUnit] = useState<AngleUnit>("deg");
 	const buffer = useBuffer();
 	const memory = useMemory();
 

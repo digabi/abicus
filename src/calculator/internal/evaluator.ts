@@ -2,6 +2,7 @@ import Decimal from "decimal.js";
 import { isMatching, match, P, Pattern } from "ts-pattern";
 import { ok, err, Ok, Result } from "neverthrow";
 
+import { AngleUnit } from "..";
 import { Token } from "./tokeniser";
 
 const PI = Decimal.acos(-1);
@@ -19,7 +20,7 @@ export type EvalResult = Result<Decimal, SyntaxErrorId>;
  * - A string representing a syntax error in the input
  *
  */
-export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, angleUnit: "deg" | "rad"): EvalResult {
+export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, angleUnit: AngleUnit): EvalResult {
 	// This function is an otherwise stock-standard Pratt parser but instead
 	// of building a full AST as the `left` value, we instead eagerly evaluate
 	// the sub-expressions in the `led` parselets.
