@@ -7,7 +7,11 @@ export default function Keypad() {
 	const calculator = useCalculator();
 
 	function onClickMemIn() {
-		calculator.crunch(true);
+		if (!calculator.buffer.isDirty && !calculator.buffer.isErr) {
+			calculator.memory.setInd(calculator.memory.ans);
+		} else {
+			calculator.crunch(true);
+		}
 	}
 
 	// Show "clear buffer" (C) button when buffer has content and "clear all" (AC) when buffer is empty
