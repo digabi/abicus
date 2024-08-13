@@ -49,19 +49,39 @@ After all the required packages have been installed, run one of the following co
 
 ## Tests
 
-This project uses the [Vitest testing framework](https://vitest.dev). After the project has been [set up](#installation), to run all the unit tests for the project you can simply run:
+This project uses the [Vitest testing framework](https://vitest.dev) for unit tests and [Playwright](https://playwright.dev) for UI tests. After the project has been [set up](#installation), to run all the tests for the project you can simply run:
 
 ```bash
 npm run test
 ```
 
-Please see the [Vitest CLI documentation](https://vitest.dev/guide/cli.html) for details on e.g. how to filter which tests to run etc.
+To run only the unit tests:
+
+```bash
+npm run test:unit
+```
+
+And to only run the UI tests:
+
+```bash
+npm run test:ui
+```
+
+Please see the Vitest and/or Playwright documentation for details on e.g. how to filter which tests to run etc.
 
 ---
 
 <div align="center">
 
-| [![Abitti.dev](https://abitti.dev/images/abittidev_logo.svg)](https://abitti.dev/) | <ul><li><a href="https://abitti.dev">Abitti.dev</a></li><li><a href="https://abitti.dev/abitti-trademark.html">Use of Abitti Trademark policy</a></li></ul> |
-| ---------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-
-</div>
+<table>
+  <tr>
+    <td>
+      <a href="https://abitti.dev/">
+        <img src="https://abitti.dev/images/abittidev_logo.svg" />
+      </a>
+    </td>
+    <td>
+      <ul><li><a href="https://abitti.dev">Abitti.dev</a></li><li><a href="https://abitti.dev/abitti-trademark.html">Use of Abitti Trademark policy</a></li></ul>
+    </td>
+  </tr>
+</table>
