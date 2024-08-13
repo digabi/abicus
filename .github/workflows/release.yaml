@@ -62,7 +62,7 @@ jobs:
           releaseBody: |
             <img alt="logo" height="100" src="https://github.com/digabi/abicus/blob/master/app-icon.png" />
 
-            ### Esikäännetyt binäärit<br/>Förkompilerade binärfiler<br/>Precompiled binaries
+            ### Precompiled binaries
 
             <table>
               <tr>
@@ -74,12 +74,12 @@ jobs:
                 <td>
                   <ul>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/abicus_0.0.0_amd64.AppImage">
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.AppImage">
                         AppImage (x64)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/abicus_0.0.0_amd64.deb">
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.deb">
                         Debian (x64 <code>.deb</code>)
                       </a>
                     </li>
@@ -88,12 +88,12 @@ jobs:
                 <td>
                   <ul>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_0.0.0_x64_en-US.msi">
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_en-US.msi">
                         Windows Installer (x64 <code>.msi</code>)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_0.0.0_x64-setup.exe">
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64-setup.exe">
                         Windows Executable (x64 <code>.exe</code>)
                       </a>
                     </li>
@@ -102,31 +102,23 @@ jobs:
                 <td>
                   <ul>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_aarch64.app.tar.gz">
-                        Mac-tietokone Apple-prosessorilla (<code>.app</code>)
-                        <br/>
-                        Mac-datorer med Apple-processor (<code>.app</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_aarch64.app.tar.gz">
+                        Mac-computers with Apple-processors (<code>.app</code>)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_x64.app.tar.gz">
-                        Mac-tietokone Intel-prosessorilla (<code>.app</code>)
-                        <br/>
-                        Mac-datorer med Intel-processor (<code>.app</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_x64.app.tar.gz">
+                        Mac-computers with Intel-processors (<code>.app</code>)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_0.0.0_aarch64.dmg">
-                        Mac-tietokone Apple-prosessorilla (<code>.dmg</code>)
-                        <br/>
-                        Mac-datorer med Apple-processor (<code>.dmg</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___aarch64.dmg">
+                        Mac-computers with Apple-processors (<code>.dmg</code>)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v0.0.0/Abicus_0.0.0_x64.dmg">
-                        Mac-tietokone Intel-prosessorilla (<code>.dmg</code>)
-                        <br/>
-                        Mac-datorer med Intel-processor (<code>.dmg</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64.dmg">
+                        Mac-computers with Intel-processors (<code>.dmg</code>)
                       </a>
                     </li>
                   </ul>
