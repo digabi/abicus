@@ -5,7 +5,7 @@ import { match } from "ts-pattern";
 import { EXPR_DEBUG } from "#/error-boundary/constants";
 
 export default function Input() {
-	const { buffer, crunch } = useCalculator();
+	const { buffer, crunch, angleUnit, degsOn, radsOn } = useCalculator();
 
 	const shouldShowOutput = !buffer.isDirty && !buffer.isErr;
 
@@ -16,7 +16,7 @@ export default function Input() {
 
 	function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
 		match(e.key)
-			.with("Enter", "=", () => {
+			.with("Enter", "=", "ArrowDown", () => {
 				crunch();
 			})
 			.with("(", () => {
@@ -33,6 +33,12 @@ export default function Input() {
 			})
 			.with("*", () => {
 				buffer.input.oper("×");
+			})
+			.with("Escape", () => {
+				buffer.empty();
+			})
+			.with("Tab", () => {
+				angleUnit === "deg" ? radsOn() : degsOn();
 			})
 			.otherwise(() => true) || e.preventDefault();
 	}
