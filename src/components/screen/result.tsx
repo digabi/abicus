@@ -16,7 +16,6 @@ export default function Result() {
 				"px-4 py-1",
 				"bg-slate-100",
 				shouldShowOutput ? "translate-y-0" : "translate-y-full",
-				// shouldShowOutput ? "translate-y-8" : "translate-y-0",
 			]}
 		>
 			<span x="pointer-events-none text-slate-500">{"="}</span>
