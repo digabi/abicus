@@ -40,6 +40,9 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
+			"deb": {
+				"section": "math"
+			},
 			"windows": {
 				"nsis": {
 					"displayLanguageSelector": true,
