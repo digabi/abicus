@@ -4,6 +4,6 @@
 **/target
 **/playwright*
 **/test*
-**/.git*
+**/.github
 **/npm-debug.log
 **/.DS_Store
