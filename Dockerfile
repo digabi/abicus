@@ -6,7 +6,7 @@ RUN npm ci
 
 FROM node:20.15.0 AS build
 ARG GIT_HASH=""
-ENV GIT_HASH ${GIT_HASH}
+ENV GIT_HASH=${GIT_HASH}
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
