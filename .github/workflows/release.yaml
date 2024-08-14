@@ -88,13 +88,13 @@ jobs:
                 <td>
                   <ul>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_en-US.msi">
-                        Windows Installer (x64 <code>.msi</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_fi-FI.msi">
+                        Windows Installer (Finnish) (x64 <code>.msi</code>)
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64-setup.exe">
-                        Windows Executable (x64 <code>.exe</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_sv-SE.msi">
+                        Windows Installer (Swedish) (x64 <code>.msi</code>)
                       </a>
                     </li>
                   </ul>
