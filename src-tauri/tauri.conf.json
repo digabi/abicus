@@ -44,14 +44,7 @@
 				"section": "math"
 			},
 			"windows": {
-				"nsis": {
-					"displayLanguageSelector": true,
-					"languages": [
-						"fi-FI",
-						"sv-SE",
-						"en-GB"
-					]
-				},
+				"nsis": null,
 				"wix": {
 					"language": [
 						"fi-FI",
