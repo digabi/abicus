@@ -10,6 +10,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
         with:
           role-to-assume: arn:aws:iam::${{ secrets.UTILITY_ACCOUNT_ID }}:role/AbicusGithubActionsAccessRole
+          aws-region: eu-north-1
 
       - name: Login to Amazon ECR
         id: login-ecr
