@@ -17,7 +17,7 @@ It is built for use in the Finnish digital matriculation examinations.
 </div>
 
 > [!NOTE]
-> The calculator was developed especially to be an example of an Abitti 2 application. The source code, the Abitti 2 container, and precompiled binaries of the calculator are made available to the public for demonstration purposes only. The matriculation examination board does not provide support for e.g. installing the precompiled binaries.
+> The calculator was developed especially to be an example of an Abitti 2 application. The source code, the Abitti 2 container (WiP), and precompiled binaries of the calculator are made available to the public for demonstration purposes only. The matriculation examination board does not provide support for e.g. installing the precompiled binaries.
 >
 > We request that any errors in the program are reported to Abitti-support (abitti@ylioppilastutkinto.fi)
 
