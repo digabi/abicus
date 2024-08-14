@@ -1,0 +1,9 @@
+**/node_modules
+**/dist
+**/.vscode
+**/target
+**/playwright*
+**/test*
+**/.git*
+**/npm-debug.log
+**/.DS_Store
