@@ -60,11 +60,6 @@ jobs:
     name: Build Desktop Application (${{ matrix.title }})
     runs-on: ${{ matrix.platform }}
     steps:
-      - name: Set git to use LF
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
-
       - name: Check out
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
@@ -80,23 +75,11 @@ jobs:
         if: matrix.platform == 'windows-latest'
         shell: powershell
         run: |
-          $content = Get-Content -Path package.json -Raw
-          $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
-          $base64 = [System.Convert]::ToBase64String($byte_array)
-          echo "Before jq"
-          echo $base64
-
           $abicus_ver = jq -r ".version" package.json
-
-          $content = Get-Content -Path package.json -Raw
-          $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
-          $base64 = [System.Convert]::ToBase64String($byte_array)
-          echo "After jq-1"
-          echo $base64
-
-          jq ".version = \`"$abicus_ver-${{ github.run_number }}.${{ github.run_attempt }}\`"" package.json | tr -d '\r' | Out-File tmp-package.json -Encoding UTF8
-          cat tmp-package.json
+          jq ".version = \`"$abicus_ver-${{ github.run_number }}.${{ github.run_attempt }}\`"" package.json | Out-File tmp-package.json -Encoding UTF8
           Move-Item -Path tmp-package.json -Destination package.json -Force
+          ((Get-Content package.json) -join "`n") + "`n" | Set-Content -NoNewline package.json
+
           $content = Get-Content -Path package.json -Raw
           $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
           $base64 = [System.Convert]::ToBase64String($byte_array)
