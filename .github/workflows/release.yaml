@@ -60,6 +60,11 @@ jobs:
     name: Build Desktop Application (${{ matrix.title }})
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Check out
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
