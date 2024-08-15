@@ -3,7 +3,6 @@ on: [workflow_dispatch]
 
 jobs:
   build-docker:
-    if: false
     name: Build Docker Image and Push to Abitti 2 ECR
     runs-on: ubuntu-latest
     permissions:
@@ -44,15 +43,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - title: MacOS (arm64)
-          #   platform: macos-latest
-          #   args: "--target aarch64-apple-darwin"
-          # - title: MacOS (x86_64)
-          #   platform: macos-latest
-          #   args: "--target x86_64-apple-darwin"
-          # - title: Ubuntu
-          #   platform: ubuntu-22.04
-          #   args: ""
+          - title: MacOS (arm64)
+            platform: macos-latest
+            args: "--target aarch64-apple-darwin"
+          - title: MacOS (x86_64)
+            platform: macos-latest
+            args: "--target x86_64-apple-darwin"
+          - title: Ubuntu
+            platform: ubuntu-22.04
+            args: ""
           - title: Windows
             platform: windows-latest
             args: ""
@@ -147,13 +146,8 @@ jobs:
                 <td>
                   <ul>
                     <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_fi-FI.msi">
-                        Windows Installer (Finnish) (x64 <code>.msi</code>)
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64_sv-SE.msi">
-                        Windows Installer (Swedish) (x64 <code>.msi</code>)
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64-setup.exe">
+                        Windows Installer (x64 <code>.exe</code>)
                       </a>
                     </li>
                   </ul>
