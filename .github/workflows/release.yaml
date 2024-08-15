@@ -79,6 +79,10 @@ jobs:
           jq --binary ".version = \`"$abicus_ver-${{ github.run_number }}.${{ github.run_attempt }}\`"" package.json | Out-File tmp-package.json -Encoding UTF8
           cat tmp-package.json
           Move-Item -Path tmp-package.json -Destination package.json -Force
+          $content = Get-Content -Path package.json -Raw
+          $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
+          $base64 = [System.Convert]::ToBase64String($byte_array)
+          echo $base64
 
       - name: Set up Node
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
