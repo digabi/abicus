@@ -6,7 +6,7 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import * as child from "child_process";
 
-const commitHash = child.execSync("git rev-parse HEAD").toString();
+const commitHash = process.env.GIT_HASH || child.execSync("git rev-parse HEAD").toString();
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
