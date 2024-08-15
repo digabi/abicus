@@ -62,6 +62,24 @@ jobs:
       - name: Check out
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
+      - name: Inject workflow run information into app version
+        if: matrix.platform == 'ubuntu-22.04' || matrix.platform == 'macos-latest'
+        run: |
+          ABICUS_VERSION=$(jq -r '.version' package.json)
+          TMP_FILE=$(mktemp)
+          jq ".version = \"$ABICUS_VERSION-${{ github.run_number }}.${{ github.run_attempt }}\"" package.json > "$TMP_FILE"
+          mv $TMP_FILE package.json
+
+      - name: Inject workflow run information into app version (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: powershell
+        run: |
+          $abicus_ver = jq -r ".version" package.json
+          echo $abicus_ver
+          jq ".version = \`"$abicus_ver-${{ github.run_number }}.${{ github.run_attempt }}\`"" package.json | Out-File tmp-package.json -Encoding UTF8
+          cat tmp-package.json
+          Move-Item -Path tmp-package.json -Destination package.json -Force
+
       - name: Set up Node
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         with:
@@ -72,7 +90,7 @@ jobs:
         with:
           target: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: Install build dependencies
+      - name: Install build dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
