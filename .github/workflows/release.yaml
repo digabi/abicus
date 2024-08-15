@@ -75,7 +75,20 @@ jobs:
         if: matrix.platform == 'windows-latest'
         shell: powershell
         run: |
+          $content = Get-Content -Path package.json -Raw
+          $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
+          $base64 = [System.Convert]::ToBase64String($byte_array)
+          echo "Before jq"
+          echo $base64
+
           $abicus_ver = jq -r ".version" package.json
+
+          $content = Get-Content -Path package.json -Raw
+          $byte_array = [System.Text.Encoding]::UTF8.GetBytes($content)
+          $base64 = [System.Convert]::ToBase64String($byte_array)
+          echo "After jq-1"
+          echo $base64
+
           jq ".version = \`"$abicus_ver-${{ github.run_number }}.${{ github.run_attempt }}\`"" package.json | tr -d '\r' | Out-File tmp-package.json -Encoding UTF8
           cat tmp-package.json
           Move-Item -Path tmp-package.json -Destination package.json -Force
