@@ -3,6 +3,7 @@ on: [workflow_dispatch]
 
 jobs:
   build-docker:
+    if: false
     name: Build Docker Image and Push to Abitti 2 ECR
     runs-on: ubuntu-latest
     permissions:
@@ -43,15 +44,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - title: MacOS (arm64)
-            platform: macos-latest
-            args: "--target aarch64-apple-darwin"
-          - title: MacOS (x86_64)
-            platform: macos-latest
-            args: "--target x86_64-apple-darwin"
-          - title: Ubuntu
-            platform: ubuntu-22.04
-            args: ""
+          # - title: MacOS (arm64)
+          #   platform: macos-latest
+          #   args: "--target aarch64-apple-darwin"
+          # - title: MacOS (x86_64)
+          #   platform: macos-latest
+          #   args: "--target x86_64-apple-darwin"
+          # - title: Ubuntu
+          #   platform: ubuntu-22.04
+          #   args: ""
           - title: Windows
             platform: windows-latest
             args: ""
