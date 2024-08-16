@@ -40,6 +40,7 @@ jobs:
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
 
   build-docker:
+    if: false
     name: Build Docker Image and Push to Abitti 2 ECR
     runs-on: ubuntu-latest
     permissions:
@@ -76,6 +77,7 @@ jobs:
           build-args: GIT_HASH=${{ github.sha }}
 
   build-binaries:
+    if: false
     strategy:
       fail-fast: false
       matrix:
