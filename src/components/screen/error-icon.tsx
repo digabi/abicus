@@ -8,6 +8,7 @@ export default function ErrorIcon() {
 		<div
 			x={[
 				"absolute bottom-0 left-0",
+				"pointer-events-none",
 				"pl-2 py-2",
 				"bg-white",
 				"transition-opacity",
