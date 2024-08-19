@@ -78,6 +78,9 @@ run("Negative numbers", [
 	[[t.sub, t.lbrk, litr(5), t.mul, litr(5), t.rbrk], d(-25)],
 	[[litr(7), t.add, t.lbrk, t.sub, litr(5), t.rbrk], d(7).plus(-5)],
 	[[litr(7), t.add, t.sub, litr(5)], d(7).plus(-5)],
+	[[t.sub, litr(5), t.add, litr(10), t.div, litr(2)], d(0)],
+	[[t.sub, t.lbrk, litr(5), t.add, litr(10), t.div, litr(2), t.rbrk], d(-10)],
+	[[t.sub, t.lbrk, litr(5), t.add, litr(10), t.rbrk, t.div, litr(2)], d(-7.5)],
 ]);
 
 //prettier-ignore
