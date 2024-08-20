@@ -83,7 +83,7 @@ jobs:
             platform: macos-latest
             args: "--target x86_64-apple-darwin"
           - title: Ubuntu
-            platform: ubuntu-22.04
+            platform: ubuntu-20.04
             args: ""
           - title: Windows
             platform: windows-latest
