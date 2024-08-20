@@ -12,7 +12,7 @@ export default function Result() {
 				"absolute bottom-0",
 				"w-full",
 				"flex items-center justify-between",
-				"transition-transform",
+				"transition-all",
 				"px-4 py-1",
 				"bg-slate-100",
 				shouldShowOutput ? "translate-y-0" : "translate-y-full",

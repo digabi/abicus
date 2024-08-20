@@ -77,7 +77,7 @@ export default function Input() {
 				"px-4 pt-14",
 				"bg-transparent",
 				"text-right",
-				"transition-transform",
+				"transition-all",
 				// Focus is shown by the parent so it's safe to disable here
 				"focus:outline-none",
 				shouldShowOutput ? "text-slate-500 text-sm" : "text-black",

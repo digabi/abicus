@@ -11,7 +11,7 @@ export default function ErrorIcon() {
 				"pointer-events-none",
 				"pl-2 py-2",
 				"bg-white",
-				"transition-opacity",
+				"transition-all",
 				buffer.isErr ? "opacity-100" : "opacity-0",
 			]}
 			style={{ boxShadow: "0 0 4px 4px white" }}

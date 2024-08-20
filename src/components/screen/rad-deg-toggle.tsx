@@ -19,7 +19,7 @@ export default function RadDegToggle() {
 				x={[
 					"text-xs",
 					"h-full px-3",
-					"transition-colors",
+					"transition-all",
 					angleUnit === "rad" ? "bg-abi-lgrey text-black" : "bg-white text-abi-dgrey",
 				]}
 			>
@@ -30,7 +30,7 @@ export default function RadDegToggle() {
 				x={[
 					"text-xs",
 					"h-full px-3",
-					"transition-colors",
+					"transition-all",
 					angleUnit === "deg" ? "bg-abi-lgrey text-black" : "bg-white text-abi-dgrey",
 				]}
 			>
