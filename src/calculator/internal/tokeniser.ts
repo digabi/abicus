@@ -141,15 +141,15 @@ const tokenMatchers = [
 ] satisfies [RegExp, (str: string) => { type: string }][];
 
 /**
- * Reads an input expression and returns a `Result<Token[], number>` where
+ * Reads an input expression and returns a `Result<Token[], LexicalError>` where
  * - `Token[]` is the tokenised expression, or
- * - `number` is the starting index of the *first lexical error* (i.e. unrecognised word) in the input expression.
+ * - `LexicalError.idx` is the starting index of the *first lexical error* (i.e. unrecognised word) in the input expression.
  *
  * @see {@link Token}
  * @example
  * ```typescript
  * tokenise("1 + 2") // => Ok([{ type: "litr", value: Decimal(1) }, { type: "oper", name: "+" }, ...])
- * tokenise("1 ö 2") // => Err(2) // 2 === "1 ö 2".indexOf("ö")
+ * tokenise("1 ö 2") // => Err({ type: "UNKNOWN_TOKEN", idx: 2 }) // 2 === "1 ö 2".indexOf("ö")
  * ```
  */
 export default function tokenise(expression: string): Result<Token[], LexicalError> {
