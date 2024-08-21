@@ -156,7 +156,7 @@ export default function useBuffer() {
 
 			power() {
 				if (isSelection()) {
-					rawInput("(", `)^()`, "wrap", -1);
+					rawInput("(", `) ^ ()`, "wrap", -1);
 				} else {
 					rawInput("^(", ")", "replace", -1);
 				}
@@ -164,17 +164,17 @@ export default function useBuffer() {
 
 			magnitude() {
 				if (isSelection()) {
-					rawInput("(", `)×10^()`, "wrap", -1);
+					rawInput("(", `) × 10 ^ ()`, "wrap", -1);
 				} else {
-					rawInput("×10^(", ")", "replace", -1);
+					rawInput("× 10 ^ (", ")", "replace", -1);
 				}
 			},
 
 			square() {
 				if (isSelection()) {
-					rawInput("(", `)^2`, "wrap", 0);
+					rawInput("(", `) ^ 2`, "wrap", 0);
 				} else {
-					rawInput("^2", "", "replace", 0);
+					rawInput("^ 2", "", "replace", 0);
 				}
 			},
 		},
