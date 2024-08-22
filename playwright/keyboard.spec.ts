@@ -14,7 +14,7 @@ test("Crunch by pressing Enter on keyboard", async ({ page }) => {
 test("Crunch by pressing Equals sign on keyboard", async ({ page }) => {
 	await page.getByRole("textbox").fill("sqrt(49)");
 	await page.keyboard.press("=");
-	expect(await page.getByRole("textbox").inputValue()).toBe("√(25)");
+	expect(await page.getByRole("textbox").inputValue()).toBe("√(49)");
 	expect(page.getByRole("status")).toHaveText("7");
 });
 
