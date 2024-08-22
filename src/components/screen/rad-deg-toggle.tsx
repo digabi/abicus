@@ -16,6 +16,7 @@ export default function RadDegToggle() {
 		>
 			<button
 				onClick={radsOn}
+				disabled={angleUnit === "rad"}
 				x={[
 					"text-xs",
 					"h-full px-3",
@@ -27,6 +28,7 @@ export default function RadDegToggle() {
 			</button>
 			<button
 				onClick={degsOn}
+				disabled={angleUnit === "deg"}
 				x={[
 					"text-xs",
 					"h-full px-3",
