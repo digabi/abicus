@@ -177,7 +177,7 @@ jobs:
         with:
           args: ${{ matrix.args }}
           tagName: v__VERSION__
-          releaseDraft: true
+          releaseDraft: false
           releaseName: Abicus v__VERSION__
           releaseBody: |
             <img alt="logo" height="100" src="https://github.com/digabi/abicus/blob/master/app-icon.png" />
