@@ -97,7 +97,7 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: GIT_HASH=${{ github.sha }}
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/abicus-prod:v${{ env.ABICUS_VERSION }}-${{ github.run_number }}.${{ github.run_attempt }}
+            ${{ steps.login-ecr.outputs.registry }}/abicus:v${{ env.ABICUS_VERSION }}-${{ github.run_number }}.${{ github.run_attempt }}
 
   build-binaries:
     if: false
