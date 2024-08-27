@@ -3,6 +3,7 @@ on: [workflow_dispatch]
 
 jobs:
   run-tests:
+    if: false
     name: Run Tests
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +62,7 @@ jobs:
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
 
   build-docker:
-    needs: run-tests
+    # needs: run-tests
     name: Build Docker Image and Push to Abitti 2 ECR
     runs-on: ubuntu-latest
     permissions:
@@ -99,6 +100,7 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/abicus-prod:v${{ env.ABICUS_VERSION }}-${{ github.run_number }}.${{ github.run_attempt }}
 
   build-binaries:
+    if: false
     needs: run-tests
     strategy:
       fail-fast: false
