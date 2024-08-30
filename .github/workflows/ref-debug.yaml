@@ -1,9 +1,0 @@
-name: Release (Production version for A2 + Binaries + GH Pages)
-on: [workflow_dispatch]
-
-jobs:
-  print-ref:
-    name: Print ref
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ github.ref_name }}
