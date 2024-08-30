@@ -156,7 +156,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           args: ${{ matrix.args }}
-          releaseDraft: true
+          releaseDraft: false
           tagName: ${{ github.ref_name }}
           releaseName: Abicus v__VERSION__
           releaseBody: |
