@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
+import { err, ok, Ok, Result } from "neverthrow";
 import { isMatching, match, P, Pattern } from "ts-pattern";
-import { ok, err, Ok, Result } from "neverthrow";
 
 import { AngleUnit } from "..";
 import { Token } from "./tokeniser";
@@ -8,9 +8,15 @@ import { Token } from "./tokeniser";
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
 const RAD_DEG_RATIO = new Decimal(180).div(PI);
+const TAN_PRECISION = new Decimal(1).div("1_000_000_000");
 
-export type SyntaxErrorId = "UNEXPECTED_EOF" | "UNEXPECTED_TOKEN" | "NO_LHS_BRACKET" | "NO_RHS_BRACKET";
-export type EvalResult = Result<Decimal, SyntaxErrorId>;
+export type EvalResult = Result<Decimal, EvalErrorId>;
+export type EvalErrorId =
+	| "UNEXPECTED_EOF"
+	| "UNEXPECTED_TOKEN"
+	| "NO_LHS_BRACKET"
+	| "NO_RHS_BRACKET"
+	| "TRIG_PRECISION";
 
 /**
  * Parses and evaluates a mathematical expression as a list of `Token`s into a `Decimal` value.
@@ -51,7 +57,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 *
 	 * Can either just peek at the next token or consume it, based on the value of the second argument.
 	 */
-	function expect(pattern: Pattern.Pattern<Token>, consumeNext: boolean): Result<Token, SyntaxErrorId> {
+	function expect(pattern: Pattern.Pattern<Token>, consumeNext: boolean): Result<Token, EvalErrorId> {
 		const token = consumeNext ? next() : peek();
 
 		if (!token) return err("UNEXPECTED_EOF");
@@ -89,17 +95,30 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 				return expect({ type: "lbrk" }, false).andThen(() => {
 					const result = evalExpr(Infinity);
 					if (result.isErr()) return result;
-
 					const argument = result.value;
 
-					if (angleUnit === "rad") return ok(func(argument));
+					const { any, union } = P;
 
-					return ok(
-						match(funcName)
-							.with("sin", "cos", "tan", () => func(degToRad(argument)))
-							.with("asin", "acos", "atan", () => radToDeg(func(argument)))
-							.otherwise(() => func(argument))
-					);
+					return match([angleUnit, funcName])
+						.with(["deg", union("sin", "cos")], () => ok(func(degToRad(argument))))
+						.with(["deg", union("asin", "acos", "atan")], () => ok(radToDeg(func(argument))))
+						.with([any, "tan"], () => {
+							const argInRads = angleUnit === "deg" ? degToRad(argument) : argument;
+
+							// Tangent is undefined when the tangent line is parallel to the x-axis,
+							// since parallel lines, by definition, don't cross.
+							// The tangent is parallel when the argument is $ pi/2 + n × pi $ where
+							// $ n $ is an integer. Since we use an approximation for pi, we can only
+							// check if the argument is "close enough" to being an integer.
+							const coefficient = argInRads.sub(PI.div(2)).div(PI);
+							const distFromCriticalPoint = coefficient.sub(coefficient.round()).abs();
+							const isArgCritical = distFromCriticalPoint.lt(TAN_PRECISION);
+
+							if (isArgCritical) return err("TRIG_PRECISION" as const);
+
+							return ok(func(argInRads));
+						})
+						.otherwise(() => ok(func(argument)));
 				});
 			})
 			.otherwise(() => err("UNEXPECTED_TOKEN"));
@@ -111,7 +130,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 *
 	 * Returns the value of a sub-expression with a preceeding (i.e. left) expression (i.e. value).
 	 */
-	function led(token: Token | undefined, left: Ok<Decimal, SyntaxErrorId>): EvalResult {
+	function led(token: Token | undefined, left: Ok<Decimal, EvalErrorId>): EvalResult {
 		return (
 			match(token)
 				.with(undefined, () => err("UNEXPECTED_EOF" as const))
