@@ -180,11 +180,6 @@ describe("Using degrees", () => {
 			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
 			expect(result.value.toNumber()).toBeCloseTo(0);
 		}
-		{
-			const result = evaluate([t.tan, t.lbrk, litr(90), t.rbrk], d(0), d(0), "deg");
-			if (result.isErr()) expect.unreachable(`Could not use the answer register: (${result.error})`);
-			expect(result.value.toNumber()).toBe(-707106781186547.5);
-		}
 	});
 	test("45°", () => {
 		{
@@ -304,4 +299,41 @@ describe("Syntax Errors", () => {
 		[t.sin, t.sin, t.lbrk, litr(10), t.rbrk],
 		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk],
 	]);
+});
+
+describe("Tangent errors", () => {
+	test("90°", () => {
+		const result = evaluate([t.tan, t.lbrk, litr(90), t.rbrk], d(0), d(0), "deg");
+		expect(result.isErr()).toBe(true);
+	});
+	test("90° + 180°", () => {
+		const result = evaluate([t.tan, t.lbrk, litr(90), t.add, litr(180), t.rbrk], d(0), d(0), "deg");
+		expect(result.isErr()).toBe(true);
+	});
+	test("90° - 180°", () => {
+		const result = evaluate([t.tan, t.lbrk, litr(90), t.sub, litr(180), t.rbrk], d(0), d(0), "deg");
+		expect(result.isErr()).toBe(true);
+	});
+	test("90° + 50_000 × 180°", () => {
+		const result = evaluate(
+			[t.tan, t.lbrk, litr(90), t.add, litr(50_000), t.mul, litr(180), t.rbrk],
+			d(0),
+			d(0),
+			"deg"
+		);
+		expect(result.isErr()).toBe(true);
+	});
+	test("90° + 50_000.1 × 180°", () => {
+		const result = evaluate(
+			[t.tan, t.lbrk, litr(90), t.add, litr(50_000.1), t.mul, litr(180), t.rbrk],
+			d(0),
+			d(0),
+			"deg"
+		);
+		expect(result.isErr()).toBe(false);
+	});
+	test("90° + 0.001 × 180°", () => {
+		const result = evaluate([t.tan, t.lbrk, litr(90), t.add, litr(0.001), t.mul, litr(180), t.rbrk], d(0), d(0), "deg");
+		expect(result.isErr()).toBe(false);
+	});
 });
