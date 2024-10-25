@@ -70,7 +70,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 * The null denotation of a token.
 	 * Also known as the "prefix" or "head" handler.
 	 *
-	 * Returns the value of a sub-expression without a preceeding (i.e. left) expression (i.e. value).
+	 * Returns the value of a sub-expression without a preceding (i.e. left) expression (i.e. value).
 	 */
 	function nud(token: Token | undefined): EvalResult {
 		return match(token)
@@ -128,7 +128,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 * The left denotation of a token.
 	 * Also known as the "infix" or "tail" handler.
 	 *
-	 * Returns the value of a sub-expression with a preceeding (i.e. left) expression (i.e. value).
+	 * Returns the value of a sub-expression with a preceding (i.e. left) expression (i.e. value).
 	 */
 	function led(token: Token | undefined, left: Ok<Decimal, EvalErrorId>): EvalResult {
 		return (
