@@ -60,7 +60,7 @@ export default function CalculatorProvider({ children }: PropsWithChildren) {
 		buffer.clean();
 
 		const result = calculate(buffer.value, memory.ans, memory.ind, angleUnit);
-		if (result.isErr() || result.value.isNaN() || !result.value.isFinite()) {
+		if (result.isErr()) {
 			buffer.setErr(true);
 			return;
 		}

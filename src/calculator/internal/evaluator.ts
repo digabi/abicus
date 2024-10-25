@@ -14,6 +14,8 @@ export type EvalResult = Result<Decimal, EvalErrorId>;
 export type EvalErrorId =
 	| "UNEXPECTED_EOF"
 	| "UNEXPECTED_TOKEN"
+	| "NOT_A_NUMBER"
+	| "INFINITY"
 	| "NO_LHS_BRACKET"
 	| "NO_RHS_BRACKET"
 	| "TRIG_PRECISION";
@@ -160,6 +162,10 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	// After the root eval call there shouldn't be anything to peek at
 	if (peek()) {
 		return err("UNEXPECTED_TOKEN");
+	} else if (result.value?.isNaN()) {
+		return err("NOT_A_NUMBER");
+	} else if (!result.value?.isFinite()) {
+		return err("INFINITY");
 	} else {
 		return result;
 	}
