@@ -162,6 +162,8 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	// After the root eval call there shouldn't be anything to peek at
 	if (peek()) {
 		return err("UNEXPECTED_TOKEN");
+	} else if (result.isErr()) {
+		return result;
 	} else if (result.value?.isNaN()) {
 		return err("NOT_A_NUMBER");
 	} else if (!result.value?.isFinite()) {
