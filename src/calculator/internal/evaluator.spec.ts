@@ -81,6 +81,22 @@ run("Negative numbers", [
 	[[t.sub, litr(5), t.add, litr(10), t.div, litr(2)], d(0)],
 	[[t.sub, t.lbrk, litr(5), t.add, litr(10), t.div, litr(2), t.rbrk], d(-10)],
 	[[t.sub, t.lbrk, litr(5), t.add, litr(10), t.rbrk, t.div, litr(2)], d(-7.5)],
+	[[t.lbrk, t.sub, litr(4), t.rbrk, t.pow, litr(4)], d(-4).pow(4)],
+	[[t.sub, t.lbrk, litr(4), t.pow, litr(4), t.rbrk], d(4).pow(4).neg()],
+	[[t.sub, t.lbrk, litr(4), t.pow, litr(4), t.rbrk, t.div, litr(5)], d(4).pow(4).div(5).neg()],
+	[[t.lbrk, t.sub, litr(4), t.rbrk, t.pow, litr(3)], d(-4).pow(3)],
+	[[t.sub, t.lbrk, litr(4), t.pow, litr(3), t.rbrk], d(4).pow(3).neg()],
+	[[t.sub, t.lbrk, litr(4), t.pow, litr(3), t.rbrk, t.div, litr(5)], d(4).pow(3).div(5).neg()],
+	[[t.sub, litr(5), t.add, litr(4)], d(5).neg().add(4)],
+	[[t.sub, litr(5), t.sub, litr(4)], d(5).neg().sub(4)],
+	[[t.sub, litr(5), t.mul, litr(4)], d(5).neg().mul(4)],
+	[[t.sub, litr(5), t.div, litr(4)], d(5).neg().div(4)],
+	[[t.sub, litr(5), t.pow, litr(4)], d(5).pow(4).neg()],
+	[[t.sub, litr(5), t.add, litr(4), t.div, litr(3)], d(5).neg().add(d(4).div(3))],
+	[[t.sub, litr(5), t.sub, litr(4), t.div, litr(3)], d(5).neg().sub(d(4).div(3))],
+	[[t.sub, litr(5), t.mul, litr(4), t.div, litr(3)], d(5).neg().mul(4).div(3)],
+	[[t.sub, litr(5), t.div, litr(4), t.div, litr(3)], d(5).neg().div(4).div(3)],
+	[[t.sub, litr(5), t.pow, litr(4), t.div, litr(3)], d(5).pow(4).neg().div(3)],
 ]);
 
 //prettier-ignore
@@ -337,3 +353,10 @@ describe("Tangent errors", () => {
 		expect(result.isErr()).toBe(false);
 	});
 });
+
+describe("Exponent errors", () => {
+	fail("Roots of negative numbers", [
+		[t.lbrk, t.sub, litr(17), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(2), t.rbrk],
+		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
+	])
+})
