@@ -80,7 +80,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 			.with({ type: "cons", name: "e" }, () => ok(E))
 			.with({ type: "memo", name: "ans" }, () => ok(ans))
 			.with({ type: "memo", name: "ind" }, () => ok(ind))
-			.with({ type: "oper", name: "-" }, () => evalExpr(Infinity).map(right => right.neg()))
+			.with({ type: "oper", name: "-" }, () => evalExpr(3).map(right => right.neg()))
 			.with({ type: "lbrk" }, () =>
 				evalExpr(0).andThen(value =>
 					expect({ type: "rbrk" }, true)
