@@ -27,7 +27,7 @@ It is built for use in the Finnish digital matriculation examinations.
 [Development Guide]()
 -->
 
-## Installation
+## Development Setup
 
 Clone this repository and make sure you have [Node.js](https://nodejs.org/) installed on your system. The exact version used in development can be found in the [`.nvmrc` file](./.nvmrc).
 
