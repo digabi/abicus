@@ -81,12 +81,12 @@ Please see the Vitest and/or Playwright documentation for details on e.g. how to
 <table>
   <tr>
     <td>
-      <a href="https://abitti.dev/">
-        <img src="https://abitti.dev/images/abittidev_logo.svg" />
+      <a href="https://abitti.net/">
+        <img src="https://abitti.net/images/abittinet_logo.svg" />
       </a>
     </td>
     <td>
-      <ul><li><a href="https://abitti.dev">Abitti.dev</a></li><li><a href="https://abitti.dev/abitti-trademark.html">Use of Abitti Trademark policy</a></li></ul>
+      <ul><li><a href="https://abitti.net">Abitti.net</a></li><li><a href="https://abitti.net/abitti-trademark.html">Use of Abitti Trademark policy</a></li></ul>
     </td>
   </tr>
 </table>
