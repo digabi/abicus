@@ -82,7 +82,7 @@ Please see the Vitest and/or Playwright documentation for details on e.g. how to
   <tr>
     <td>
       <a href="https://abitti.net/">
-        <img src="https://abitti.net/images/abittinet_logo.svg" />
+        <img width="400" src="https://abitti.net/images/abittinet_logo.svg" />
       </a>
     </td>
     <td>
