@@ -42,6 +42,7 @@ function* prettiedCharacters(tokens: Token[]) {
 		const formattedToken = match(cur)
 			.with({ type: "litr" }, token => token.value.toFixed().replace(".", ","))
 			.with({ type: "lbrk" }, () => "(")
+			.with({ type: "semi" }, () => ";")
 			.with({ type: "rbrk" }, () => ")")
 			.with({ type: "memo", name: "ans" }, () => "ANS")
 			.with({ type: "memo", name: "ind" }, () => "M")

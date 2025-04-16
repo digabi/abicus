@@ -93,15 +93,13 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 			.with({ type: "func" }, token => {
 				const funcName = token.name;
 				const func = Decimal[funcName].bind(Decimal);
-
-				return expect({ type: "lbrk" }, false).andThen(() => {
-					const result = evalExpr(Infinity);
-					if (result.isErr()) return result;
-					const argument = result.value;
-
+				const args = getArguments();
+				if (args[0] && args[0].isOk()) {
+					const argument = args[0].value;
 					const { any, union } = P;
 
 					return match([angleUnit, funcName])
+						.with([any, "sqrt"], () => ok(nthRoot(argument, args[1]?.isOk() ? args[1].value : new Decimal(2))))
 						.with(["deg", union("sin", "cos")], () => ok(func(degToRad(argument))))
 						.with(["deg", union("asin", "acos", "atan")], () => ok(radToDeg(func(argument))))
 						.with([any, "tan"], () => {
@@ -121,9 +119,26 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 							return ok(func(argInRads));
 						})
 						.otherwise(() => ok(func(argument)));
-				});
+				}
+				return args[0]!
 			})
 			.otherwise(() => err("UNEXPECTED_TOKEN"));
+
+		function getArguments(): EvalResult[] {
+			// TODO: support n arguments
+			const args = [] as EvalResult[]
+			const result = expect({ type: "lbrk" }, true).andThen(() => {
+				const firstArg = evalExpr(Infinity);
+				args.push(firstArg)
+				if (firstArg.isOk()) {
+					const secondArg = expect({ type: "semi" }, true).andThen(() => evalExpr(Infinity));
+					args.push(secondArg)
+				}
+				return expect({ type: "rbrk" }, true).andThen(() => firstArg)
+			})
+			if (result.isErr()) return [result]
+			return args
+		}
 	}
 
 	/**
@@ -176,7 +191,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 /** Returns the Left Binding Power of the given token */
 function lbp(token: Token) {
 	return match(token)
-		.with({ type: P.union("lbrk", "rbrk") }, () => 0)
+		.with({ type: P.union("lbrk", "rbrk", "semi") }, () => 0)
 		.with({ type: P.union("litr", "memo", "cons") }, () => 1)
 		.with({ type: "oper", name: P.union("+", "-") }, () => 2)
 		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
@@ -193,4 +208,10 @@ function degToRad(deg: Decimal) {
 /** Converts the argument from radians to degrees */
 function radToDeg(rad: Decimal) {
 	return rad.mul(RAD_DEG_RATIO);
+}
+
+function nthRoot(base: Decimal, root: Decimal) {
+	return base?.isNeg() && !root.mod(2).eq(0)
+		? base.neg().pow(new Decimal(1).div(root)).neg()
+		: base.pow(new Decimal(1).div(root));
 }

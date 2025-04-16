@@ -79,6 +79,11 @@ const tokenMatchers = [
 		_ => ({ type: "lbrk" as const }),
 	],
 	[
+		// Semicolor: ";"
+		/^;/,
+		_ => ({ type: "semi" as const }),
+	],
+	[
 		// Right bracket: ")"
 		/^\)/,
 		_ => ({ type: "rbrk" as const }),
