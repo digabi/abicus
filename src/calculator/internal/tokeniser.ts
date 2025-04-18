@@ -84,6 +84,11 @@ const tokenMatchers = [
 		_ => ({ type: "rbrk" as const }),
 	],
 	[
+		// Semicolon: ";"
+		/^;/,
+		_ => ({ type: "semi" as const }),
+	],
+	[
 		// Constants: "pi", "e", and unicode variations
 		/^(pi|π|e|ℇ|𝑒|ℯ)/i,
 		str => ({
@@ -118,24 +123,24 @@ const tokenMatchers = [
 				// TODO: Should we also support the "sin^(2)(x) == sin(x^2)" notation?
 				/^((a(rc)?)?(sin|cos|tan))/,
 				/^(log|lg|ln)/,
-				/^(sqrt|√)/,
+				/^(root|sqrt|√)/,
 			]
 				.map(subRegex => subRegex.source)
 				.join("|"),
-			"i"
+			"i",
 		),
 		str => ({
 			type: "func" as const,
 			name: match(str.toLowerCase())
-				.with("sqrt", "ln", "sin", "cos", "tan", "asin", "acos", "atan", name => name)
+				.with("sqrt", "root", "ln", "sin", "cos", "tan", "asin", "acos", "atan", name => name)
 				.with("log", "lg", () => "log10" as const)
-				.with("√", () => "sqrt" as const)
+				.with("√", () => "root" as const)
 				.with("arcsin", () => "asin" as const)
 				.with("arccos", () => "acos" as const)
 				.with("arctan", () => "atan" as const)
 				.otherwise(name => {
 					throw Error(`Programmer error: neglected function "${name}"`);
-				}) satisfies keyof typeof Decimal,
+				}),
 		}),
 	],
 ] satisfies [RegExp, (str: string) => { type: string }][];
