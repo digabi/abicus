@@ -7,6 +7,8 @@ import { Token } from "./tokeniser";
 Decimal.set({ precision: 500 });
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
+const ONE = new Decimal(1);
+const TWO = new Decimal(2);
 const RAD_DEG_RATIO = new Decimal(180).div(PI);
 const TAN_PRECISION = new Decimal(1).div("1_000_000_000");
 
@@ -18,6 +20,8 @@ export type EvalErrorId =
 	| "INFINITY"
 	| "NO_LHS_BRACKET"
 	| "NO_RHS_BRACKET"
+	| "NOT_ENOUGH_ARGS"
+	| "TOO_MANY_ARGS"
 	| "TRIG_PRECISION";
 
 /**
@@ -59,11 +63,13 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 *
 	 * Can either just peek at the next token or consume it, based on the value of the second argument.
 	 */
-	function expect(pattern: Pattern.Pattern<Token>, consumeNext: boolean): Result<Token, EvalErrorId> {
-		const token = consumeNext ? next() : peek();
+	function expect(pattern: Pattern.Pattern<Token>): Result<Token, EvalErrorId> {
+		const token = peek();
 
 		if (!token) return err("UNEXPECTED_EOF");
 		if (!isMatching(pattern, token)) return err("UNEXPECTED_TOKEN");
+
+		next();
 
 		return ok(token);
 	}
@@ -85,44 +91,65 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 			.with({ type: "oper", name: "-" }, () => evalExpr(3).map(right => right.neg()))
 			.with({ type: "lbrk" }, () =>
 				evalExpr(0).andThen(value =>
-					expect({ type: "rbrk" }, true)
+					expect({ type: "rbrk" })
 						.map(() => value)
-						.mapErr(() => "NO_RHS_BRACKET" as const)
-				)
+						.mapErr(() => "NO_RHS_BRACKET" as const),
+				),
 			)
-			.with({ type: "func" }, token => {
-				const funcName = token.name;
-				const func = Decimal[funcName].bind(Decimal);
+			.with({ type: "func" }, token =>
+				evalArgs().andThen(args =>
+					match(token.name)
+						.with("root", () => {
+							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
+							if (args.length > 2) return err("TOO_MANY_ARGS" as const);
 
-				return expect({ type: "lbrk" }, false).andThen(() => {
-					const result = evalExpr(Infinity);
-					if (result.isErr()) return result;
-					const argument = result.value;
+							const radicand = args[0]!;
+							const degree = args[1] ?? TWO;
 
-					const { any, union } = P;
+							if (degree.eq(0)) {
+								return err("NOT_A_NUMBER" as const);
+							}
 
-					return match([angleUnit, funcName])
-						.with(["deg", union("sin", "cos")], () => ok(func(degToRad(argument))))
-						.with(["deg", union("asin", "acos", "atan")], () => ok(radToDeg(func(argument))))
-						.with([any, "tan"], () => {
-							const argInRads = angleUnit === "deg" ? degToRad(argument) : argument;
-
-							// Tangent is undefined when the tangent line is parallel to the x-axis,
-							// since parallel lines, by definition, don't cross.
-							// The tangent is parallel when the argument is $ pi/2 + n × pi $ where
-							// $ n $ is an integer. Since we use an approximation for pi, we can only
-							// check if the argument is "close enough" to being an integer.
-							const coefficient = argInRads.sub(PI.div(2)).div(PI);
-							const distFromCriticalPoint = coefficient.sub(coefficient.round()).abs();
-							const isArgCritical = distFromCriticalPoint.lt(TAN_PRECISION);
-
-							if (isArgCritical) return err("TRIG_PRECISION" as const);
-
-							return ok(func(argInRads));
+							return ok(
+								radicand.isZero()
+									? radicand
+									: radicand.lt(0) && !degree.mod(2).eq(0)
+										? radicand.neg().pow(ONE.div(degree)).neg()
+										: radicand.pow(ONE.div(degree))
+							);
 						})
-						.otherwise(() => ok(func(argument)));
-				});
-			})
+						.otherwise(funcName => {
+							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
+							if (args.length > 1) return err("TOO_MANY_ARGS" as const);
+
+							const func = Decimal[funcName].bind(Decimal);
+							const arg = args[0]!;
+
+							const { any, union } = P;
+
+							return match([angleUnit, funcName])
+								.with(["deg", union("sin", "cos")], () => ok(func(degToRad(arg))))
+								.with(["deg", union("asin", "acos", "atan")], () => ok(radToDeg(func(arg))))
+								.with([any, "tan"], () => {
+									const argInRads = angleUnit === "deg" ? degToRad(arg) : arg;
+
+									// Tangent is undefined when the tangent line is parallel to the x-axis,
+									// since parallel lines, by definition, don't cross.
+									// The tangent is parallel when the argument is $ pi/2 + n × pi $ where
+									// $ n $ is an integer. Since we use an approximation for pi, we can only
+									// check if the argument is "close enough" to being an integer.
+									const coefficient = argInRads.sub(PI.div(2)).div(PI);
+									const distFromCriticalPoint = coefficient.sub(coefficient.round()).abs();
+									const isArgCritical = distFromCriticalPoint.lt(TAN_PRECISION);
+
+									if (isArgCritical) return err("TRIG_PRECISION" as const);
+
+									return ok(func(argInRads));
+								})
+								.otherwise(() => ok(func(arg)));
+						}),
+				),
+			)
 			.otherwise(() => err("UNEXPECTED_TOKEN"));
 	}
 
@@ -145,6 +172,21 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 				.with({ type: "rbrk" }, () => err("NO_LHS_BRACKET" as const))
 				.otherwise(() => err("UNEXPECTED_TOKEN"))
 		);
+	}
+
+	/**
+	 * Tries to read the arguments of a function call to a list of `Decimal`s.
+	 */
+	function evalArgs(): Result<Decimal[], EvalErrorId> {
+		return expect({ type: "lbrk" }).andThen(() => {
+			const out: EvalResult[] = [];
+
+			do {
+				out.push(evalExpr(0));
+			} while (expect({ type: "semi" }).isOk());
+
+			return expect({ type: "rbrk" }).andThen(() => Result.combine(out));
+		});
 	}
 
 	function evalExpr(rbp: number): EvalResult {
@@ -176,7 +218,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 /** Returns the Left Binding Power of the given token */
 function lbp(token: Token) {
 	return match(token)
-		.with({ type: P.union("lbrk", "rbrk") }, () => 0)
+		.with({ type: P.union("lbrk", "rbrk", "semi") }, () => 0)
 		.with({ type: P.union("litr", "memo", "cons") }, () => 1)
 		.with({ type: "oper", name: P.union("+", "-") }, () => 2)
 		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
