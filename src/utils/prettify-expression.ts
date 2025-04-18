@@ -43,6 +43,7 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "litr" }, token => token.value.toFixed().replace(".", ","))
 			.with({ type: "lbrk" }, () => "(")
 			.with({ type: "rbrk" }, () => ")")
+			.with({ type: "semi" }, () => ";")
 			.with({ type: "memo", name: "ans" }, () => "ANS")
 			.with({ type: "memo", name: "ind" }, () => "M")
 			.with({ type: "cons", name: "pi" }, () => "π")
@@ -53,11 +54,12 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "func", name: any }, token =>
 				match(token.name)
 					.with("sqrt", () => "√")
+					.with("root", () => "√")
 					.with("asin", () => "arcsin")
 					.with("acos", () => "arccos")
 					.with("atan", () => "arctan")
 					.with("log10", () => "log")
-					.otherwise(() => token.name)
+					.otherwise(() => token.name),
 			)
 			.exhaustive();
 
@@ -77,7 +79,7 @@ function* prettiedCharacters(tokens: Token[]) {
 					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
 					// No space at the end
 					[any, any, null],
-					() => false
+					() => false,
 				)
 				.otherwise(() => true);
 
