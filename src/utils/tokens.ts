@@ -14,6 +14,7 @@ export const T = {
 	cons: (name: Token<"cons">["name"]) => ({ type: "cons", name }),
 	lbrk: () => ({ type: "lbrk" }),
 	rbrk: () => ({ type: "rbrk" }),
+	semi: () => ({ type: "semi" }),
 } satisfies Record<TokenId, (...args: any[]) => Token>;
 
 /**
