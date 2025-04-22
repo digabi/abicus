@@ -162,11 +162,11 @@ export default function useBuffer() {
 				}
 			},
 
-			magnitude() {
+			root() {
 				if (isSelection()) {
-					rawInput("(", `) × 10 ^ ()`, "wrap", -1);
+					rawInput("√(", " ; )", "wrap", -1);
 				} else {
-					rawInput("× 10 ^ (", ")", "replace", -1);
+					rawInput("√(", "x ; n)", "replace", -1);
 				}
 			},
 
