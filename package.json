@@ -7,7 +7,7 @@
     "dev": "vite",
     "test": "concurrently -n ui,unit npm:test:ui npm:test:unit",
     "test:ui": "playwright test",
-    "test:unit": "vitest",
+    "test:unit": "vitest run",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri"

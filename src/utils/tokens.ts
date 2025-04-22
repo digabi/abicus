@@ -38,8 +38,10 @@ export const t = {
 	ln: T.func("ln"),
 	log10: T.func("log10"),
 	sqrt: T.func("sqrt"),
+	root: T.func("root"),
 	ans: T.memo("ans"),
 	ind: T.memo("ind"),
 	lbrk: T.lbrk(),
 	rbrk: T.rbrk(),
+	semi: T.semi(),
 };
