@@ -69,11 +69,11 @@ test(`Shortcut for "^2" works (on-screen keypad)`, async ({ page }) => {
 	expect(await page.getByRole("textbox").inputValue()).toBe(`(5+5) ^ 2`);
 });
 
-test(`Shortcut for "×10^" works (on-screen keypad)`, async ({ page }) => {
+test(`Shortcut for "ⁿ√x" works (on-screen keypad)`, async ({ page }) => {
 	await page.getByRole("textbox").fill("5+5");
 	await selectRange(page, 0, 3);
-	await page.getByRole("button", { name: "×10x", exact: true }).click();
-	expect(await page.getByRole("textbox").inputValue()).toBe(`(5+5) × 10 ^ ()`);
+	await page.getByRole("button", { name: "n√x", exact: true }).click();
+	expect(await page.getByRole("textbox").inputValue()).toBe(`√(5+5 ; n)`);
 });
 
 /*****************************************************************************/

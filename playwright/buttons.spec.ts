@@ -16,5 +16,5 @@ expectButtons("Has constant buttons", ["π", "e"]);
 expectButtons("Has decimal, operator, and bracket buttons", [...",+−×/()"]);
 expectButtons("Has memory buttons", ["Min", "Mout", "ANS"]);
 expectButtons("Has logarithm buttons", ["log", "ln"]);
-expectButtons("Has exponent and root buttons", ["x2", "xy", "×10x", "√"]);
+expectButtons("Has exponent and root buttons", ["x2", "xy", "n√x", "√"]);
 expectButtons("Has del, clear, and calculate buttons", ["⌫", "AC", "="]);

@@ -43,6 +43,7 @@ run("Disregard trailing zeros", [
 
 run("Operators", [["2+3", [litr(2), t.add, litr(3)]]]);
 run("Brackets", [["2+(3+4)", [litr(2), t.add, t.lbrk, litr(3), t.add, litr(4), t.rbrk]]]);
+run("Semicolors", [["root(8;3)", [t.root, t.lbrk, litr(8), t.semi, litr(3), t.rbrk]]]);
 run("Functions", [["sin cos tan", [t.sin, t.cos, t.tan]]]);
 run("Memory", [["ans mem", [t.ans, t.ind]]]);
 
