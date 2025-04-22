@@ -37,15 +37,15 @@ export default function Keypad() {
 					<FunctionKey name="sin" tint="l-blue" />
 					<FunctionKey name="cos" tint="l-blue" />
 					<FunctionKey name="tan" tint="l-blue" />
-					<RawKey label={keyLabel.squared} onClick={calculator.buffer.input.square} tint="l-blue" />
+					<RawKey label={keyLabel.root} onClick={calculator.buffer.input.root} tint="l-blue" />
 					<FunctionKey name="√" tint="l-blue" />
 
 					{/* Row #3 */}
 					<FunctionKey name="arcsin" tint="l-blue" />
 					<FunctionKey name="arccos" tint="l-blue" />
 					<FunctionKey name="arctan" tint="l-blue" />
-					<RawKey label={keyLabel.magnitude} onClick={calculator.buffer.input.magnitude} tint="l-blue" />
 					<RawKey label={keyLabel.power} onClick={calculator.buffer.input.power} tint="l-blue" />
+					<RawKey label={keyLabel.squared} onClick={calculator.buffer.input.square} tint="l-blue" />
 
 					{/* Row #4 */}
 					<BasicKey input="1" />

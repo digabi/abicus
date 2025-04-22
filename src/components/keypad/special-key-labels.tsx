@@ -19,10 +19,10 @@ export const squared = (
 	</>
 );
 
-export const magnitude = (
+export const root = (
 	<>
-		<span>×10</span>
-		<sup>x</sup>
+		<sup>n</sup>
+		<span>√</span>
 	</>
 );
 
