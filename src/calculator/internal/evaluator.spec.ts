@@ -343,7 +343,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(true);
 	});
@@ -352,7 +352,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000.1), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(false);
 	});

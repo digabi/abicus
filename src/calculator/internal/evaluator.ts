@@ -115,7 +115,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 									? radicand
 									: radicand.lt(0) && !degree.mod(2).eq(0)
 										? radicand.neg().pow(ONE.div(degree)).neg()
-										: radicand.pow(ONE.div(degree))
+										: radicand.pow(ONE.div(degree)),
 							);
 						})
 						.otherwise(funcName => {

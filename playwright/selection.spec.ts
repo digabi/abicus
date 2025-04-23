@@ -11,7 +11,7 @@ async function selectRange(page: Page, lhs: number, rhs: number) {
 		(el: HTMLInputElement, { lhs, rhs }) => {
 			el.setSelectionRange(lhs, rhs);
 		},
-		{ lhs, rhs }
+		{ lhs, rhs },
 	);
 }
 
