@@ -342,7 +342,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(true);
 	});
@@ -351,7 +351,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000.1), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(false);
 	});
@@ -365,5 +365,5 @@ describe("Exponent errors", () => {
 	fail("Roots of negative numbers", [
 		[t.lbrk, t.sub, litr(17), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(2), t.rbrk],
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
-	])
-})
+	]);
+});

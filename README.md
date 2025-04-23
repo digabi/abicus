@@ -1,4 +1,5 @@
-[![Digabi logo](https://digabi.fi/images/digabi-logo.png)](https://digabi.fi) 
+[![Digabi logo](https://digabi.fi/images/digabi-logo.png)](https://digabi.fi)
+
 # Digabi
 
 Digabi is a codebase used in the Abitti exam system, the digital exam environment for the [Finnish Matriculation Examination](https://www.ylioppilastutkinto.fi/en).
@@ -14,7 +15,7 @@ Before any contribution is accepted to the codebase, to clarify the intellectual
 
 - Individuals should sign and send the [Personal CLA](https://digabi.fi/YTL%20Personal%20CLA.pdf) to [digabi@ylioppilastutkinto.fi](mailto:digabi@ylioppilastutkinto.fi).
 - Organizations or corporations should sign and send the [Corporate CLA](https://digabi.fi/YTL%20Corporate%20CLA.pdf) to the same address.
-  
+
 <h1 align="center">
   <img alt="logo" height="100" src="./app-icon.png" />
   <div>Abicus</div>
@@ -92,6 +93,5 @@ npm run test:ui
 Please see the Vitest and/or Playwright documentation for details on e.g. how to filter which tests to run etc.
 
 ---
-
 
 </table>
