@@ -1,4 +1,5 @@
-[![Digabi logo](https://digabi.fi/images/digabi-logo.png)](https://digabi.fi) 
+[![Digabi logo](https://digabi.fi/images/digabi-logo.png)](https://digabi.fi)
+
 # Digabi
 
 Digabi is a codebase used in the Abitti exam system, the digital exam environment for the [Finnish Matriculation Examination](https://www.ylioppilastutkinto.fi/en).
@@ -94,6 +95,5 @@ npm run test:ui
 Please see the Vitest and/or Playwright documentation for details on e.g. how to filter which tests to run etc.
 
 ---
-
 
 </table>
