@@ -4,7 +4,12 @@ export default function Result() {
 	const { buffer, memory } = useCalculator();
 
 	const shouldShowOutput = !buffer.isErr && !buffer.isDirty;
-	const formattedOutput = memory.ans.toDecimalPlaces(8).toString().replace(".", ",").replace("-", "−");
+	const formattedOutput = memory.ans
+		.toDecimalPlaces(200)
+		.toSignificantDigits(21)
+		.toString()
+		.replace(".", ",")
+		.replace("-", "-");
 
 	return (
 		<div

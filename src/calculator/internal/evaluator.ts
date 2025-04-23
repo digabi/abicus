@@ -4,7 +4,7 @@ import { isMatching, match, P, Pattern } from "ts-pattern";
 
 import { AngleUnit } from "..";
 import { Token } from "./tokeniser";
-
+Decimal.set({ precision: 500 });
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
 const RAD_DEG_RATIO = new Decimal(180).div(PI);
