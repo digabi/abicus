@@ -6,7 +6,6 @@ on:
 
 jobs:
   run-tests:
-    if: false
     name: Run Tests
     runs-on: ubuntu-latest
     steps:
@@ -77,3 +76,123 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ${{ steps.login-ecr.outputs.registry }}/abicus:${{ github.ref_name }}
+
+  build-binaries:
+    needs: run-tests
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - title: MacOS (arm64)
+            platform: macos-latest
+            args: "--target aarch64-apple-darwin"
+          - title: MacOS (x86_64)
+            platform: macos-latest
+            args: "--target x86_64-apple-darwin"
+          - title: Ubuntu
+            platform: ubuntu-22.04
+            args: ""
+          - title: Windows
+            platform: windows-latest
+            args: ""
+
+    name: Build Desktop Application (${{ matrix.title }})
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Set up Node
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: 20.15.0
+
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc
+        with:
+          target: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Install build dependencies (Ubuntu)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - uses: tauri-apps/tauri-action@41242bd545b6d1310ffc1685fb8bb87e97f0b748
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          args: ${{ matrix.args }}
+          releaseDraft: false
+          tagName: ${{ github.ref_name }}
+          releaseName: Abicus v__VERSION__
+          releaseBody: |
+            <img alt="logo" height="100" src="https://github.com/digabi/abicus/blob/master/app-icon.png" />
+
+            ### Precompiled binaries
+
+            <table>
+              <tr>
+                <td>Linux</td>
+                <td>Windows</td>
+                <td>MacOS</td>
+              </tr>
+              <tr>
+                <td>
+                  <ul>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.AppImage">
+                        AppImage (x64)
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.deb">
+                        Debian (x64 <code>.deb</code>)
+                      </a>
+                    </li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64-setup.exe">
+                        Windows Installer (x64 <code>.exe</code>)
+                      </a>
+                    </li>
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_aarch64.app.tar.gz">
+                        Mac-computers with Apple-processors (<code>.app</code>)
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_x64.app.tar.gz">
+                        Mac-computers with Intel-processors (<code>.app</code>)
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___aarch64.dmg">
+                        Mac-computers with Apple-processors (<code>.dmg</code>)
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64.dmg">
+                        Mac-computers with Intel-processors (<code>.dmg</code>)
+                      </a>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
