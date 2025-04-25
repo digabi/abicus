@@ -5,6 +5,7 @@ import Decimal from "decimal.js";
 import evaluate from "./evaluator";
 import { Token } from "./tokeniser";
 
+Decimal.set({ precision: 20 });
 const d = (x: number) => new Decimal(x);
 const { litr } = T;
 
@@ -358,5 +359,5 @@ describe("Exponent errors", () => {
 	fail("Roots of negative numbers", [
 		[t.lbrk, t.sub, litr(17), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(2), t.rbrk],
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
-	])
-})
+	]);
+});

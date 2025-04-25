@@ -1,10 +1,11 @@
 import { useCalculator } from "#/state";
+import { formatResult } from "#/utils/format-result";
 
 export default function Result() {
 	const { buffer, memory } = useCalculator();
 
 	const shouldShowOutput = !buffer.isErr && !buffer.isDirty;
-	const formattedOutput = memory.ans.toDecimalPlaces(8).toString().replace(".", ",").replace("-", "−");
+	const formattedOutput = formatResult(memory.ans);
 
 	return (
 		<div
