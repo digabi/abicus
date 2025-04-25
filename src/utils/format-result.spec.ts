@@ -1,7 +1,8 @@
 import Decimal from "decimal.js";
-import { formatResult, MAX_SIGNIFICANT_DIGITS } from "./format-result";
+import { formatResult } from "./format-result";
 import { calculate, AngleUnit } from "../calculator";
 
+const MAX_SIGNIFICANT_DIGITS = 21;
 const NEGATIVE_EXPONENT_LIMIT = 7;
 
 function testCalculate(expression: string, angleUnit: AngleUnit = "rad") {
