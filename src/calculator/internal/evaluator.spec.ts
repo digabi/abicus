@@ -111,6 +111,9 @@ run("Functions", [
 	[[t.ln,    t.lbrk, litr(10),  t.rbrk], d(10).ln()],
 	[[t.log10, t.lbrk, litr(13),  t.rbrk], Decimal.log10(13)],
 	[[t.sqrt,  t.lbrk, litr(13),  t.rbrk], Decimal.sqrt(13)],
+	[[t.root,  t.lbrk, litr(8),  t.semi, litr(3), t.rbrk], d(2)],
+	[[t.root,  t.lbrk, litr(-8),  t.semi, litr(3), t.rbrk], d(-2)],
+	[[t.root,  t.lbrk, litr(8),  t.semi, litr(-3), t.rbrk], d(1/2)],
 
 	[[t.sin,   t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], d(2 * 13).sin()],
 	[[t.cos,   t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], d(2 * 13).cos()],
@@ -121,6 +124,7 @@ run("Functions", [
 	[[t.ln,    t.lbrk, litr(10),  t.add, litr(10),  t.rbrk], d(2 * 10).ln()],
 	[[t.log10, t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.log10(2 * 13)],
 	[[t.sqrt,  t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.sqrt(2 * 13)],
+	[[t.root,  t.lbrk, litr(4),   t.add, litr(4), t.semi, litr(3), t.rbrk], d(2)],
 
 	[
 		[ // sin((2 / 3) * pi) ^ sqrt(1.08 + 7.12)
@@ -315,6 +319,9 @@ describe("Syntax Errors", () => {
 		[t.sin, litr(10)],
 		[t.sin, t.sin, t.lbrk, litr(10), t.rbrk],
 		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.semi, t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.semi, litr(2), t.rbrk],
+		[t.root, t.lbrk, litr(8), t.semi, litr(0), t.rbrk],
 	]);
 });
 
@@ -336,7 +343,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(true);
 	});
@@ -345,7 +352,7 @@ describe("Tangent errors", () => {
 			[t.tan, t.lbrk, litr(90), t.add, litr(50_000.1), t.mul, litr(180), t.rbrk],
 			d(0),
 			d(0),
-			"deg"
+			"deg",
 		);
 		expect(result.isErr()).toBe(false);
 	});

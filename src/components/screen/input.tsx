@@ -59,7 +59,7 @@ export default function Input() {
 				element.scrollLeft = element.scrollWidth;
 			}
 		},
-		[buffer.value]
+		[buffer.value],
 	);
 
 	return (
