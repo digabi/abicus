@@ -113,6 +113,7 @@ run("Functions", [
 	[[t.sqrt,  t.lbrk, litr(13),  t.rbrk], Decimal.sqrt(13)],
 	[[t.root,  t.lbrk, litr(8),  t.semi, litr(3), t.rbrk], d(2)],
 	[[t.root,  t.lbrk, litr(-8),  t.semi, litr(3), t.rbrk], d(-2)],
+	[[t.root,  t.lbrk, litr(-8),  t.semi, litr(1/5), t.rbrk], d(-32768)],
 	[[t.root,  t.lbrk, litr(8),  t.semi, litr(-3), t.rbrk], d(1/2)],
 
 	[[t.sin,   t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], d(2 * 13).sin()],
@@ -319,8 +320,12 @@ describe("Syntax Errors", () => {
 		[t.sin, litr(10)],
 		[t.sin, t.sin, t.lbrk, litr(10), t.rbrk],
 		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.rbrk],
 		[t.root, t.lbrk, litr(-8), t.semi, t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.semi, litr(-2), t.rbrk],
 		[t.root, t.lbrk, litr(-8), t.semi, litr(2), t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.semi, litr(3.1), t.rbrk],
+		[t.root, t.lbrk, litr(-8), t.semi, litr(-3.1), t.rbrk],
 		[t.root, t.lbrk, litr(8), t.semi, litr(0), t.rbrk],
 	]);
 });

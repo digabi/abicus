@@ -113,7 +113,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 							return ok(
 								radicand.isZero()
 									? radicand
-									: radicand.lt(0) && !degree.mod(2).eq(0)
+									: radicand.lt(0) && degree.isInteger() && !degree.mod(2).eq(0)
 										? radicand.neg().pow(ONE.div(degree)).neg()
 										: radicand.pow(ONE.div(degree)),
 							);
