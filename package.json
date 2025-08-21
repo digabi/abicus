@@ -21,7 +21,7 @@
     "ts-pattern": "5.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.6.0",
+    "@eslint/js": "9.33.0",
     "@playwright/test": "1.45.3",
     "@tauri-apps/cli": "1",
     "@types/node": "20.14.12",
