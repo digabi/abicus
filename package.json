@@ -33,7 +33,7 @@
     "babel-plugin-transform-jsx-classnames": "1.2.2",
     "concurrently": "8.2.2",
     "eslint": "8.57.0",
-    "eslint-plugin-react": "7.34.3",
+    "eslint-plugin-react": "7.37.5",
     "globals": "15.7.0",
     "postcss": "8.4.39",
     "prettier": "^3.5.3",
