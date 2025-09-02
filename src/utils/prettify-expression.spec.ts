@@ -56,7 +56,7 @@ run("Superscript exponents", [
 	// Should have no space before superscript
 	["2 + 3²", "2 + 3²"],
 	["(2 + 3)²", "(2 + 3)²"],
-	["2 × 3¹⁰", "2 × 3¹⁰"],
+	["2 * 3¹⁰", "2 * 3¹⁰"],
 ]);
 
 describe("Arithmetic character rewrites", () => {

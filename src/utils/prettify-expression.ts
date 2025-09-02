@@ -84,7 +84,7 @@ function* prettiedCharacters(tokens: Token[]) {
 
 		yield formattedToken;
 
-		// Decide whether we want a space between the *current* and *left-hand-side* tokens:
+		// Decide whether we want a space between the *current* and *next* tokens:
 		const shouldHaveSpace =
 			(lhs || rhs) &&
 			match([lhs, cur, rhs])
@@ -97,7 +97,7 @@ function* prettiedCharacters(tokens: Token[]) {
 					// Negative numbers: e.g. "-5" and "-5 + 5" instead of "- 5" and "- 5 + 5"
 					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
 					// No space before superscript: "5²" instead of "5 ²"
-					[any, { type: "spow" }, any],
+					[any, any, { type: "spow" }],
 					// No space at the end
 					[any, any, null],
 					() => false,
