@@ -67,7 +67,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 		const token = peek();
 
 		if (!token) return err("UNEXPECTED_EOF");
-		if (!isMatching(pattern, token)) return err("UNEXPECTED_TOKEN");
+		if (!isMatching(pattern as any, token)) return err("UNEXPECTED_TOKEN");
 
 		next();
 
@@ -169,6 +169,23 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 				.with({ type: "oper", name: "/" }, () => evalExpr(3).map(right => left.value.div(right)))
 				.with({ type: "oper", name: "^" }, () => evalExpr(3).map(right => left.value.pow(right)))
 				.with({ type: "spow" }, (token: Token<"spow">) => ok(left.value.pow(token.value))) // Superscript power
+				.with({ type: "fact" }, () => {
+					// Factorial function - only works on non-negative integers
+					const value = left.value;
+					if (!value.isInteger() || value.isNegative()) {
+						return err("NOT_A_NUMBER" as const);
+					}
+					if (value.gt(170)) {
+						// Prevent overflow - factorial grows very quickly
+						return err("INFINITY" as const);
+					}
+					
+					let result = new Decimal(1);
+					for (let i = new Decimal(2); i.lte(value); i = i.add(1)) {
+						result = result.mul(i);
+					}
+					return ok(result);
+				})
 				// Right bracket should never get parsed by anything else than the left bracket parselet
 				.with({ type: "rbrk" }, () => err("NO_LHS_BRACKET" as const))
 				.otherwise(() => err("UNEXPECTED_TOKEN"))
@@ -225,6 +242,7 @@ function lbp(token: Token) {
 		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
 		.with({ type: "oper", name: "^" }, () => 4)
 		.with({ type: "spow" }, () => 4) // Same precedence as ^ operator
+		.with({ type: "fact" }, () => 4) // Same precedence as ^ operator (high precedence)
 		.with({ type: "func" }, () => 5)
 		.exhaustive();
 }

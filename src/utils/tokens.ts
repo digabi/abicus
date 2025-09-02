@@ -16,6 +16,7 @@ export const T = {
 	lbrk: () => ({ type: "lbrk" }),
 	rbrk: () => ({ type: "rbrk" }),
 	semi: () => ({ type: "semi" }),
+	fact: () => ({ type: "fact" }),
 } satisfies Record<TokenId, (...args: any[]) => Token>;
 
 /**
@@ -58,4 +59,5 @@ export const t = {
 	lbrk: T.lbrk(),
 	rbrk: T.rbrk(),
 	semi: T.semi(),
+	fact: T.fact(),
 };

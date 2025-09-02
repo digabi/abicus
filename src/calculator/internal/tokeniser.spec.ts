@@ -42,6 +42,7 @@ run("Disregard trailing zeros", [
 ]);
 
 run("Operators", [["2+3", [litr(2), t.add, litr(3)]]]);
+run("Factorial", [["5!", [litr(5), t.fact]]]);
 run("Brackets", [["2+(3+4)", [litr(2), t.add, t.lbrk, litr(3), t.add, litr(4), t.rbrk]]]);
 run("Semicolons", [["(8;3;2;1)", [t.lbrk, litr(8), t.semi, litr(3), t.semi, litr(2), t.semi, litr(1), t.rbrk]]]);
 run("Functions", [["sin cos tan root", [t.sin, t.cos, t.tan, t.root]]]);

@@ -59,6 +59,16 @@ run("Superscript exponents", [
 	["2 * 3¹⁰", "2 * 3¹⁰"],
 ]);
 
+run("Factorials", [
+	["5!", "5!"],
+	["10!", "10!"],
+	// Should have no space before factorial
+	["2 + 3!", "2 + 3!"],
+	["(2 + 3)!", "(2 + 3)!"],
+	["2 * 5!", "2 * 5!"],
+	["3! + 4!", "3! + 4!"],
+]);
+
 describe("Arithmetic character rewrites", () => {
 	// Running these in their own block so the names are more descriptive than "5 - 5 => 5 − 5"
 	test("Minus", () => expect(prettify("5-5")).toBe("5 − 5"));

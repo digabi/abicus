@@ -41,6 +41,23 @@ run("Basic operations", [
 	[[litr(1), t.pow, litr(1)], d(1)],
 ]);
 
+run("Factorials", [
+	[[litr(0), t.fact], d(1)],
+	[[litr(1), t.fact], d(1)],
+	[[litr(2), t.fact], d(2)],
+	[[litr(3), t.fact], d(6)],
+	[[litr(4), t.fact], d(24)],
+	[[litr(5), t.fact], d(120)],
+	[[litr(10), t.fact], d(3628800)],
+]);
+
+run("Complex factorial expressions", [
+	[[litr(3), t.fact, t.add, litr(4), t.fact], d(6).add(24)],
+	[[litr(2), t.fact, t.mul, litr(3), t.fact], d(2).mul(6)],
+	[[t.lbrk, litr(2), t.add, litr(1), t.rbrk, t.fact], d(6)], // (2+1)! = 3! = 6
+	[[litr(5), t.fact, t.div, litr(3), t.fact], d(120).div(6)], // 5!/3! = 20
+]);
+
 run("Superscript exponents", [
 	[[litr(2), t.spow2], d(4)],
 	[[litr(3), t.spow3], d(27)],
@@ -388,5 +405,20 @@ describe("Exponent errors", () => {
 	fail("Roots of negative numbers", [
 		[t.lbrk, t.sub, litr(17), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(2), t.rbrk],
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
+	]);
+});
+
+describe("Factorial errors", () => {
+	fail("Negative numbers", [
+		[t.lbrk, t.sub, litr(1), t.rbrk, t.fact],
+		[t.lbrk, t.sub, litr(5), t.rbrk, t.fact],
+	]);
+	fail("Decimal numbers", [
+		[litr(1.5), t.fact],
+		[litr(3.14), t.fact],
+	]);
+	fail("Large numbers", [
+		[litr(171), t.fact],
+		[litr(200), t.fact],
 	]);
 });

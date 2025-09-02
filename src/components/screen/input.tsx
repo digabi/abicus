@@ -25,6 +25,9 @@ export default function Input() {
 			.with(")", () => {
 				buffer.input.closeBrackets();
 			})
+			.with("!", () => {
+				buffer.input.key("!");
+			})
 			.with("^", "/", "+", symbol => {
 				buffer.input.oper(symbol);
 			})

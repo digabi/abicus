@@ -80,6 +80,7 @@ function* prettiedCharacters(tokens: Token[]) {
 					.with("log10", () => "log")
 					.otherwise(() => token.name),
 			)
+			.with({ type: "fact" }, () => "!")
 			.exhaustive();
 
 		yield formattedToken;
@@ -98,6 +99,8 @@ function* prettiedCharacters(tokens: Token[]) {
 					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
 					// No space before superscript: "5²" instead of "5 ²"
 					[any, any, { type: "spow" }],
+					// No space before factorial: "5!" instead of "5 !"
+					[any, any, { type: "fact" }],
 					// No space at the end
 					[any, any, null],
 					() => false,

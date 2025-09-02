@@ -100,6 +100,13 @@ const tokenMatchers = [
 		}),
 	],
 	[
+		// Factorial operator: "!"
+		/^!/,
+		_ => ({
+			type: "fact" as const,
+		}),
+	],
+	[
 		// Left bracket: "("
 		/^\(/,
 		_ => ({ type: "lbrk" as const }),
