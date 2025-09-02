@@ -12,16 +12,16 @@ test('factorial button works correctly', async ({ page }) => {
 	await page.getByRole('button', { name: '=', exact: true }).click();
 
 	// 5! = 120
-	await expect(page.locator('input')).toHaveValue('120');
+	expect(page.getByRole("status")).toHaveText("120");
 
 	// Clear and test another factorial
-	await page.getByRole('button', { name: 'AC', exact: true }).click();
+	await page.getByRole('button', { name: 'C', exact: true }).click();
 	await page.getByRole('button', { name: '3', exact: true }).click();
 	await page.getByRole('button', { name: '!', exact: true }).click();
 	await page.getByRole('button', { name: '=', exact: true }).click();
 
 	// 3! = 6
-	await expect(page.locator('input')).toHaveValue('6');
+	expect(page.getByRole("status")).toHaveText("6");
 });
 
 test('factorial keyboard input works', async ({ page }) => {
@@ -35,5 +35,5 @@ test('factorial keyboard input works', async ({ page }) => {
 	await page.keyboard.press('Enter');
 
 	// 4! = 24
-	await expect(page.locator('input')).toHaveValue('24');
+	expect(page.getByRole("status")).toHaveText("24");
 });

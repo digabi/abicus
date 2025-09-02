@@ -17,7 +17,7 @@ export function calculate(expression: string, ans: Decimal, ind: Decimal, angleU
 	if (tokens.isErr()) return err(tokens);
 
 	const result = evaluate(tokens.value, ans, ind, angleUnit);
-	if (result.isErr()) return err(tokens);
+	if (result.isErr()) return err(result);
 
 	return ok(result.value);
 }
