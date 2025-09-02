@@ -7,6 +7,7 @@ import { Token, TokenId } from "#/calculator";
  */
 export const T = {
 	litr: (x: number | Decimal) => ({ type: "litr", value: new Decimal(x) }),
+	spow: (x: number | Decimal) => ({ type: "spow", value: new Decimal(x) }),
 
 	oper: (name: Token<"oper">["name"]) => ({ type: "oper", name }),
 	memo: (name: Token<"memo">["name"]) => ({ type: "memo", name }),
@@ -29,6 +30,19 @@ export const t = {
 	mul: T.oper("*"),
 	div: T.oper("/"),
 	pow: T.oper("^"),
+	spow0: T.spow(0),
+	spow1: T.spow(1),
+	spow2: T.spow(2),
+	spow3: T.spow(3),
+	spow4: T.spow(4),
+	spow5: T.spow(5),
+	spow6: T.spow(6),
+	spow7: T.spow(7),
+	spow8: T.spow(8),
+	spow9: T.spow(9),
+	spow10: T.spow(10),
+	spow44: T.spow(44),
+	spow123: T.spow(123),
 	sin: T.func("sin"),
 	cos: T.func("cos"),
 	tan: T.func("tan"),

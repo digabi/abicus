@@ -51,6 +51,25 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "oper", name: "*" }, () => "×")
 			.with({ type: "oper", name: "-" }, () => "−")
 			.with({ type: "oper", name: any }, token => token.name)
+			.with({ type: "spow" }, token => {
+				// Convert the decimal value back to superscript characters
+				const numberMap: Record<string, string> = {
+					'0': '⁰',
+					'1': '¹', 
+					'2': '²',
+					'3': '³',
+					'4': '⁴',
+					'5': '⁵',
+					'6': '⁶',
+					'7': '⁷',
+					'8': '⁸',
+					'9': '⁹'
+				};
+				// Convert each digit to its superscript equivalent
+				const digits = token.value.toString();
+				const superscript = digits.split('').map((digit: string) => numberMap[digit] || digit).join('');
+				return superscript || `^${token.value.toString()}`;
+			})
 			.with({ type: "func", name: any }, token =>
 				match(token.name)
 					.with("sqrt", () => "√")
@@ -77,6 +96,8 @@ function* prettiedCharacters(tokens: Token[]) {
 					[any, { type: "func" }, { type: "lbrk" }],
 					// Negative numbers: e.g. "-5" and "-5 + 5" instead of "- 5" and "- 5 + 5"
 					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
+					// No space before superscript: "5²" instead of "5 ²"
+					[any, { type: "spow" }, any],
 					// No space at the end
 					[any, any, null],
 					() => false,

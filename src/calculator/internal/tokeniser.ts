@@ -59,6 +59,32 @@ const tokenMatchers = [
 		}),
 	],
 	[
+		// Superscript numbers as exponents: "²", "³", "¹", "⁴⁴", etc.
+		// These will be converted to "^2", "^3", "^1", "^44", etc.
+		// Multiple superscript digits are treated as a single multi-digit exponent
+		/^[⁰¹²³⁴⁵⁶⁷⁸⁹]+/,
+		str => {
+			const superscriptMap: Record<string, string> = {
+				'⁰': '0',
+				'¹': '1', 
+				'²': '2',
+				'³': '3',
+				'⁴': '4',
+				'⁵': '5',
+				'⁶': '6',
+				'⁷': '7',
+				'⁸': '8',
+				'⁹': '9'
+			};
+			// Convert each superscript character to its regular digit
+			const digits = str.split('').map(char => superscriptMap[char] || char).join('');
+			return {
+				type: "spow" as const,
+				value: new Decimal(digits),
+			};
+		},
+	],
+	[
 		// Operators: "-", "+", "/", "*", "^"
 		// The multiplication and minus signs have unicode variants that also need to be handled
 		/^[-+/*^−×]/,

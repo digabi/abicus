@@ -40,6 +40,25 @@ run("Negative numbers", [
 	["-(5+5)", "-(5 + 5)"],
 ]);
 
+run("Superscript exponents", [
+	["2²", "2²"],
+	["3³", "3³"], 
+	["5¹", "5¹"],
+	["10⁰", "10⁰"],
+	["4⁶", "4⁶"],
+	["7⁷", "7⁷"],
+	["8⁸", "8⁸"],
+	["9⁹", "9⁹"],
+	// Multi-digit superscripts
+	["2¹⁰", "2¹⁰"],
+	["3⁴⁴", "3⁴⁴"],
+	["5¹²³", "5¹²³"],
+	// Should have no space before superscript
+	["2 + 3²", "2 + 3²"],
+	["(2 + 3)²", "(2 + 3)²"],
+	["2 × 3¹⁰", "2 × 3¹⁰"],
+]);
+
 describe("Arithmetic character rewrites", () => {
 	// Running these in their own block so the names are more descriptive than "5 - 5 => 5 − 5"
 	test("Minus", () => expect(prettify("5-5")).toBe("5 − 5"));

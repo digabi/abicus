@@ -41,6 +41,23 @@ run("Basic operations", [
 	[[litr(1), t.pow, litr(1)], d(1)],
 ]);
 
+run("Superscript exponents", [
+	[[litr(2), t.spow2], d(4)],
+	[[litr(3), t.spow3], d(27)],
+	[[litr(5), t.spow1], d(5)],
+	[[litr(10), t.spow0], d(1)],
+	[[litr(2), t.spow4], d(16)],
+	[[litr(3), t.spow2], d(9)],
+	// Multi-digit superscripts
+	[[litr(2), t.spow10], d(1024)], // 2^10 = 1024
+	[[litr(3), t.spow44], d(3).pow(44)], // 3^44 (huge number)
+	// Test precedence - superscript should have same precedence as ^ operator
+	[[litr(2), t.add, litr(3), t.spow2], d(2).add(d(3).pow(2))], // 2 + 3² = 2 + 9 = 11
+	[[litr(2), t.mul, litr(3), t.spow2], d(2).mul(d(3).pow(2))], // 2 × 3² = 2 × 9 = 18
+	// Mixed with regular exponents
+	[[litr(2), t.spow2, t.pow, litr(2)], d(2).pow(2).pow(2)], // 2²^2 = 4^2 = 16
+]);
+
 run("Associativity", [
 	[[litr(4), t.add, litr(3), t.add, litr(2), t.add, litr(1)], d(4).add(3).add(2).add(1)],
 	[[litr(4), t.sub, litr(3), t.sub, litr(2), t.sub, litr(1)], d(4).sub(3).sub(2).sub(1)],

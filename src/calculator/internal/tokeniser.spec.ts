@@ -46,6 +46,21 @@ run("Brackets", [["2+(3+4)", [litr(2), t.add, t.lbrk, litr(3), t.add, litr(4), t
 run("Semicolons", [["(8;3;2;1)", [t.lbrk, litr(8), t.semi, litr(3), t.semi, litr(2), t.semi, litr(1), t.rbrk]]]);
 run("Functions", [["sin cos tan root", [t.sin, t.cos, t.tan, t.root]]]);
 run("Memory", [["ans mem", [t.ans, t.ind]]]);
+run("Superscript", [
+	["2²", [litr(2), t.spow2]],
+	["5¹", [litr(5), t.spow1]],
+	["10⁰", [litr(10), t.spow0]],
+	["3⁴", [litr(3), t.spow4]],
+	["2⁵", [litr(2), t.spow5]],
+	["4⁶", [litr(4), t.spow6]],
+	["7⁷", [litr(7), t.spow7]],
+	["8⁸", [litr(8), t.spow8]],
+	["9⁹", [litr(9), t.spow9]],
+	// Multi-digit superscripts
+	["2¹⁰", [litr(2), t.spow10]],
+	["3⁴⁴", [litr(3), t.spow44]],
+	["5¹²³", [litr(5), t.spow123]],
+]);
 
 function run(title: string, cases: [input: string, expected: Token[]][]) {
 	describe(title, () => {

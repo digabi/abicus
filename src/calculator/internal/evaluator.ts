@@ -168,6 +168,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 				.with({ type: "oper", name: "*" }, () => evalExpr(3).map(right => left.value.mul(right)))
 				.with({ type: "oper", name: "/" }, () => evalExpr(3).map(right => left.value.div(right)))
 				.with({ type: "oper", name: "^" }, () => evalExpr(3).map(right => left.value.pow(right)))
+				.with({ type: "spow" }, (token: Token<"spow">) => ok(left.value.pow(token.value))) // Superscript power
 				// Right bracket should never get parsed by anything else than the left bracket parselet
 				.with({ type: "rbrk" }, () => err("NO_LHS_BRACKET" as const))
 				.otherwise(() => err("UNEXPECTED_TOKEN"))
@@ -223,6 +224,7 @@ function lbp(token: Token) {
 		.with({ type: "oper", name: P.union("+", "-") }, () => 2)
 		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
 		.with({ type: "oper", name: "^" }, () => 4)
+		.with({ type: "spow" }, () => 4) // Same precedence as ^ operator
 		.with({ type: "func" }, () => 5)
 		.exhaustive();
 }
