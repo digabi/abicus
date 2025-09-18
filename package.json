@@ -17,7 +17,7 @@
     "decimal.js": "10.6.0",
     "neverthrow": "8.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "19.1.1",
     "ts-pattern": "5.8.0"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "@tauri-apps/cli": "2",
     "@types/node": "24.3.1",
     "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
+    "@types/react-dom": "19.1.9",
     "@vitejs/plugin-react": "5.0.2",
     "autoprefixer": "10.4.21",
     "babel-plugin-rename-jsx-attribute": "0.2.4",
