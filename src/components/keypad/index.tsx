@@ -3,6 +3,8 @@ import { useCalculator } from "#/state";
 import { RawKey, BasicKey, FunctionKey, OperatorKey } from "./key";
 import * as keyLabel from "./special-key-labels";
 
+const gitRef = __GIT_REF__.startsWith("v") ? __GIT_REF__ : __GIT_REF__.slice(0, 7)
+
 export default function Keypad() {
 	const calculator = useCalculator();
 
@@ -77,7 +79,7 @@ export default function Keypad() {
 					{/* Row #8 */}
 					<RawKey tint="d-blue" label="⌫" onClick={calculator.buffer.del} />
 					{clearButton}
-					<div x="col-span-2" />
+					<div x={["col-span-2", "text-sm text-neutral-400", "inline-flex items-center justify-center"]}>Abicus {gitRef}</div>
 					<RawKey tint="d-blue" label="=" onClick={calculator.crunch} />
 				</div>
 			</div>
