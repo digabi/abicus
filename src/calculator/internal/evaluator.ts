@@ -67,7 +67,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 		const token = peek();
 
 		if (!token) return err("UNEXPECTED_EOF");
-		if (!isMatching(pattern, token)) return err("UNEXPECTED_TOKEN");
+		if (!isMatching(pattern)(token)) return err("UNEXPECTED_TOKEN");
 
 		next();
 
