@@ -31,10 +31,10 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 		<button
 			x={[
 				"h-9",
-				"rounded-sm border border-abi-dgrey",
+				"rounded-xs border border-abi-dgrey",
 				[
 					"transition-all duration-75",
-					"shadow scale-100",
+					"shadow-sm scale-100",
 					"active:shadow-none active:scale-95",
 					match(tint)
 						.with("none", () => "bg-white active:bg-slate-100")

@@ -79,7 +79,7 @@ export default function Input() {
 				"text-right",
 				"transition-all",
 				// Focus is shown by the parent so it's safe to disable here
-				"focus:outline-none",
+				"focus:outline-hidden",
 				shouldShowOutput ? "text-slate-500 text-sm" : "text-black",
 			]}
 			// Safari bug workaround:

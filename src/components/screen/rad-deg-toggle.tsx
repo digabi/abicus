@@ -10,7 +10,7 @@ export default function RadDegToggle() {
 				"h-6",
 				"border border-abi-dgrey",
 				"divide-x divide-abi-dgrey",
-				"rounded-sm overflow-hidden",
+				"rounded-xs overflow-hidden",
 				"flex items-center",
 			]}
 		>
