@@ -144,7 +144,7 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - uses: tauri-apps/tauri-action@41242bd545b6d1310ffc1685fb8bb87e97f0b748
+      - uses: tauri-apps/tauri-action@e834788a94591d81e3ae0bd9ec06366f5afb8994 # v0.5.23
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
