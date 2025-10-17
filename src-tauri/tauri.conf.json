@@ -1,47 +1,57 @@
 {
-	"build": {
-		"beforeDevCommand": "npm run dev",
-		"beforeBuildCommand": "npm run build",
-		"devPath": "http://localhost:1420",
-		"distDir": "../dist"
-	},
-	"package": {
-		"productName": "Abicus",
-		"version": "../package.json"
-	},
-	"tauri": {
-		"allowlist": {
-			"all": false,
-			"shell": {
-				"all": false,
-				"open": true
-			}
-		},
-		"windows": [
-			{
-				"title": "Abicus",
-				"width": 416,
-				"height": 516,
-				"resizable": false,
-				"fileDropEnabled": false
-			}
-		],
-		"security": {
-			"csp": null
-		},
-		"bundle": {
-			"active": true,
-			"targets": ["deb", "appimage", "nsis", "app", "dmg"],
-			"identifier": "fi.ylioppilastutkinto.abicus",
-			"icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-			"deb": {
-				"section": "math"
-			},
-			"windows": {
-				"nsis": {
-					"languages": ["Finnish", "Swedish"]
-				}
-			}
-		}
-	}
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "deb",
+      "appimage",
+      "nsis",
+      "app",
+      "dmg"
+    ],
+    "windows": {
+      "nsis": {
+        "languages": [
+          "Finnish",
+          "Swedish"
+        ]
+      }
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "linux": {
+      "deb": {
+        "section": "math"
+      }
+    }
+  },
+  "productName": "Abicus",
+  "mainBinaryName": "Abicus",
+  "version": "../package.json",
+  "identifier": "fi.ylioppilastutkinto.abicus",
+  "plugins": {},
+  "app": {
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Abicus",
+        "width": 416,
+        "height": 516,
+        "resizable": false,
+        "useHttpsScheme": true
+      }
+    ]
+  }
 }
