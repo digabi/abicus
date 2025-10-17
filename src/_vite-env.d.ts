@@ -1,3 +1,3 @@
 /// <reference types="vite/client" />
 
-const __GIT_HASH__: string;
+const __GIT_REF__: string;

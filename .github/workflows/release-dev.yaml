@@ -30,7 +30,6 @@ jobs:
 
   build-docker:
     name: Build Docker Image
-    # needs: run-tests
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -60,7 +59,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
-          build-args: GIT_HASH=${{ github.sha }}
+          build-args: GIT_REF=${{ github.sha }}
 
       - name: Assume AWS role
         uses: digabi/workflows-common/actions/assume-digabi-aws-role@main

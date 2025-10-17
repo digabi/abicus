@@ -63,7 +63,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build -- --base=/abicus/
+        run: GIT_REF=${{ github.ref_name }} npm run build -- --base=/abicus/
 
       - name: Upload Pages artefact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
@@ -74,14 +74,30 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
 
-  tag-docker:
+  build-docker:
     needs: run-tests
-    name: Pull Dev Image from A2 ECR and Tag It as Prod
+    name: Build Docker image
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
+      packages: write
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db
+
+      - name: Check out
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Build
+        id: docker-build
+        uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
+          build-args: GIT_REF=${{ github.ref_name }}
+
       - name: Assume AWS role
         uses: digabi/workflows-common/actions/assume-digabi-aws-role@main
         with:
@@ -91,13 +107,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076
 
-      - name: Pull Dev Image
-        run: docker pull ${{ steps.login-ecr.outputs.registry }}/abicus:${{ github.ref_name }}
+      - name: Tag Docker Image
+        run: docker tag ${{ steps.docker-build.outputs.imageid }} ${{ steps.login-ecr.outputs.registry }}/abicus-prod:${{ github.ref_name }}
 
-      - name: Tag Dev Image as Prod Image
-        run: docker tag ${{ steps.login-ecr.outputs.registry }}/abicus:${{ github.ref_name }} ${{ steps.login-ecr.outputs.registry }}/abicus-prod:${{ github.ref_name }}
-
-      - name: Push Prod Image
+      - name: Push Docker Image
         run: docker push ${{ steps.login-ecr.outputs.registry }}/abicus-prod:${{ github.ref_name }}
 
   build-binaries:
@@ -147,6 +160,7 @@ jobs:
       - uses: tauri-apps/tauri-action@41242bd545b6d1310ffc1685fb8bb87e97f0b748
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_REF: ${{ github.ref_name }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
