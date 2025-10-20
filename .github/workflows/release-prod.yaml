@@ -151,8 +151,18 @@ jobs:
       - name: Install build dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
+          # List from https://v2.tauri.app/start/prerequisites/#linux
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
 
       - name: Install Node dependencies
         run: npm ci
