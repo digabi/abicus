@@ -126,7 +126,7 @@ jobs:
             platform: macos-latest
             args: "--target x86_64-apple-darwin"
           - title: Ubuntu
-            platform: ubuntu-24.04
+            platform: ubuntu-22.04 # Version required by Tauri action below
             args: ""
           - title: Windows
             platform: windows-latest
@@ -149,7 +149,7 @@ jobs:
           target: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Install build dependencies (Ubuntu)
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.title == 'Ubuntu'
         run: |
           # List from https://v2.tauri.app/start/prerequisites/#linux
           sudo apt-get update
