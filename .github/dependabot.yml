@@ -6,6 +6,6 @@ updates:
       interval: daily
       time: "01:00"
     labels: []
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 99
     cooldown:
       default-days: 7
