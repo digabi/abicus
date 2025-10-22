@@ -22,7 +22,7 @@
     "ts-pattern": "5.8.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.35.0",
+    "@eslint/js": "9.37.0",
     "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@tauri-apps/cli": "2",
