@@ -34,7 +34,7 @@
     "babel-plugin-rename-jsx-attribute": "0.2.4",
     "babel-plugin-transform-jsx-classnames": "1.2.2",
     "concurrently": "9.2.1",
-    "eslint": "9.35.0",
+    "eslint": "9.37.0",
     "eslint-plugin-react": "7.37.5",
     "globals": "16.4.0",
     "postcss": "8.5.6",
