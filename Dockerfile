@@ -1,10 +1,10 @@
-FROM node:20.15.0 AS deps
+FROM node:22.21.0 AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
 
-FROM node:20.15.0 AS build
+FROM node:22.21.0 AS build
 ARG GIT_REF=""
 ENV GIT_REF=${GIT_REF}
 WORKDIR /app
