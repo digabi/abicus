@@ -9,3 +9,22 @@ updates:
     open-pull-requests-limit: 99
     cooldown:
       default-days: 7
+    ignore:
+      - dependency-name: react
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@types/react'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: react-dom
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@types/react-dom'
+        update-types:
+          - version-update:semver-major
+      - dependency-name: eslint
+        update-types:
+          - version-update:semver-major
+      - dependency-name: eslint-plugin-mocha
+        update-types:
+          - version-update:semver-major
