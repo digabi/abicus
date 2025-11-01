@@ -167,7 +167,14 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 				.with({ type: "oper", name: "-" }, () => evalExpr(2).map(right => left.value.sub(right)))
 				.with({ type: "oper", name: "*" }, () => evalExpr(3).map(right => left.value.mul(right)))
 				.with({ type: "oper", name: "/" }, () => evalExpr(3).map(right => left.value.div(right)))
-				.with({ type: "oper", name: "^" }, () => evalExpr(3).map(right => left.value.pow(right)))
+				.with({ type: "oper", name: "^" }, () =>
+					evalExpr(3).andThen(right => {
+						if (left.value.isZero() && right.isZero()) {
+							return err("NOT_A_NUMBER" as const);
+						}
+						return ok(left.value.pow(right));
+					}),
+				)
 				// Right bracket should never get parsed by anything else than the left bracket parselet
 				.with({ type: "rbrk" }, () => err("NO_LHS_BRACKET" as const))
 				.otherwise(() => err("UNEXPECTED_TOKEN"))
