@@ -132,8 +132,20 @@ const tokenMatchers = [
 		str => ({
 			type: "func" as const,
 			name: match(str.toLowerCase())
-				.with("sqrt", "root", "ln", "sin", "cos", "tan", "asin", "acos", "atan", name => name)
-				.with("log", "lg", () => "log10" as const)
+				.with(
+					"sqrt",
+					"root",
+					"ln",
+					"sin",
+					"cos",
+					"tan",
+					"asin",
+					"acos",
+					"atan",
+					"log",
+					name => name,
+				)
+				.with("lg", () => "log10" as const)
 				.with("√", () => "root" as const)
 				.with("arcsin", () => "asin" as const)
 				.with("arccos", () => "acos" as const)

@@ -4,6 +4,7 @@ import { isMatching, match, P, Pattern } from "ts-pattern";
 
 import { AngleUnit } from "..";
 import { Token } from "./tokeniser";
+
 Decimal.set({ precision: 500 });
 const PI = Decimal.acos(-1);
 const E = Decimal.exp(1);
@@ -117,6 +118,19 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 										? radicand.neg().pow(ONE.div(degree)).neg()
 										: radicand.pow(ONE.div(degree)),
 							);
+						})
+						.with("log", () => {
+							if (args.length < 2) return err("NOT_ENOUGH_ARGS" as const);
+							if (args.length > 2) return err("TOO_MANY_ARGS" as const);
+
+							const base = args[0]!;
+							const num = args[1]!;
+
+							if (num.lte(0) || base.lte(0) || base.eq(ONE)) {
+								return err("NOT_A_NUMBER" as const);
+							}
+
+							return ok(Decimal.ln(num).div(Decimal.ln(base)));
 						})
 						.otherwise(funcName => {
 							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);

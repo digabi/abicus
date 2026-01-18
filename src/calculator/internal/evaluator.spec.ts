@@ -22,6 +22,19 @@ function run(title: string, cases: [input: Token[], expected: Decimal][]) {
 	});
 }
 
+function runApprox(title: string, cases: [input: Token[], expected: number, digits?: number][]) {
+	describe(title, () => {
+		for (const [input, expected, digits = 12] of cases) {
+			const title = `"${prettify(input)}" ≈ ${expected}`;
+
+			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
+			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title} (${result.error})`);
+
+			test(title, () => expect(result.value.toNumber()).toBeCloseTo(expected, digits));
+		}
+	});
+}
+
 function fail(title: string, cases: Token[][]) {
 	describe(title, () => {
 		for (const input of cases) {
@@ -373,3 +386,22 @@ describe("Exponent errors", () => {
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
 	]);
 });
+
+fail("Log function errors", [
+	// wrong arity
+	[t.log, t.lbrk, litr(2), t.rbrk],
+	[t.log, t.lbrk, litr(2), t.semi, litr(3), t.semi, litr(4), t.rbrk],
+	// invalid base
+	[t.log, t.lbrk, litr(1), t.semi, litr(10), t.rbrk],
+	[t.log, t.lbrk, litr(0), t.semi, litr(10), t.rbrk],
+	[t.log, t.lbrk, t.sub, litr(2), t.semi, litr(8), t.rbrk],
+	// invalid num
+	[t.log, t.lbrk, litr(2), t.semi, litr(0), t.rbrk],
+	[t.log, t.lbrk, litr(2), t.semi, t.sub, litr(8), t.rbrk],
+]);
+
+runApprox("Log(base;num)", [
+	[[t.log, t.lbrk, litr(2), t.semi, litr(8), t.rbrk], 3],
+	[[t.log, t.lbrk, litr(10), t.semi, litr(1000), t.rbrk], 3],
+	[[t.log, t.lbrk, litr(2), t.semi, t.lbrk, litr(1), t.add, litr(1), t.rbrk, t.pow, litr(3), t.rbrk], 3],
+]);

@@ -37,6 +37,7 @@ export const t = {
 	atan: T.func("atan"),
 	ln: T.func("ln"),
 	log10: T.func("log10"),
+	log: T.func("log"),
 	sqrt: T.func("sqrt"),
 	root: T.func("root"),
 	ans: T.memo("ans"),
