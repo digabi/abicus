@@ -410,7 +410,6 @@ describe("Exponent errors", () => {
 
 fail("Log function errors", [
 	// wrong arity
-	[t.log, t.lbrk, litr(2), t.rbrk],
 	[t.log, t.lbrk, litr(2), t.semi, litr(3), t.semi, litr(4), t.rbrk],
 	// invalid base
 	[t.log, t.lbrk, litr(1), t.semi, litr(10), t.rbrk],
@@ -420,6 +419,14 @@ fail("Log function errors", [
 	[t.log, t.lbrk, litr(2), t.semi, litr(0), t.rbrk],
 	[t.log, t.lbrk, litr(2), t.semi, t.sub, litr(8), t.rbrk],
 ]);
+
+runNumber("Log(num)", [
+	[[t.log, t.lbrk, litr(1), t.rbrk], 0],
+	[[t.log, t.lbrk, litr(10), t.rbrk], 1],
+	[[t.log, t.lbrk, litr(100), t.rbrk], 2],
+	[[t.log, t.lbrk, litr(1000), t.rbrk], 3],
+]);
+
 
 runNumber("Log(base;num)", [
 	[[t.log, t.lbrk, litr(2), t.semi, litr(8), t.rbrk], 3],

@@ -120,11 +120,23 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 							);
 						})
 						.with("log", () => {
-							if (args.length < 2) return err("NOT_ENOUGH_ARGS" as const);
-							if (args.length > 2) return err("TOO_MANY_ARGS" as const);
+							if (args.length === 0) {
+								return err("NOT_ENOUGH_ARGS" as const);
+							}
+							if (args.length > 2) {
+								return err("TOO_MANY_ARGS" as const);
+							}
 
-							const base = args[0]!;
-							const num = args[1]!;
+							let base: Decimal;
+							let num: Decimal;
+
+							if (args.length === 1) {
+								base = new Decimal(10);
+								num = args[0]!;
+							} else {
+								base = args[0]!;
+								num = args[1]!;
+							}
 
 							if (num.lte(0) || base.lte(0) || base.eq(ONE)) {
 								return err("NOT_A_NUMBER" as const);
