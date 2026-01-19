@@ -22,15 +22,36 @@ function run(title: string, cases: [input: Token[], expected: Decimal][]) {
 	});
 }
 
-function runApprox(title: string, cases: [input: Token[], expected: number, digits?: number][]) {
+/**
+ * Based on https://en.wikipedia.org/wiki/IEEE_754
+ * @param actual the actual result
+ * @param expected the expected result
+ */
+function expectNumberEqual(actual: number, expected: number): void {
+	// Handles NaN, infinities, +0 / -0
+	if (Object.is(actual, expected)) return;
+
+	const diff = Math.abs(actual - expected);
+	const scale = Math.max(1, Math.abs(actual), Math.abs(expected));
+
+	expect(diff).toBeLessThanOrEqual(Number.EPSILON * scale);
+}
+
+function runNumber(title: string, cases: [input: Token[], expected: number][]) {
 	describe(title, () => {
-		for (const [input, expected, digits = 12] of cases) {
-			const title = `"${prettify(input)}" ≈ ${expected}`;
+		for (const [input, expected] of cases) {
+			const title = `"${prettify(input)}" => ${expected}`;
 
 			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
-			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title} (${result.error})`);
+			if (result.isErr()) {
+				expect.unreachable(
+					`Test case could not be evaluated: ${title} (${result.error})`,
+				);
+			}
 
-			test(title, () => expect(result.value.toNumber()).toBeCloseTo(expected, digits));
+			test(title, () =>
+				expectNumberEqual(result.value.toNumber(), expected),
+			);
 		}
 	});
 }
@@ -400,7 +421,7 @@ fail("Log function errors", [
 	[t.log, t.lbrk, litr(2), t.semi, t.sub, litr(8), t.rbrk],
 ]);
 
-runApprox("Log(base;num)", [
+runNumber("Log(base;num)", [
 	[[t.log, t.lbrk, litr(2), t.semi, litr(8), t.rbrk], 3],
 	[[t.log, t.lbrk, litr(10), t.semi, litr(1000), t.rbrk], 3],
 	[[t.log, t.lbrk, litr(2), t.semi, t.lbrk, litr(1), t.add, litr(1), t.rbrk, t.pow, litr(3), t.rbrk], 3],
