@@ -22,6 +22,40 @@ function run(title: string, cases: [input: Token[], expected: Decimal][]) {
 	});
 }
 
+/**
+ * Based on https://en.wikipedia.org/wiki/IEEE_754
+ * @param actual the actual result
+ * @param expected the expected result
+ */
+function expectNumberEqual(actual: number, expected: number): void {
+	// Handles NaN, infinities, +0 / -0
+	if (Object.is(actual, expected)) return;
+
+	const diff = Math.abs(actual - expected);
+	const scale = Math.max(1, Math.abs(actual), Math.abs(expected));
+
+	expect(diff).toBeLessThanOrEqual(Number.EPSILON * scale);
+}
+
+function runNumber(title: string, cases: [input: Token[], expected: number][]) {
+	describe(title, () => {
+		for (const [input, expected] of cases) {
+			const title = `"${prettify(input)}" => ${expected}`;
+
+			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
+			if (result.isErr()) {
+				expect.unreachable(
+					`Test case could not be evaluated: ${title} (${result.error})`,
+				);
+			}
+
+			test(title, () =>
+				expectNumberEqual(result.value.toNumber(), expected),
+			);
+		}
+	});
+}
+
 function fail(title: string, cases: Token[][]) {
 	describe(title, () => {
 		for (const input of cases) {
@@ -373,3 +407,29 @@ describe("Exponent errors", () => {
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
 	]);
 });
+
+fail("Log function errors", [
+	// wrong arity
+	[t.log, t.lbrk, litr(2), t.semi, litr(3), t.semi, litr(4), t.rbrk],
+	// invalid base
+	[t.log, t.lbrk, litr(1), t.semi, litr(10), t.rbrk],
+	[t.log, t.lbrk, litr(0), t.semi, litr(10), t.rbrk],
+	[t.log, t.lbrk, t.sub, litr(2), t.semi, litr(8), t.rbrk],
+	// invalid num
+	[t.log, t.lbrk, litr(2), t.semi, litr(0), t.rbrk],
+	[t.log, t.lbrk, litr(2), t.semi, t.sub, litr(8), t.rbrk],
+]);
+
+runNumber("Log(num)", [
+	[[t.log, t.lbrk, litr(1), t.rbrk], 0],
+	[[t.log, t.lbrk, litr(10), t.rbrk], 1],
+	[[t.log, t.lbrk, litr(100), t.rbrk], 2],
+	[[t.log, t.lbrk, litr(1000), t.rbrk], 3],
+]);
+
+
+runNumber("Log(base;num)", [
+	[[t.log, t.lbrk, litr(2), t.semi, litr(8), t.rbrk], 3],
+	[[t.log, t.lbrk, litr(10), t.semi, litr(1000), t.rbrk], 3],
+	[[t.log, t.lbrk, litr(2), t.semi, t.lbrk, litr(1), t.add, litr(1), t.rbrk, t.pow, litr(3), t.rbrk], 3],
+]);
