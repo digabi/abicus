@@ -9,7 +9,7 @@ export type RawKeyProps<O extends string = never> = Omit<
 	{
 		label: ReactNode;
 		onClick: () => void;
-		tint?: "none" | "d-blue" | "l-blue" | "grey";
+		tint?: "none" | "red" | "blue-light" | "blue-mid" | "blue-dark";
 		className?: any;
 	},
 	O
@@ -30,17 +30,18 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 	return (
 		<button
 			x={[
-				"h-9",
-				"rounded-xs border border-abi-dgrey",
+				"h-12 key",
+				"rounded-sm border border-blue text-2xl",
 				[
 					"transition-all duration-75",
-					"shadow-sm scale-100",
-					"active:shadow-none active:scale-95",
+					"scale-100",
+					"active:scale-97",
 					match(tint)
-						.with("none", () => "bg-white active:bg-slate-100")
-						.with("d-blue", () => "bg-abi-blue-2 active:bg-blue-300")
-						.with("l-blue", () => "bg-abi-blue-3 active:bg-blue-100")
-						.with("grey", () => "bg-abi-lgrey active:bg-slate-300")
+						.with("none", () => "bg-white border-blue-border")
+						.with("blue-dark", () => "bg-blue-dark text-white border-none")
+						.with("blue-mid", () => "bg-blue-mid border-none")
+						.with("blue-light", () => "bg-blue-light border-blue-border")
+						.with("red", () => "bg-red text-white border-none")
 						.exhaustive(),
 				],
 				className,

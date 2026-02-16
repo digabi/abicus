@@ -49,6 +49,7 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "cons", name: "pi" }, () => "π")
 			.with({ type: "cons", name: "e" }, () => "e")
 			.with({ type: "oper", name: "*" }, () => "×")
+			.with({ type: "oper", name: "/" }, () => "÷")
 			.with({ type: "oper", name: "-" }, () => "−")
 			.with({ type: "oper", name: any }, token => token.name)
 			.with({ type: "func", name: any }, token =>

@@ -7,10 +7,10 @@ export default function RadDegToggle() {
 		<div
 			x={[
 				"absolute top-1 left-1",
-				"h-6",
-				"border border-abi-dgrey",
+				"h-10",
+				"border border-blue-border",
 				"divide-x divide-abi-dgrey",
-				"rounded-xs overflow-hidden",
+				"rounded-md overflow-hidden",
 				"flex items-center",
 			]}
 		>
@@ -18,10 +18,10 @@ export default function RadDegToggle() {
 				onClick={radsOn}
 				disabled={angleUnit === "rad"}
 				x={[
-					"text-xs",
+					"text-[16px] key",
 					"h-full px-3",
 					"transition-all",
-					angleUnit === "rad" ? "bg-abi-lgrey text-black" : "bg-white text-abi-dgrey",
+					angleUnit === "rad" ? "bg-blue-light border-blue-border text-black" : "bg-white border-blue-border",
 				]}
 			>
 				Rad
@@ -30,10 +30,10 @@ export default function RadDegToggle() {
 				onClick={degsOn}
 				disabled={angleUnit === "deg"}
 				x={[
-					"text-xs",
+					"text-[16px] key",
 					"h-full px-3",
 					"transition-all",
-					angleUnit === "deg" ? "bg-abi-lgrey text-black" : "bg-white text-abi-dgrey",
+					angleUnit === "deg" ? "bg-blue-light border-blue-border text-black" : "bg-white",
 				]}
 			>
 				Deg

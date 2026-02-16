@@ -59,15 +59,16 @@ const tokenMatchers = [
 		}),
 	],
 	[
-		// Operators: "-", "+", "/", "*", "^"
-		// The multiplication and minus signs have unicode variants that also need to be handled
-		/^[-+/*^−×]/,
+		// Operators: "-", "+", "÷", "*", "^"
+		// The multiplication, minus and division signs have unicode variants that also need to be handled
+		/^[-+/*^−×÷]/,
 		str => ({
 			type: "oper" as const,
 			name: match(str)
-				.with("-", "+", "/", "*", "^", op => op)
+				.with("-", "+", "*", "^", op => op)
 				.with("−", () => "-" as const)
 				.with("×", () => "*" as const)
+				.with("÷", "/", () => "/" as const)
 				.otherwise(op => {
 					throw Error(`Programmer error: neglected operator "${op}"`);
 				}),

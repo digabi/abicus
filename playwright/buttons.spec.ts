@@ -13,7 +13,7 @@ function expectButtons(title: string, names: string[]) {
 expectButtons("Has trigonometric buttons", ["sin", "cos", "tan", "arcsin", "arccos", "arctan"]);
 expectButtons("Has digit buttons", [..."0123456789"]);
 expectButtons("Has constant buttons", ["π", "e"]);
-expectButtons("Has decimal, operator, and bracket buttons", [...",+−×/()"]);
+expectButtons("Has decimal, operator, and bracket buttons", [...",+−×÷()"]);
 expectButtons("Has memory buttons", ["Min", "Mout", "ANS"]);
 expectButtons("Has logarithm buttons", ["log", "ln"]);
 expectButtons("Has exponent and root buttons", ["x2", "xy", "n√", "√"]);

@@ -1,11 +1,23 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
-  --color-abi-blue-3: #edf6fe;
-  --color-abi-blue-2: #ccdffd;
-  --color-abi-blue-1: #365488;
-  --color-abi-lgrey: #e5eaf1;
-  --color-abi-dgrey: #c5c5c5;
+	--blue-800: #204d99;
+	--blue-400: #6694e3;
+	--blue-200: #a6c7ff;
+	--blue-050: #e6efff;
+	--grey-700: #424242;
+	--grey-050: #f5f5f5;
+	--red-800: #9e0000;
+
+	--color-blue-dark: var(--blue-800);
+	--color-blue-border: var(--blue-400);
+	--color-blue-mid: var(--blue-200);
+	--color-blue-light: var(--blue-050);
+
+	--color-grey-text: var(--grey-700);
+	--color-grey-light: var(--grey-050);
+
+	--color-red: var(--red-800);
 }
 
 /*
@@ -16,17 +28,72 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
+}
+
+html {
+	font-family: "IBMPlexSansCondensed";
 }
 
 @font-face {
-	font-family: "Jost";
-	src: url("/src/assets/fonts/Jost-Regular.ttf") format("truetype");
+	font-family: "IBMPlexSansCondensed";
+	src: url("/src/assets/fonts/IBMPlexSansCondensed-Medium.ttf") format("truetype");
+}
+
+.key {
+	&:hover {
+		background-color: hsl(from var(--bg) h calc(s - 10) calc(1.1 * l - 15));
+	}
+
+	&:active {
+		background-color: hsl(from var(--bg) h calc(s + 50) calc(1.1 * l - 15));
+	}
+}
+
+.bg-blue-dark {
+	--bg: var(--blue-800);
+}
+
+.bg-blue-mid {
+	--bg: var(--blue-200);
+}
+
+.bg-blue-light {
+	--bg: var(--blue-050);
+}
+
+.bg-white {
+	--bg: white;
+
+	&.key:active {
+		background-color: hsl(0 0 92);
+	}
+}
+
+.bg-red {
+	--bg: var(--red-800);
+}
+
+.text-grey-700 {
+	color: var(--grey-700);
+}
+
+.text-2xl {
+	font-size: 1.35rem;
+}
+
+button {
+	cursor: pointer;
+}
+
+.bg-grey-050 {
+	background-color: var(--grey-050);
 }

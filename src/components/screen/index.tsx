@@ -10,8 +10,10 @@ export default function Screen() {
 			<div
 				x={[
 					"relative",
-					"h-24",
+					"h-32",
 					"text-xl",
+					"bg-white",
+					"border border-blue",
 					"rounded-md overflow-hidden",
 					"border border-abi-dgrey has-focus:border-transparent",
 					"has-focus:ring-2 ring-blue-400",
