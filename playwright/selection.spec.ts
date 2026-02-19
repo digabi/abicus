@@ -18,10 +18,10 @@ async function selectRange(page: Page, lhs: number, rhs: number) {
 /*****************************************************************************/
 
 test("Can wrap in brackets", async ({ page }) => {
-	await page.getByRole("textbox").fill("5+5/2");
+	await page.getByRole("textbox").fill("5+5÷2");
 	await selectRange(page, 0, 3);
 	await page.keyboard.press("(");
-	expect(await page.getByRole("textbox").inputValue()).toBe("(5+5)/2");
+	expect(await page.getByRole("textbox").inputValue()).toBe("(5+5)÷2");
 });
 
 /*****************************************************************************/
@@ -42,7 +42,7 @@ function operator(keyboard: string, render = keyboard) {
 }
 
 operator("+");
-operator("/");
+operator("/", "÷");
 operator("*", "×");
 operator("-", "−");
 

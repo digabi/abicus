@@ -25,8 +25,11 @@ export default function Input() {
 			.with(")", () => {
 				buffer.input.closeBrackets();
 			})
-			.with("^", "/", "+", symbol => {
+			.with("^", "+", symbol => {
 				buffer.input.oper(symbol);
+			})
+			.with("/", () => {
+				buffer.input.oper("÷");
 			})
 			.with("-", () => {
 				buffer.input.oper("−");
@@ -80,12 +83,12 @@ export default function Input() {
 				"transition-all",
 				// Focus is shown by the parent so it's safe to disable here
 				"focus:outline-hidden",
-				shouldShowOutput ? "text-slate-500 text-sm" : "text-black",
+				shouldShowOutput ? "text-grey-700" : "text-black",
 			]}
 			// Safari bug workaround:
 			// As of writing this, translating an input in safari without using `translate3d`
 			// can cause the content of the input to visually lag behind the container
-			style={{ transform: shouldShowOutput ? "translate3d(0, -2rem, 0)" : "translate3d(0, 0, 0)" }}
+			style={{ transform: shouldShowOutput ? "translate3d(0, -1.5rem, 0)" : "translate3d(0, 0, 0)" }}
 		/>
 	);
 }

@@ -16,7 +16,7 @@ function testResultFormat(
 	description: string,
 	expression: string,
 	expectedFormat: string,
-	angleUnit: AngleUnit = "rad"
+	angleUnit: AngleUnit = "rad",
 ) {
 	it(`${description}: "${expression}" → "${expectedFormat}"`, () => {
 		const result = testCalculate(expression, angleUnit);
@@ -48,12 +48,12 @@ describe("formatResult", () => {
 		testResultFormat(
 			"formats large number in exponential notation",
 			"1.23456789012345678901*10^25",
-			"1,23456789012345678901e+25"
+			"1,23456789012345678901e+25",
 		);
 		testResultFormat(
 			"truncates to significant digits limit for large numbers",
 			"1.234567890123456789012345678901*10^25",
-			"1,23456789012345678901e+25"
+			"1,23456789012345678901e+25",
 		);
 	});
 
@@ -61,12 +61,12 @@ describe("formatResult", () => {
 		testResultFormat(
 			"formats very small number in exponential notation",
 			"1.23456789012345678901*10^-25",
-			"1,23456789012345678901e-25"
+			"1,23456789012345678901e-25",
 		);
 		testResultFormat(
 			"truncates to significant digits limit for small numbers",
 			"1.234567890123456789012345678901*10^-25",
-			"1,23456789012345678901e-25"
+			"1,23456789012345678901e-25",
 		);
 	});
 
@@ -75,17 +75,17 @@ describe("formatResult", () => {
 		testResultFormat(
 			"rounds up with decimals",
 			`1.${"1".repeat(MAX_SIGNIFICANT_DIGITS - 1)}5`,
-			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 2)}2`
+			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 2)}2`,
 		);
 		testResultFormat(
 			"rounds down with large integers",
 			`${"1".repeat(MAX_SIGNIFICANT_DIGITS)}1`,
-			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 1)}e+${MAX_SIGNIFICANT_DIGITS}`
+			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 1)}e+${MAX_SIGNIFICANT_DIGITS}`,
 		);
 		testResultFormat(
 			"rounds up large integers",
 			`${"1".repeat(MAX_SIGNIFICANT_DIGITS)}5`,
-			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 2)}2e+${MAX_SIGNIFICANT_DIGITS}`
+			`1,${"1".repeat(MAX_SIGNIFICANT_DIGITS - 2)}2e+${MAX_SIGNIFICANT_DIGITS}`,
 		);
 	});
 
@@ -93,32 +93,32 @@ describe("formatResult", () => {
 		testResultFormat(
 			`below large threshold (${MAX_SIGNIFICANT_DIGITS}) - no exponentia`,
 			`1 * 10 ^ ${MAX_SIGNIFICANT_DIGITS - 1}`,
-			`1${"0".repeat(MAX_SIGNIFICANT_DIGITS - 1)}`
+			`1${"0".repeat(MAX_SIGNIFICANT_DIGITS - 1)}`,
 		);
 		testResultFormat(
 			`at large threshold (${MAX_SIGNIFICANT_DIGITS}) - uses exponential`,
 			`1 * 10 ^ ${MAX_SIGNIFICANT_DIGITS}`,
-			`1e+${MAX_SIGNIFICANT_DIGITS}`
+			`1e+${MAX_SIGNIFICANT_DIGITS}`,
 		);
 		testResultFormat(
 			`above small threshold (-${NEGATIVE_EXPONENT_LIMIT}) - no exponential`,
 			`1 * 10 ^ -${NEGATIVE_EXPONENT_LIMIT - 1}`,
-			`0,${"0".repeat(NEGATIVE_EXPONENT_LIMIT - 2)}1`
+			`0,${"0".repeat(NEGATIVE_EXPONENT_LIMIT - 2)}1`,
 		);
 		testResultFormat(
 			`at small threshold (-${NEGATIVE_EXPONENT_LIMIT}) - uses exponential`,
 			`1 * 10 ^ -${NEGATIVE_EXPONENT_LIMIT}`,
-			`1e-${NEGATIVE_EXPONENT_LIMIT}`
+			`1e-${NEGATIVE_EXPONENT_LIMIT}`,
 		);
 	});
 
 	describe("Trigonometric results", () => {
 		testResultFormat("formats sin(π) as exactly zero", "sin(π)", "0");
 		testResultFormat("handles high multiples of π", "sin(π*10^100)", "0");
-		testResultFormat("formats sin(π/2) as exactly one", "sin(π/2)", "1");
-		testResultFormat("formats cos(π/2) as exactly zero", "cos(π/2)", "0");
+		testResultFormat(`formats sin(π÷2) as exactly one`, `sin(π÷2)`, "1");
+		testResultFormat(`formats cos(π÷2) as exactly zero`, `cos(π÷2)`, "0");
 		testResultFormat("formats cos(π) as exactly negative one", "cos(π)", "-1");
-		testResultFormat("formats tan(π/4) as exactly one", "tan(π/4)", "1");
+		testResultFormat(`formats tan(π÷4) as exactly one`, `tan(π÷4)`, "1");
 		testResultFormat("respects angle unit", "sin(90)", "1", "deg");
 	});
 });

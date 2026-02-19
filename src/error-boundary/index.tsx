@@ -74,8 +74,7 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 						x={[
 							"h-9 px-4",
 							"rounded-xs border border-abi-dgrey",
-
-							"shadow-sm scale-100",
+							"scale-100",
 							"bg-white active:bg-slate-100",
 							"transition-all duration-75",
 							"active:shadow-none active:scale-95",

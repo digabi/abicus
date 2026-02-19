@@ -43,7 +43,7 @@ test("Can change to radians by pressing tab", async ({ page }) => {
 	await expect(page.getByRole("button", { name: "Deg" })).not.toBeDisabled();
 	await expect(page.getByRole("button", { name: "Rad" })).toBeDisabled();
 
-	await page.getByRole("textbox").fill("sin(pi/2)");
+	await page.getByRole("textbox").fill("sin(pi÷2)");
 	await page.keyboard.press("=");
 	expect(page.getByRole("status")).toHaveText("1");
 });

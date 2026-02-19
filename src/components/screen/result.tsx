@@ -14,8 +14,9 @@ export default function Result() {
 				"w-full",
 				"flex items-center justify-between",
 				"transition-all",
+				"text-2xl",
 				"px-4 py-1",
-				"bg-slate-100",
+				"bg-blue-light",
 				shouldShowOutput ? "translate-y-0" : "translate-y-full",
 			]}
 		>
