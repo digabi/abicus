@@ -101,4 +101,4 @@ Please see the Vitest and/or Playwright documentation for details on e.g. how to
 ## Releasing
 
 1. Run `npm version {major,minor,patch}`. It will output the new version: `vX.Y.Z`
-2. Run `git push --tags`. This will start the release process in [Github Actions](https://github.com/digabi/abicus/actions/workflows/release-dev.yaml)
+2. Run `git push --follow-tags`. This will start the release process in [Github Actions](https://github.com/digabi/abicus/actions/workflows/release-dev.yaml)
