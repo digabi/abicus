@@ -9,7 +9,7 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2.10.1", features = [] }
 serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"
 tauri-plugin-shell = "2"
