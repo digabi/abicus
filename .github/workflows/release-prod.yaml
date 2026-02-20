@@ -114,6 +114,7 @@ jobs:
         run: docker push ${{ steps.login-ecr.outputs.registry }}/abicus-prod:${{ github.ref_name }}
 
   build-binaries:
+    if: false # Disable desktop builds temporarily
     needs: run-tests
     strategy:
       fail-fast: false
