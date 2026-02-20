@@ -99,6 +99,11 @@ Please see the Vitest and/or Playwright documentation for details on e.g. how to
 </table>
 
 ## Releasing
-
+### Dev release
 1. Run `npm version {major,minor,patch}`. It will output the new version: `vX.Y.Z`
 2. Run `git push --follow-tags`. This will start the release process in [Github Actions](https://github.com/digabi/abicus/actions/workflows/release-dev.yaml)
+### Prod release
+1. Go to [Prod release actions](https://github.com/digabi/abicus/actions/workflows/release-prod.yaml)
+2. Click "New workflow"
+3. Open dropdown, select tab "Tags" and select the newest version vX.Y.Z
+4. Click on "Run workflow" 
