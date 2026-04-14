@@ -1,4 +1,4 @@
-name: Release (Production version for A2 + Binaries + GH Pages)
+name: Release (Production version for A2 GH Pages)
 on: [workflow_dispatch]
 
 jobs:
@@ -73,7 +73,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
-        
+
   build-docker:
     needs: run-tests
     name: Build Docker image
@@ -112,134 +112,3 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ${{ steps.login-ecr.outputs.registry }}/abicus-prod:${{ github.ref_name }}
-
-  build-binaries:
-    if: false # Disable desktop builds temporarily    needs: run-tests
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - title: MacOS (arm64)
-            platform: macos-latest
-            args: "--target aarch64-apple-darwin"
-          - title: MacOS (x86_64)
-            platform: macos-latest
-            args: "--target x86_64-apple-darwin"
-          - title: Ubuntu
-            platform: ubuntu-22.04 # Version required by Tauri action below
-            args: ""
-          - title: Windows
-            platform: windows-latest
-            args: ""
-
-    name: Build Desktop Application (${{ matrix.title }})
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - name: Check out
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-
-      - name: Set up Node
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
-        with:
-          node-version: 22.21.0
-
-      - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c # v1.15.2
-        with:
-          target: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-
-      - name: Install build dependencies (Ubuntu)
-        if: matrix.title == 'Ubuntu'
-        run: |
-          # List from https://v2.tauri.app/start/prerequisites/#linux
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            build-essential \
-            curl \
-            wget \
-            file \
-            libxdo-dev \
-            libssl-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - uses: tauri-apps/tauri-action@e834788a94591d81e3ae0bd9ec06366f5afb8994 # v0.5.23
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_REF: ${{ github.ref_name }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        with:
-          args: ${{ matrix.args }}
-          releaseDraft: false
-          tagName: ${{ github.ref_name }}
-          releaseName: Abicus v__VERSION__
-          releaseBody: |
-            <img alt="logo" height="100" src="https://github.com/digabi/abicus/blob/master/app-icon.png" />
-
-            ### Precompiled binaries
-
-            <table>
-              <tr>
-                <td>Linux</td>
-                <td>Windows</td>
-                <td>MacOS</td>
-              </tr>
-              <tr>
-                <td>
-                  <ul>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.AppImage">
-                        AppImage (x64)
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/abicus___VERSION___amd64.deb">
-                        Debian (x64 <code>.deb</code>)
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-                <td>
-                  <ul>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64-setup.exe">
-                        Windows Installer (x64 <code>.exe</code>)
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-                <td>
-                  <ul>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_aarch64.app.tar.gz">
-                        Mac-computers with Apple-processors (<code>.app</code>)
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus_x64.app.tar.gz">
-                        Mac-computers with Intel-processors (<code>.app</code>)
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___aarch64.dmg">
-                        Mac-computers with Apple-processors (<code>.dmg</code>)
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://github.com/digabi/abicus/releases/download/v__VERSION__/Abicus___VERSION___x64.dmg">
-                        Mac-computers with Intel-processors (<code>.dmg</code>)
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            </table>

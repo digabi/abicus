@@ -10,14 +10,14 @@ export default defineConfig({
 	reporter: "html",
 
 	use: {
-		baseURL: "http://localhost:1420",
+		baseURL: "http://localhost:5173",
 		trace: "retain-on-failure",
 		screenshot: "only-on-failure",
 	},
 
 	webServer: {
 		command: "npm run dev",
-		port: 1420,
+		port: 5173,
 		reuseExistingServer: !process.env.CI,
 	},
 
