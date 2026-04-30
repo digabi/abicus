@@ -14,6 +14,10 @@ export const T = {
 	cons: (name: Token<"cons">["name"]) => ({ type: "cons", name }),
 	lbrk: () => ({ type: "lbrk" }),
 	rbrk: () => ({ type: "rbrk" }),
+	lsbk: () => ({ type: "lsbk" }),
+	rsbk: () => ({ type: "rsbk" }),
+	lcur: () => ({ type: "lcur" }),
+	rcur: () => ({ type: "rcur" }),
 	semi: () => ({ type: "semi" }),
 } satisfies Record<TokenId, (...args: any[]) => Token>;
 
@@ -39,9 +43,14 @@ export const t = {
 	log10: T.func("log10"),
 	sqrt: T.func("sqrt"),
 	root: T.func("root"),
+	latexFrac: T.func("\\frac"),
 	ans: T.memo("ans"),
 	ind: T.memo("ind"),
 	lbrk: T.lbrk(),
 	rbrk: T.rbrk(),
+	lsbk: T.lsbk(),
+	rsbk: T.rsbk(),
+	lcur: T.lcur(),
+	rcur: T.rcur(),
 	semi: T.semi(),
 };
