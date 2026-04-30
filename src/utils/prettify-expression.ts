@@ -43,6 +43,10 @@ function* prettiedCharacters(tokens: Token[]) {
 			.with({ type: "litr" }, token => token.value.toFixed().replace(".", ","))
 			.with({ type: "lbrk" }, () => "(")
 			.with({ type: "rbrk" }, () => ")")
+			.with({ type: "lsbk" }, () => "[")
+			.with({ type: "rsbk" }, () => "]")
+			.with({ type: "lcur" }, () => "{")
+			.with({ type: "rcur" }, () => "}")
 			.with({ type: "semi" }, () => ";")
 			.with({ type: "memo", name: "ans" }, () => "ANS")
 			.with({ type: "memo", name: "ind" }, () => "M")
@@ -66,18 +70,20 @@ function* prettiedCharacters(tokens: Token[]) {
 
 		yield formattedToken;
 
-		// Decide whether we want a space between the *current* and *left-hand-side* tokens:
+		// Decide whether we want a space between the *current* and *right-hand-side* tokens:
 		const shouldHaveSpace =
 			(lhs || rhs) &&
 			match([lhs, cur, rhs])
 				.with(
 					// No spaces at bracket inside boundaries: "(1 + 1)"
-					[any, { type: "lbrk" }, not(null)],
-					[any, any, { type: "rbrk" }],
+					[any, { type: P.union("lbrk", "lsbk", "lcur") }, not(null)],
+					[any, any, { type: P.union("rbrk", "rsbk", "rcur") }],
 					// No space between function name and opening brakcet: "sin(…"
-					[any, { type: "func" }, { type: "lbrk" }],
+					[any, { type: "func" }, { type: P.union("lbrk", "lsbk", "lcur") }],
+					// No space between parenthesis/brackets/braces (LaTeX)
+					[any, { type: P.union("rbrk", "rsbk", "rcur") }, { type: P.union("lbrk", "lsbk", "lcur") }],
 					// Negative numbers: e.g. "-5" and "-5 + 5" instead of "- 5" and "- 5 + 5"
-					[not({ type: union("litr", "cons", "memo", "rbrk") }), { type: "oper", name: "-" }, any],
+					[not({ type: union("litr", "cons", "memo", "rbrk", "rsbk", "rcur") }), { type: "oper", name: "-" }, any],
 					// No space at the end
 					[any, any, null],
 					() => false,

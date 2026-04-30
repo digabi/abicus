@@ -6,6 +6,8 @@ import prettify from "./prettify-expression";
 
 run("Basic spacing rules", [
 	["1+(1+1)+(1)", "1 + (1 + 1) + (1)"],
+	["1+[1+1]+[1]", "1 + [1 + 1] + [1]"],
+	["1+{1+1}+{1}", "1 + {1 + 1} + {1}"],
 	["1-(1-1)-(1)", "1 - (1 - 1) - (1)"],
 	["1+((2+2)+3+(((4))))", "1 + ((2 + 2) + 3 + (((4))))"],
 	["sin(1+1)", "sin(1 + 1)"],
@@ -38,6 +40,15 @@ run("Negative numbers", [
 	["-5+5", "-5 + 5"],
 	["5+(-5)", "5 + (-5)"],
 	["-(5+5)", "-(5 + 5)"],
+]);
+
+run("LaTeX", [
+	["1\\cdot2", "1 * 2"],
+
+	// To turn LaTeX into normal form
+	// (e.g. `√[3](27) -> √(27 ; 3)`, `\frac{1}{2} -> (1) / (2)`),
+	// we'd have to have an AST to modify.
+	["\\frac   {1 } {3}", "\\frac{1}{3}"],
 ]);
 
 describe("Arithmetic character rewrites", () => {

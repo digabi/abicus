@@ -52,22 +52,23 @@ const tokenMatchers = [
 
 	[
 		// Unsigned numeric literal: "0", "123", "25.6", etc...
-		/^((\d+[,.]\d+)|([1-9]\d*)|0)/,
+		// {,} is for decimal commas in LaTeX
+		/^((\d+([,.]|\{,\})\d+)|([1-9]\d*)|0)/,
 		str => ({
 			type: "litr" as const,
-			value: new Decimal(str.replace(",", ".")),
+			value: new Decimal(str.replace(/,|\{,\}/, ".")),
 		}),
 	],
 	[
-		// Operators: "-", "+", "÷", "*", "^"
+		// Operators: "-", "+", "÷", "*", "^", "\cdot", "\times"
 		// The multiplication, minus and division signs have unicode variants that also need to be handled
-		/^[-+/*^−×÷]/,
+		/^([-+/*^−×÷]|\\(cdot|times)(?![a-zA-Z]))/,
 		str => ({
 			type: "oper" as const,
 			name: match(str)
 				.with("-", "+", "*", "^", op => op)
 				.with("−", () => "-" as const)
-				.with("×", () => "*" as const)
+				.with("×", "\\cdot", "\\times", () => "*" as const)
 				.with("÷", "/", () => "/" as const)
 				.otherwise(op => {
 					throw Error(`Programmer error: neglected operator "${op}"`);
@@ -75,14 +76,34 @@ const tokenMatchers = [
 		}),
 	],
 	[
-		// Left bracket: "("
-		/^\(/,
+		// Left bracket: "(", "\left("
+		/^(\\left)?\(/,
 		_ => ({ type: "lbrk" as const }),
 	],
 	[
-		// Right bracket: ")"
-		/^\)/,
+		// Right bracket: ")", "\right)"
+		/^(\\right)?\)/,
 		_ => ({ type: "rbrk" as const }),
+	],
+	[
+		// Left curly brace: "{", "\left{"
+		/^(\\left)?\{/,
+		_ => ({ type: "lcur" as const }),
+	],
+	[
+		// Right curly brace: "}", "\right}"
+		/^(\\right)?\}/,
+		_ => ({ type: "rcur" as const }),
+	],
+	[
+		// Left square bracket: "[", "\left["
+		/^(\\right)?\[/,
+		_ => ({ type: "lsbk" as const }),
+	],
+	[
+		// Right square bracket: "]", "\right]"
+		/^(\\right)?\]/,
+		_ => ({ type: "rsbk" as const }),
 	],
 	[
 		// Semicolon: ";"
@@ -90,19 +111,47 @@ const tokenMatchers = [
 		_ => ({ type: "semi" as const }),
 	],
 	[
-		// Constants: "pi", "e", and unicode variations
-		/^(pi|π|e|ℇ|𝑒|ℯ)/i,
+		// Constants: "pi", "e", LaTeX "\pi", and unicode variations
+		/^(pi|π|\\pi(?![a-zA-Z])|e|ℇ|𝑒|ℯ)/i,
 		str => ({
 			type: "cons" as const,
 			name: match(str.toLowerCase())
 				.with("pi", "e", name => name)
-				.with("π", () => "pi" as const)
+				.with("\\pi", "π", () => "pi" as const)
 				.with("ℇ", "𝑒", "ℯ", () => "e" as const)
 				.otherwise(name => {
 					throw Error(`Programmer error: neglected constant "${name}"`);
 				}),
 		}),
 	],
+
+	[
+		// LaTeX functions: \ln, \log, \sin, \cos, \tan, \arcsin, \arccos, \arctan, \sqrt, \root
+		/^\\(ln|log|sin|cos|tan|arcsin|arccos|arctan|sqrt|root)(?![a-zA-Z])/,
+		str => ({
+			type: "func" as const,
+			name: match(str)
+				.with("\\ln", "\\sin", "\\cos", "\\tan", name => name.slice(1))
+				.with("\\log", () => "log10" as const)
+				.with("\\arcsin", () => "asin" as const)
+				.with("\\arccos", () => "acos" as const)
+				.with("\\arctan", () => "atan" as const)
+				.with("\\sqrt", "\\root", () => "root" as const)
+				.otherwise(name => {
+					throw Error(`Programmer error: neglected function "${name}"`);
+				}),
+		}),
+	],
+
+	[
+		// LaTeX fractions
+		/^\\(frac|dfrac)(?![a-zA-Z])/,
+		() => ({
+			type: "func" as const,
+			name: "\\frac" as const
+		}),
+	],
+
 	[
 		// Memory register: "ans" (answer register), "mem" (independent memory register)
 		/^(ans|mem|m|ind)/i,

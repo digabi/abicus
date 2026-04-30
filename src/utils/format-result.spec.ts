@@ -7,7 +7,7 @@ const NEGATIVE_EXPONENT_LIMIT = 7;
 
 function testCalculate(expression: string, angleUnit: AngleUnit = "rad") {
 	const result = calculate(expression, new Decimal(0), new Decimal(0), angleUnit);
-	if (result.isErr()) throw new Error(`Calculation failed: ${result.error}`);
+	if (result.isErr()) throw new Error(`Calculation failed: ${JSON.stringify(result.error)}`);
 	return result.value;
 }
 

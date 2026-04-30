@@ -15,9 +15,11 @@ function run(title: string, cases: [input: Token[], expected: Decimal][]) {
 			const title = `"${prettify(input)}" => ${expected.toString()}`;
 
 			const result = evaluate(input, new Decimal(0), new Decimal(0), "rad");
-			if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title} (${result.error})`);
 
-			test(title, () => expect(result.value.toFraction()).toEqual(expected.toFraction()));
+			test(title, () => {
+				if (result.isErr()) expect.unreachable(`Test case could not be evaluated: ${title} (${result.error})`);
+				expect(result.value.toFraction()).toEqual(expected.toFraction());
+			});
 		}
 	});
 }
@@ -135,6 +137,29 @@ run("Functions", [
 		],
 		new Decimal("0.66239180766192125587")
 	]
+]);
+
+run("Functions without brackets", [
+	[[t.sin, litr(1)], d(1).sin()],
+	[[t.sin, t.sin, t.lbrk, litr(10), t.rbrk], d(10).sin().sin()],
+	[[t.acos, litr(1)], d(1).acos()],
+	[[t.acos, t.latexFrac, t.lcur, litr(30), t.rcur, t.lcur, litr(42), t.rcur], d(30).div(d(42)).acos()],
+	[[t.acos, t.cos, t.lbrk, litr(30), t.rbrk], d(30).cos().acos()],
+	[[t.latexFrac, t.latexFrac, litr(1), litr(2), litr(3)], d(1).div(d(2)).div(d(3))],
+	[[t.log10, litr(1)], d(1).log(10)],
+	[[t.ln, litr(1)], d(1).ln()],
+	[[t.root, litr(1)], d(1).sqrt()],
+	[[t.sqrt, litr(1)], d(1).sqrt()],
+]);
+
+run("LaTeX roots", [
+	[[t.root, t.lsbk, litr(3), t.rsbk, litr(27)], d(27).cubeRoot()],
+	[[t.root, t.lsbk, litr(3), t.rsbk, t.lbrk, litr(27), t.rbrk], d(27).cubeRoot()],
+]);
+
+run("LaTeX fraction", [
+	[[t.latexFrac, t.lcur, litr(1), t.rcur, t.lcur, litr(3), t.rcur], d(1).div(d(3))],
+	[[t.latexFrac, litr(1), litr(3)], d(1).div(d(3))],
 ]);
 
 describe("Constants", () => {
@@ -317,9 +342,7 @@ describe("Syntax Errors", () => {
 	]);
 
 	fail("Functions", [
-		[t.sin, litr(10)],
-		[t.sin, t.sin, t.lbrk, litr(10), t.rbrk],
-		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk],
+		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk], // missing rbrk
 		[t.root, t.lbrk, litr(-8), t.rbrk],
 		[t.root, t.lbrk, litr(-8), t.semi, t.rbrk],
 		[t.root, t.lbrk, litr(-8), t.semi, litr(-2), t.rbrk],
@@ -373,3 +396,8 @@ describe("Exponent errors", () => {
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
 	]);
 });
+
+fail("LaTeX fraction with only one parameter", [
+	[t.latexFrac, litr(13)],
+	[t.latexFrac, t.lbrk, litr(13), t.rbrk],
+]);
