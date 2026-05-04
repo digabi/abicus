@@ -137,6 +137,24 @@ run("Functions", [
 	]
 ]);
 
+run("Functions without brackets", [
+	[[t.sin, litr(1)], d(1).sin()],
+	[[t.log10, litr(1)], d(1).log(10)],
+	[[t.ln, litr(1)], d(1).ln()],
+	[[t.root, litr(1)], d(1).sqrt()],
+	[[t.sqrt, litr(1)], d(1).sqrt()],
+]);
+
+run("LaTeX roots", [
+	[[t.root, t.lsbk, litr(3), t.rsbk, litr(27)], d(27).cubeRoot()],
+	[[t.root, t.lsbk, litr(3), t.rsbk, t.lbrk, litr(27), t.rbrk], d(27).cubeRoot()],
+]);
+
+run("LaTeX fraction", [
+	[[t.latexFrac, t.lcur, litr(1), t.rcur, t.lcur, litr(3), t.rcur], d(1).div(d(3))],
+	[[t.latexFrac, litr(1), litr(3)], d(1).div(d(3))],
+]);
+
 describe("Constants", () => {
 	test("π is defined", () => {
 		const result = evaluate([T.cons("pi")], d(0), d(0), "rad");
@@ -317,7 +335,6 @@ describe("Syntax Errors", () => {
 	]);
 
 	fail("Functions", [
-		[t.sin, litr(10)],
 		[t.sin, t.sin, t.lbrk, litr(10), t.rbrk],
 		[t.sin, t.lbrk, t.sin, t.lbrk, litr(10), t.rbrk],
 		[t.root, t.lbrk, litr(-8), t.rbrk],
@@ -373,3 +390,8 @@ describe("Exponent errors", () => {
 		[t.lbrk, t.sub, litr(13), t.rbrk, t.pow, t.lbrk, litr(1), t.div, litr(3), t.rbrk],
 	]);
 });
+
+fail("LaTeX fraction with only one parameter", [
+	[t.latexFrac, litr(13)],
+	[t.latexFrac, t.lbrk, litr(13), t.rbrk],
+]);

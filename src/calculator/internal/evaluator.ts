@@ -63,7 +63,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 *
 	 * Can either just peek at the next token or consume it, based on the value of the second argument.
 	 */
-	function expect(pattern: Pattern.Pattern<Token>): Result<Token, EvalErrorId> {
+	function expect<const p extends Pattern.Pattern<Token>>(pattern: p): Result<P.narrow<Token, p>, EvalErrorId> {
 		const token = peek();
 
 		if (!token) return err("UNEXPECTED_EOF");
@@ -71,7 +71,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 
 		next();
 
-		return ok(token);
+		return ok(token as P.narrow<Token, p>);
 	}
 
 	/**
@@ -96,15 +96,37 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 						.mapErr(() => "NO_RHS_BRACKET" as const),
 				),
 			)
+			.with({ type: "lcur" }, () =>
+				evalExpr(0).andThen(value =>
+					expect({ type: "rcur" })
+						.map(() => value)
+						.mapErr(() => "NO_RHS_BRACKET" as const),
+				),
+			)
 			.with({ type: "func" }, token =>
-				evalArgs().andThen(args =>
-					match(token.name)
-						.with("root", () => {
+				match(token.name)
+					.with("\\frac", () =>
+						Result.combine([evalArgs(), evalArgs()]).andThen(([args1, args2]) => {
+							if (args1.length < 1) return err("NOT_ENOUGH_ARGS" as const);
+							if (args1.length > 1) return err("TOO_MANY_ARGS" as const);
+
+							if (args2.length < 1) return err("NOT_ENOUGH_ARGS" as const);
+							if (args2.length > 1) return err("TOO_MANY_ARGS" as const);
+
+							const numerator = args1[0]!;
+							const denominator = args2[0]!;
+
+							return ok(numerator.div(denominator));
+						}),
+					)
+					.with("root", () =>
+						Result.combine([evalSquareBracketArg(), evalArgs()]).andThen(([squareBracketArg, args]) => {
 							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
-							if (args.length > 2) return err("TOO_MANY_ARGS" as const);
+							if (args.length > 2 || (args.length > 1 && squareBracketArg != null))
+								return err("TOO_MANY_ARGS" as const);
 
 							const radicand = args[0]!;
-							const degree = args[1] ?? TWO;
+							const degree = args[1] ?? squareBracketArg ?? TWO;
 
 							if (degree.eq(0)) {
 								return err("NOT_A_NUMBER" as const);
@@ -117,8 +139,10 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 										? radicand.neg().pow(ONE.div(degree)).neg()
 										: radicand.pow(ONE.div(degree)),
 							);
-						})
-						.otherwise(funcName => {
+						}),
+					)
+					.otherwise(funcName =>
+						evalArgs().andThen(args => {
 							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
 							if (args.length > 1) return err("TOO_MANY_ARGS" as const);
 
@@ -148,7 +172,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 								})
 								.otherwise(() => ok(func(arg)));
 						}),
-				),
+					),
 			)
 			.otherwise(() => err("UNEXPECTED_TOKEN"));
 	}
@@ -178,15 +202,29 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 	 * Tries to read the arguments of a function call to a list of `Decimal`s.
 	 */
 	function evalArgs(): Result<Decimal[], EvalErrorId> {
-		return expect({ type: "lbrk" }).andThen(() => {
+		// Allow e.g. "log 3"
+		const result = expect({ type: "litr" });
+		if (result.isOk()) {
+			return ok([result.value.value]);
+		}
+
+		return expect({ type: P.union("lbrk", "lcur") }).andThen(() => {
 			const out: EvalResult[] = [];
 
 			do {
 				out.push(evalExpr(0));
 			} while (expect({ type: "semi" }).isOk());
 
-			return expect({ type: "rbrk" }).andThen(() => Result.combine(out));
+			return expect({ type: P.union("rbrk", "rcur") }).andThen(() => Result.combine(out));
 		});
+	}
+
+	function evalSquareBracketArg(): Result<Decimal | null, EvalErrorId> {
+		if (expect({ type: "lsbk" }).isErr()) {
+			return ok(null);
+		}
+
+		return evalExpr(0).andThrough(() => expect({ type: "rsbk" }));
 	}
 
 	function evalExpr(rbp: number): EvalResult {
@@ -218,7 +256,7 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 /** Returns the Left Binding Power of the given token */
 function lbp(token: Token) {
 	return match(token)
-		.with({ type: P.union("lbrk", "rbrk", "semi") }, () => 0)
+		.with({ type: P.union("lbrk", "rbrk", "lcur", "rcur", "lsbk", "rsbk", "semi") }, () => 0)
 		.with({ type: P.union("litr", "memo", "cons") }, () => 1)
 		.with({ type: "oper", name: P.union("+", "-") }, () => 2)
 		.with({ type: "oper", name: P.union("*", "/") }, () => 3)
