@@ -126,6 +126,7 @@ run("Functions", [
 	[[t.log10, t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.log10(2 * 13)],
 	[[t.sqrt,  t.lbrk, litr(13),  t.add, litr(13),  t.rbrk], Decimal.sqrt(2 * 13)],
 	[[t.root,  t.lbrk, litr(4),   t.add, litr(4), t.semi, litr(3), t.rbrk], d(2)],
+	[[t.abs,  t.lbrk, litr(-4),   t.add, litr(-4), t.rbrk], d(8)],
 
 	[
 		[ // sin((2 / 3) * pi) ^ sqrt(1.08 + 7.12)

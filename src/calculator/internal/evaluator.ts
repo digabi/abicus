@@ -118,6 +118,12 @@ export default function evaluate(tokens: Token[], ans: Decimal, ind: Decimal, an
 										: radicand.pow(ONE.div(degree)),
 							);
 						})
+						.with("abs", () => {
+							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
+							if (args.length > 1) return err("TOO_MANY_ARGS" as const);
+
+							return ok(args[0]!.abs());
+						})
 						.otherwise(funcName => {
 							if (args.length < 1) return err("NOT_ENOUGH_ARGS" as const);
 							if (args.length > 1) return err("TOO_MANY_ARGS" as const);

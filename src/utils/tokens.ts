@@ -44,4 +44,5 @@ export const t = {
 	lbrk: T.lbrk(),
 	rbrk: T.rbrk(),
 	semi: T.semi(),
+	abs: T.func("abs"),
 };
