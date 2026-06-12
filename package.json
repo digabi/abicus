@@ -19,7 +19,7 @@
 		"ts-pattern": "5.9.0"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.39.2",
+		"@eslint/js": "10.0.1",
 		"@playwright/test": "1.60.0",
 		"@tailwindcss/postcss": "^4.3.0",
 		"@types/node": "24.13.0",
