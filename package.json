@@ -32,7 +32,7 @@
 		"concurrently": "10.0.3",
 		"eslint": "9.39.5",
 		"eslint-plugin-react": "7.37.5",
-		"globals": "17.7.0",
+		"globals": "17.8.0",
 		"postcss": "8.5.22",
 		"prettier": "^3.9.6",
 		"tailwindcss": "^4.3.3",
