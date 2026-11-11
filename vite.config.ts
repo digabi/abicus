@@ -12,23 +12,12 @@ const commitHash =
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-	plugins: [
-		tsconfigPaths(),
-		react({
-			babel: {
-				plugins: [
-					/** See `./src/_clsx-jsx.d.ts` for more details on these two plugins */
-					["transform-jsx-classnames", { attributes: ["x"] }],
-					["babel-plugin-rename-jsx-attribute", { attributes: { x: "className" } }],
-				],
-			},
-		}),
-	],
+	plugins: [tsconfigPaths(), react()],
 
 	define: {
 		__GIT_REF__: JSON.stringify(commitHash),
 	},
-	
+
 	test: {
 		globals: true,
 		exclude: ["**/playwright/**", "**/node_modules/**"],

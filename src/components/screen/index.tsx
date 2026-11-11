@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Input from "./input";
 
 import RadDegToggle from "./rad-deg-toggle";
@@ -8,7 +9,7 @@ export default function Screen() {
 	return (
 		<>
 			<div
-				x={[
+				className={clsx(
 					"relative",
 					"h-32",
 					"text-xl",
@@ -17,7 +18,7 @@ export default function Screen() {
 					"rounded-md overflow-hidden",
 					"border border-abi-dgrey has-focus:border-transparent",
 					"has-focus:ring-2 ring-blue-400",
-				]}
+				)}
 			>
 				<Result />
 				<Input />

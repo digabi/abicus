@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { KeyboardEvent, FocusEvent, useEffect, ChangeEvent } from "react";
 
 import { useCalculator } from "#/state";
@@ -74,7 +75,7 @@ export default function Input() {
 			onChange={onChange}
 			onKeyDown={onKeyDown}
 			onBlur={onBlur}
-			x={[
+			className={clsx(
 				"absolute bottom-0",
 				"w-full h-full",
 				"px-4 pt-14",
@@ -84,7 +85,7 @@ export default function Input() {
 				// Focus is shown by the parent so it's safe to disable here
 				"focus:outline-hidden",
 				shouldShowOutput ? "text-grey-700" : "text-black",
-			]}
+			)}
 			// Safari bug workaround:
 			// As of writing this, translating an input in safari without using `translate3d`
 			// can cause the content of the input to visually lag behind the container

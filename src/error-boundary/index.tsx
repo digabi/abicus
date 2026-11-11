@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Component, PropsWithChildren } from "react";
 
 import errorImgSrc from "./error-img.svg";
@@ -34,19 +35,19 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 		}
 
 		return (
-			<main x={["max-w-sm h-screen", "flex flex-col justify-center items-center"]}>
-				<div x="grid grid-cols-[5rem_1fr] mt-10">
-					<img src={errorImgSrc} x="row-span-2 h-16" />
+			<main className="max-w-sm h-screen flex flex-col justify-center items-center">
+				<div className="grid grid-cols-[5rem_1fr] mt-10">
+					<img src={errorImgSrc} className="row-span-2 h-16" />
 
-					<h1 x="text-xl self-center">Jotain meni pieleen!</h1>
-					<h1 x="text-xl self-center">Något gick fel!</h1>
+					<h1 className="text-xl self-center">Jotain meni pieleen!</h1>
+					<h1 className="text-xl self-center">Något gick fel!</h1>
 				</div>
 
-				<p x="mt-8">Välitäthän alla olevan virheviestin Abitti-tukeen.</p>
-				<p x="mb-8">Vänligen lämna feluppgifterna nedan till Abitti-support.</p>
+				<p className="mt-8">Välitäthän alla olevan virheviestin Abitti-tukeen.</p>
+				<p className="mb-8">Vänligen lämna feluppgifterna nedan till Abitti-support.</p>
 
 				<output
-					x={[
+					className={clsx(
 						"w-[24rem] grow",
 						"overflow-scroll",
 						"px-3 py-2",
@@ -54,7 +55,7 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 						"flex flex-col",
 						"text-xs font-mono",
 						"bg-abi-blue-2 border border-blue-300",
-					]}
+					)}
 				>
 					<span>Abicus@{__GIT_REF__}</span>
 					<span>--- Message ---</span>
@@ -68,17 +69,17 @@ export default class ErrorBoundary extends Component<Props, { error: any; stack:
 					<span>--- End ---</span>
 				</output>
 
-				<div x="my-8">
+				<div className="my-8">
 					<button
 						onClick={onClickReload}
-						x={[
+						className={clsx(
 							"h-9 px-4",
 							"rounded-xs border border-abi-dgrey",
 							"scale-100",
 							"bg-white active:bg-slate-100",
 							"transition-all duration-75",
 							"active:shadow-none active:scale-95",
-						]}
+						)}
 					>
 						Uudelleenkäynnistä / Omstarta
 					</button>
