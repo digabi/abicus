@@ -15,35 +15,37 @@ export default function Input() {
 	}
 
 	function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-		match(e.key)
-			.with("Enter", "=", "ArrowDown", () => {
-				crunch();
-			})
-			.with("(", () => {
-				buffer.input.openBrackets();
-			})
-			.with(")", () => {
-				buffer.input.closeBrackets();
-			})
-			.with("^", "+", symbol => {
-				buffer.input.oper(symbol);
-			})
-			.with("/", () => {
-				buffer.input.oper("÷");
-			})
-			.with("-", () => {
-				buffer.input.oper("−");
-			})
-			.with("*", () => {
-				buffer.input.oper("×");
-			})
-			.with("Escape", () => {
-				buffer.empty();
-			})
-			.with("Tab", () => {
-				angleUnit === "deg" ? radsOn() : degsOn();
-			})
-			.otherwise(() => true) || e.preventDefault();
+		return (
+			match(e.key)
+				.with("Enter", "=", "ArrowDown", () => {
+					crunch();
+				})
+				.with("(", () => {
+					buffer.input.openBrackets();
+				})
+				.with(")", () => {
+					buffer.input.closeBrackets();
+				})
+				.with("^", "+", symbol => {
+					buffer.input.oper(symbol);
+				})
+				.with("/", () => {
+					buffer.input.oper("÷");
+				})
+				.with("-", () => {
+					buffer.input.oper("−");
+				})
+				.with("*", () => {
+					buffer.input.oper("×");
+				})
+				.with("Escape", () => {
+					buffer.empty();
+				})
+				.with("Tab", () => {
+					return angleUnit === "deg" ? radsOn() : degsOn();
+				})
+				.otherwise(() => true) || e.preventDefault()
+		);
 	}
 
 	function onBlur(e: FocusEvent<HTMLInputElement>) {
