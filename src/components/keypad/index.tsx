@@ -27,7 +27,7 @@ export default function Keypad() {
 	return (
 		<>
 			<div>
-				<div x={["inline-grid grid-cols-5 gap-2", "w-96"]}>
+				<div className="inline-grid grid-cols-5 gap-2 w-96">
 					{/* Row #1 */}
 					<RawKey tint="blue-dark" onClick={onClickMemIn} label={keyLabel.memIn} />
 					<BasicKey tint="blue-dark" input="M" label={keyLabel.memOut} />
@@ -79,7 +79,7 @@ export default function Keypad() {
 					{/* Row #8 */}
 					<RawKey tint="red" label="⌫" onClick={calculator.buffer.del} />
 					{clearButton}
-					<div x={["col-span-2", "text-sm text-neutral-400", "inline-flex items-center justify-center"]}>
+					<div className="col-span-2 text-sm text-neutral-400 inline-flex items-center justify-center">
 						Abicus {gitRef}
 					</div>
 					<RawKey tint="blue-dark" label="=" onClick={calculator.crunch} />

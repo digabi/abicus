@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useCalculator } from "#/state";
 
 export default function RadDegToggle() {
@@ -5,36 +6,36 @@ export default function RadDegToggle() {
 
 	return (
 		<div
-			x={[
+			className={clsx(
 				"absolute top-1 left-1",
 				"h-10",
 				"border border-blue-border",
 				"divide-x divide-abi-dgrey",
 				"rounded-md overflow-hidden",
 				"flex items-center",
-			]}
+			)}
 		>
 			<button
 				onClick={radsOn}
 				disabled={angleUnit === "rad"}
-				x={[
+				className={clsx(
 					"text-[16px] key",
 					"h-full px-3",
 					"transition-all",
 					angleUnit === "rad" ? "bg-blue-light border-blue-border text-black" : "bg-white border-blue-border",
-				]}
+				)}
 			>
 				Rad
 			</button>
 			<button
 				onClick={degsOn}
 				disabled={angleUnit === "deg"}
-				x={[
+				className={clsx(
 					"text-[16px] key",
 					"h-full px-3",
 					"transition-all",
 					angleUnit === "deg" ? "bg-blue-light border-blue-border text-black" : "bg-white",
-				]}
+				)}
 			>
 				Deg
 			</button>

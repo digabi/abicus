@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ReactNode, MouseEvent } from "react";
 import { match } from "ts-pattern";
 
@@ -29,7 +30,7 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 
 	return (
 		<button
-			x={[
+			className={clsx(
 				"h-12 key",
 				"rounded-sm border border-blue text-2xl",
 				[
@@ -45,7 +46,7 @@ export function RawKey({ onClick: propsOnClick, tint = "none", label, className 
 						.exhaustive(),
 				],
 				className,
-			]}
+			)}
 			onClick={onClick}
 			onMouseDown={onMouseDown}
 		>

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useCalculator } from "#/state";
 import { formatResult } from "#/utils/format-result";
 
@@ -9,7 +10,7 @@ export default function Result() {
 
 	return (
 		<div
-			x={[
+			className={clsx(
 				"absolute bottom-0",
 				"w-full",
 				"flex items-center justify-between",
@@ -18,9 +19,9 @@ export default function Result() {
 				"px-4 py-1",
 				"bg-blue-light",
 				shouldShowOutput ? "translate-y-0" : "translate-y-full",
-			]}
+			)}
 		>
-			<span x="pointer-events-none text-slate-500">{"="}</span>
+			<span className="pointer-events-none text-slate-500">{"="}</span>
 			{shouldShowOutput && <output>{formattedOutput}</output>}
 		</div>
 	);
