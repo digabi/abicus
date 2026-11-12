@@ -15,6 +15,7 @@ export default [
 		rules: {
 			"react/react-in-jsx-scope": "off",
 			"@typescript-eslint/no-explicit-any": "off",
+			"@typescript-eslint/no-unused-expressions": ["error", { allowShortCircuit: true, allowTernary: true }],
 
 			"no-unused-vars": "off",
 			"@typescript-eslint/no-unused-vars": [
